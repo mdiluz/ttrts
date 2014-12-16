@@ -14,8 +14,7 @@ class CTTRTSGame
 public:
 
 	CTTRTSGame( ucoord_t c, ucoord_t r )
-	: cols (c)
-	, rows (r)
+	: dimentions( {c,r} )
 	{
 
 	}
@@ -50,6 +49,9 @@ public:
 
 	// Get orders by index as above 
 	inline const COrder& GetOrdersByIndex( unsigned int i ) const { return m_orders[i]; }
+
+	// Get dimentions
+	inline const uvector2& GetDimentions() const { return dimentions; };
 	
 private:
 
@@ -72,8 +74,7 @@ private:
 	COrderVector 		m_orders;
 
 	// Dimensions of the game
-	ucoord_t rows;
-	ucoord_t cols;
+	uvector2 dimentions;
 };
 
 #endif //_GAME_H_

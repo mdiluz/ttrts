@@ -73,7 +73,7 @@ int CTTRTSGame::AddUnit( std::shared_ptr<CUnit> unit )
 
 	// Verify if the unit can be placed on the current board
 	const uvector2 pos = unit->getPos();
-	if( (pos.x < cols) && (pos.y < rows) )
+	if( (pos.x < dimentions.x) && (pos.y < dimentions.y) )
 		return 1;
 
 	m_allUnits.push_back(unit);
