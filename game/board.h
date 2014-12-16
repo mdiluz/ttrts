@@ -7,11 +7,11 @@
 #include <limits>       // std::numeric_limits
 #include <vector>   	// std::vector
 
-typedef std::vector< unitType_c > vunitType_c;
+typedef std::vector< unitVis_c > vunitVis_c;
 
 // Invalid value for the board square
-constexpr unitType_c square_invalid = std::numeric_limits<unitType_c>::max();
-constexpr unitType_c square_empty = ' ';
+constexpr unitVis_c square_invalid = std::numeric_limits<unitVis_c>::max();
+constexpr unitVis_c square_empty = ' ';
 
 // Class to store simple data about a board
 class CBoard
@@ -26,7 +26,7 @@ public:
 	CBoard( unsigned int c, unsigned int r );
 
 	// constructor
-	CBoard( unsigned int c, unsigned int r, vunitType_c&& b );
+	CBoard( unsigned int c, unsigned int r, vunitVis_c&& b );
 
 	// Default destructor
 	~CBoard() = default;
@@ -35,20 +35,20 @@ public:
 	inline void clear() { fill(square_empty); }
 
 	// fill the board
-	inline void fill(unitType_c v) { std::fill(board.begin(),board.end(),v); };
+	inline void fill(unitVis_c v) { std::fill(board.begin(),board.end(),v); };
 
 	// Get a square on the board
-	unitType_c get( const unsigned int c, const unsigned int r ) const;
+	unitVis_c get( const unsigned int c, const unsigned int r ) const;
 
 	// Get the full board
-	inline const vunitType_c& get() const { return board; };
+	inline const vunitVis_c& get() const { return board; };
 
 	// Get a square on the board
-	unitType_c set( const unsigned int c, const unsigned int r , const unitType_c n );
+	unitVis_c set( const unsigned int c, const unsigned int r , const unitVis_c n );
 
 private:
 
-	vunitType_c board; 	// Board data storage
+	vunitVis_c board; 	// Board data storage
 }; 
 
 #endif //_BOARD_H_
