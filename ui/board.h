@@ -2,7 +2,7 @@
 #define _BOARD_H_
 
 #include "gametypes.h"
-#include "basetypes.h"
+#include "mathtypes.h"
 
 #include <limits>       // std::numeric_limits
 #include <vector>   	// std::vector
