@@ -51,11 +51,11 @@ CUnit::CUnit(CUnit&& unit)
 	updateMyVisual();
 }
 
-CUnit&& CUnit::getUnitFromVis( unitVis_c vis )
+CUnit CUnit::getUnitFromVis( unitVis_c vis )
 {
 	CUnit unit;
 	unit.setFromVisual(vis);
-	return std::move(unit);
+    return unit;
 }
 
 // Update the visual representation of the unit

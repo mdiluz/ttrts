@@ -36,7 +36,7 @@ public:
 	bool 		setFromVisual( const unitVis_c& vis);
 
 	// Factory function for creating units from a visual
-	static CUnit&& getUnitFromVis( unitVis_c vis );
+    static CUnit getUnitFromVis( unitVis_c vis );
 
 
 protected:
