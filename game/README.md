@@ -1,7 +1,7 @@
 ttrts Game Design
 =================
 
-The game takes place in a series of simultanious turns on an arbitrarilly sized 2D grid.
+The game takes place in a series of simultanious turns on an arbitrarilly sized 2D board.
 
 Each player is in control of a set number of starting units, each turn recieves data on the status of the board.
 
@@ -28,8 +28,8 @@ X is your basic slow melee unit. It has very basic data and controls, basically 
 ##### properties
 | property | type    | description                       |
 |:---------|:--------|:----------------------------------|
-| pos      | char[2] | x,y position on the grid          |
-| dir      | char    | compass direction unit is facing  |
+| pos      | char[2] | x,y position on the board         |
+| dir      | char[2] | compass direction unit is facing  |
 
 ##### commands
 | command  | description                                 |
@@ -40,10 +40,10 @@ X is your basic slow melee unit. It has very basic data and controls, basically 
 | A        | deal 1 damage to unit directly in front     |
 
 --------------------------------------------------------
-The Grid
+The Board
 --------
 
-As an example, let's start with a basic starting `[10,5]` grid
+As an example, let's start with a basic starting `[10,5]` board
 ````
 0000000000
 0000000000

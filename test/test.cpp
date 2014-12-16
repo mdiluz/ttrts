@@ -1,7 +1,7 @@
-#include "game.h"
+#include "board.h"
 
 // Main program entry point
 int main()
 {
-	tests::test_CBoardData();
+	tests::test_CBoard();
 };

@@ -5,6 +5,7 @@ project( ttrts-test )
 
 include_directories( 
 	../game 
+	../maths
 )
 
 set( SOURCES 

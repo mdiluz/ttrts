@@ -29,5 +29,8 @@ Wrapper for user interface for the terminal, this only really needs three stages
 * Run the game simulation to it's conclusion
 * Display the game result
 
+### maths
+simple maths library for 2D calculations and types
+
 ### player
 Custom player AI code, this should contain examples and test code to help newcomers begin their journey
