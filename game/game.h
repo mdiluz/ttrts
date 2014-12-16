@@ -24,8 +24,10 @@ public:
 	~CTTRTSGame() = default;
 
 	// Issue orders to the game, returns non-zero if orders are incorrect
-	int IssueOrders( player_id_t player, std::string orders );
-	int IssueOrders( player_id_t player, COrderVector orders );
+	int IssueOrders( player_id_t player, const std::string& orders );
+	int IssueOrders( player_id_t player, const COrderVector& orders );
+
+	int IssueOrder( player_id_t player, const COrder& order );
 
 	// Simulate and progress to the next turn
 	// Returns non-zero if simulation failed
@@ -52,13 +54,13 @@ public:
 private:
 
 	// Simulate all movements
-	bool SimulateMovements();
+	int SimulateMovements();
 
 	// Simulate all actions
-	bool SimulateActions();
+	int SimulateActions();
 
 	// Verify any order
-	bool VerifyOrder( player_id_t player, COrder& order );
+	int VerifyOrder( player_id_t player, const COrder& order );
 
 	// Vector to store points to all units
 	sharedUnitVector_t 	m_allUnits;

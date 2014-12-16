@@ -18,6 +18,8 @@ public:
 
 	static std::unique_ptr<CUnit> getUnitFromVis( unitVis_c vis );
 
+	inline unit_id_t getID() const { return id; }
+
 protected:
 	CUnit() = default;
 
