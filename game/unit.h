@@ -6,10 +6,10 @@
 #include "vector2.h"
 
 // Type for the unit type-id
-typedef char unit_t;
+typedef char unit_c;
 
 // Base unit type
-template < unit_t unit_type >
+template < unit_c unit_cype >
 class CUnit
 {
 public:

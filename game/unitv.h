@@ -9,8 +9,6 @@ public:
 	CUnitV() = default;
 	virtual ~CUnitV() = default;
 
-	virtual std::string&& getDescriptor();
-
 private:
 
 	// V also has a direction

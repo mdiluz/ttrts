@@ -13,7 +13,7 @@ CBoard::CBoard( unsigned int c, unsigned int r )
 
 
 // constructor
-CBoard::CBoard( unsigned int c, unsigned int r, vunit_t&& b )
+CBoard::CBoard( unsigned int c, unsigned int r, vunit_c&& b )
 : cols ( c )
 , rows ( r )
 , total ( rows * cols )
@@ -23,7 +23,7 @@ CBoard::CBoard( unsigned int c, unsigned int r, vunit_t&& b )
 }
 
 // print get a slot on the board
-unit_t CBoard::get( const unsigned int c, const unsigned int r ) const
+unit_c CBoard::get( const unsigned int c, const unsigned int r ) const
 {
 	if ( (r >= rows) || (c >= cols) )
 		return square_invalid;
@@ -32,12 +32,12 @@ unit_t CBoard::get( const unsigned int c, const unsigned int r ) const
 }
 
 // Get a square on the board
-unit_t CBoard::set( const unsigned int c, const unsigned int r , const unit_t n )
+unit_c CBoard::set( const unsigned int c, const unsigned int r , const unit_c n )
 {
 	if ( (r >= rows) || (c >= cols) )
 		return square_invalid;
 
-	unit_t old = board[r*c];
+	unit_c old = board[r*c];
 	board[r*c] = n;
 	return old;
 }
