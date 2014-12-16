@@ -6,16 +6,21 @@
 #include "vector2.h"
 
 // Type for the unit type-id
-typedef char unit_c;
+typedef char unitType_c;
+
+// Typedef for unit visual representations
+typedef char unitVis_c;
 
 // Base unit type
-template < unit_c unit_cype >
+template < unitType_c unit_type >
 class CUnit
 {
 public:
 
 	CUnit() = default;
 	virtual ~CUnit() = default;
+
+	virtual unitVis_c getVisual() const = 0;
 
 private:
 

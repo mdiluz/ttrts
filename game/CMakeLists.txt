@@ -14,6 +14,7 @@ set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --std=c++11" )
 set( SOURCES 
 	game.cpp
 	board.cpp
+	unitv.cpp
 )
 
 add_library( game ${SOURCES} )

@@ -2,6 +2,7 @@
 
 #include <iostream>     // std::cout
 
+#include "unitv.h"
 
 // Namespace for testing functions
 namespace tests
@@ -18,7 +19,6 @@ namespace tests
 			std::cout<<std::endl;
 		}
 	}
-
 
 	// Test the board data class 
 	void test_CBoard()
@@ -42,4 +42,9 @@ namespace tests
 int main()
 {
 	tests::test_CBoard();
+
+	std::cout<<"Testing units"<<std::endl;
+	CUnitV myV;
+
+	std::cout<<myV.getVisual()<<std::endl;
 };
