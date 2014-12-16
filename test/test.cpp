@@ -82,17 +82,46 @@ const char* tests()
         unit.setPos( {2,2} );
         unit.setPlayer(0);
 
-        game.AddUnit(std::move(unit));
+        if ( game.AddUnit(std::move(unit)) )
+            return "Game failed to add valid unit";
 
         order.unit = id;
         order.order = order_c::F;
 
-        game.IssueOrder(0,order);
+        if( game.IssueOrder(0,order) )
+            return "Game failed to issue valid order";
 
-        game.SimulateToNextTurn();
+        if (game.SimulateToNextTurn() )
+            return "Game failed to simulate valid turn";
 
         if( game.GetUnitByIDConst(id).getPos() != uvector2{3,2} )
             return "Simple movement order failed";
+
+    }
+
+    {
+        CTTRTSGame game( 5, 5 );
+
+        {
+            CUnit unit = CUnit::getUnitFromVis('^');
+            unit.setPos( {2,2} );
+            unit.setPlayer(0);
+
+            game.AddUnit(std::move(unit));
+        }
+
+        {
+            CUnit unit = CUnit::getUnitFromVis('^');
+            unit.setPos( {2,2} );
+            unit.setPlayer(0);
+
+            if( !game.AddUnit(std::move(unit)) )
+                return "Game should have rejected unit placed on the same spot";
+
+            if( game.GetNumUnits() != 1 )
+                return "Game ended up with too many units";
+        }
+
 
     }
 

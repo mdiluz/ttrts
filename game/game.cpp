@@ -210,8 +210,14 @@ int CTTRTSGame::AddUnit( CUnit&& unit )
     if( (pos.x >= dimentions.x) || (pos.y >= dimentions.y) )
 		return 1;
 
+    for ( const OrderUnitPair& pair: m_OrderUnitPairs )
+    {
+        if( pair.unit.getPos() == unit.getPos() )
+            return 2;
+    }
     // Add the unit with a blank order
     m_OrderUnitPairs.push_back( OrderUnitPair(std::move(unit), COrder()) );
+
 
 	return 0;
 }
