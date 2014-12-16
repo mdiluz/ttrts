@@ -16,6 +16,7 @@ set( SOURCES
 	board.cpp
 	unitv.cpp
 	unit.cpp
+	orders.cpp
 )
 
 add_library( game ${SOURCES} )
