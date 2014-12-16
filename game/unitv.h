@@ -5,7 +5,7 @@
 
 // V unit
 class CUnitV
-: public CUnit<'V'>
+: public CUnit
 {
 public:
 	CUnitV();

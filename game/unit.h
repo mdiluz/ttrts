@@ -12,7 +12,6 @@ typedef char unitType_c;
 typedef char unitVis_c;
 
 // Base unit type
-template < unitType_c unit_type >
 class CUnit
 {
 public:
