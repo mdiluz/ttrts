@@ -7,14 +7,15 @@ We aim to create a simple terminal based rts where a user can program an AI to c
 
 ------------------------------------------------------------------------------------
 ## Gameplay
-1. TTRTS clients are run from the command line
-2. clients will connect and confirm initial board state
+1. ttrts clients are run from the command line
+2. ttrts-server is launched from the command line 
+3. clients will connect to server and confirm initial board state
  1. clients output a text file with game data for this turn
  2. a player, or program, reads the game data file and outputs an instructions file
  3. clients read the instructions file, simulates the turn 
- 4. game state is verified between clients and output
+ 4. game state is verified between clients and server
  5. repeat until an end state is reached
-3. once game is finished, host and clients disconnect and a winner is notified
+4. once game is finished, host and clients disconnect and a winner is notified
 
 *see [the game directory](game) for full game rules*
 
@@ -24,14 +25,16 @@ We aim to create a simple terminal based rts where a user can program an AI to c
 
 ### Targets
 ##### ttrts
-Main TTRTS executable , runs from the command line and can act as host or client
+Main TTRTS executable , runs from the command line and acts as client
 
-##### ttrts-test
-Test executable, to be compiled and run to test various functionality
+##### ttrts-server
+TTRTS server executable, runs from the command line acting as server
 
 ##### player
 Custom player AI code, this should contain examples and test code to help newcomers begin their journey
 
+##### ttrts-test
+Test executable, to be compiled and run to test various functionality
 
 ### Libraries
 ##### game
