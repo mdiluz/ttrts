@@ -3,7 +3,7 @@
 
 #include "unit.h"
 #include "gametypes.h"
-#include "orders.h"
+#include "order.h"
 
 // Type for order and unit pairs
 struct OrderUnitPair

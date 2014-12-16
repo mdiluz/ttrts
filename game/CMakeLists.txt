@@ -11,7 +11,7 @@ include_directories(
 set( SOURCES 
 	game.cpp
 	unit.cpp
-	orders.cpp
+	order.cpp
 )
 
 add_library( game ${SOURCES} )

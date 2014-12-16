@@ -1,7 +1,7 @@
 #include <iostream>     // std::cout
 
 #include "board.h"
-#include "orders.h"
+#include "order.h"
 #include "game.h"
 
 const char* tests()
