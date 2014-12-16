@@ -4,6 +4,7 @@
 #include <string>
 #include <memory>
 
+#include "gametypes.h"
 #include "vector2.h"
 
 // Type for the unit type-id
@@ -28,6 +29,15 @@ protected:
 
 private:
 
+	// Unit ID
+	unit_id_t id;
+
+	// Team ID
+	team_id_t team_id;
+
+	// Owner ID
+	player_id_t owner_id;
+	
 	// All units must have position
 	uvector2 pos;
 };

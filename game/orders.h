@@ -20,10 +20,12 @@ struct COrder
 	// Order command issued
 	order_c order;
 
+	// Basic operators
 	inline bool operator==( const COrder& rhs ) const;
 	inline bool operator!=( const COrder& rhs ) const { return !(*this==rhs); }
 };
 
+// Simple == operator
 inline bool COrder::operator== ( const COrder& rhs ) const
 {
 	return ( unit == rhs.unit ) && ( order == rhs.order );
@@ -33,10 +35,8 @@ inline bool COrder::operator== ( const COrder& rhs ) const
 typedef std::vector<COrder> COrderVector;
 
 // Order strings stored as simply "[unit id] [order char]"
-
 // string <--> order conversion functions
 std::string GetStringFromOrder( COrder& order );
 COrder GetOrderFromString( std::string order );
-
 
 #endif //_ORDERS_H_
