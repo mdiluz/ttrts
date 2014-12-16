@@ -99,9 +99,8 @@ inline bool CUnit::valid() const
 // Factory function for creating units from a visual
 CUnit GetUnitFromVis( unitVis_c vis );
 
-// Units strings stored as
-// "U:[unit_id] T:[team_id] P:[player_id] V:[unit_vis] D:[dir] POS:[pos.x],[pos.y]"
 // Unit <--> string conversion functions
+#define UNIT_FORMATTER "UNIT id:%u tm:%u pl:%u vs:%c dr:%c ps:%u,%u"
 std::string GetStringFromUnit(const CUnit& unit );
 CUnit GetUnitFromString(const std::string& unit );
 

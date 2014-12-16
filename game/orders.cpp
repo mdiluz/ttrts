@@ -1,3 +1,4 @@
+#include <string.h>
 #include "orders.h"
 
 #include "mathtypes.h"
@@ -5,33 +6,30 @@
 // Convert an order to a string
 std::string GetStringFromOrder(const COrder& order )
 {
-	std::string ret;
-	ret += "O:";
-	ret += (char)order.order;
-	ret += " U:";
-	ret += std::to_string(order.unit);
+	static char buff[128];
+	memset(buff,0,sizeof(buff));
 
-	return ret;
+	snprintf(buff,128, ORDER_FORMATTER,
+			order.command,
+			order.unit);
+
+	return buff;
 }
 
 // Convert a string to an order
-COrder GetOrderFromString( const std::string& _order )
+COrder GetOrderFromString( const std::string& order )
 {
-	std::string order = _order;
 	COrder ret;
 
-	if( order.substr(0, 2) != "O:" )
-		return COrder();
-	order.erase(0, 2); // Erase the O: prefix
+	char corder;
+	unsigned int unit;
 
-	ret.order = (order_c)order[0]; // Grab single char oder
-	order.erase(0, 2); // Erase the order and a space
+	sscanf(order.c_str(), ORDER_FORMATTER,
+			&corder,
+			&unit);
 
-	if( order.substr(0, 2) != "U:" )
-		return COrder();
-	order.erase(0, 2); // Erase the U: prefix
-
-	ret.unit = (unit_id_t)atoi( order.c_str() ); // Grab the unit ID
+	ret.command = (command_c)corder;
+	ret.unit = unit;
 
 	return ret;
 }

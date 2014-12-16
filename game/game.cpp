@@ -84,10 +84,10 @@ uvector2 CTTRTSGame::GetNewPosition( const OrderUnitPair& pair ) const
 {
 
     // Grab the order
-    switch ( pair.order.order )
+    switch ( pair.order.command)
     {
     // For forward orders, grab in front
-    case order_c::F:
+    case command_c::F:
         return pair.unit.getInFront();
         break;
     // For all other orders, just grab the old position
@@ -105,9 +105,9 @@ int CTTRTSGame::SimulateToNextTurn()
     // Attempt all movement orders
     for ( OrderUnitPair& pair : m_OrderUnitPairs )
     {
-        switch (  pair.order.order )
+        switch (  pair.order.command)
         {
-        case order_c::F:
+        case command_c::F:
             {
                 // Verify new unit position will be on the board
                 uvector2 newpos = GetNewPosition(pair);
@@ -147,9 +147,9 @@ int CTTRTSGame::SimulateToNextTurn()
     // Attempt all actions
     for ( OrderUnitPair& pair : m_OrderUnitPairs )
     {
-        switch (  pair.order.order )
+        switch (  pair.order.command)
         {
-        case order_c::A:
+        case command_c::A:
             {
                 // Verify that there's a unit in front to attack
                 uvector2 infront = pair.unit.getInFront();
@@ -168,14 +168,14 @@ int CTTRTSGame::SimulateToNextTurn()
                 }
             }
             break;
-        case order_c::L:
+        case command_c::L:
             {
                 // Simply turn left
                 pair.unit.turnLeft();
                 pair.order = COrder();
             }
             break;
-        case order_c::R:
+        case command_c::R:
             {
                 // Simply turn right
                 pair.unit.turnRight();

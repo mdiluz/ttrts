@@ -58,7 +58,7 @@ const char* tests()
     // Test if we can successfully convert orders back and forth
 	{
 		COrder order;
-        order.order = order_c::F;
+        order.command = command_c::F;
 		order.unit = 10;
 		std::string order_string = GetStringFromOrder(order);
 		COrder order2 = GetOrderFromString(order_string);
@@ -120,7 +120,7 @@ const char* tests()
             return "Game failed to add valid unit";
 
         order.unit = id;
-        order.order = order_c::F;
+        order.command = command_c::F;
 
         if( game.IssueOrder(0,order) )
             return "Game failed to issue valid order";
@@ -151,7 +151,7 @@ const char* tests()
                 return "Game failed to add valid unit";
 
             order.unit = id;
-            order.order = order_c::A;
+            order.command = command_c::A;
 
             if( game.IssueOrder(0,order) )
                 return "Game failed to issue valid order";
