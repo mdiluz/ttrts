@@ -13,18 +13,29 @@ class CTTRTSGame
 {
 public:
 
-	CTTRTSGame();
+	CTTRTSGame( ucoord_t c, ucoord_t r )
+	: cols (c)
+	, rows (r)
+	{
+
+	}
+
+	// Default dtor
 	~CTTRTSGame() = default;
 
-	// Initialise the game with default configuration
-	void Initialise();
-
-	// Issue orders to the game
-	bool IssueOrders( std::string orders );
-	bool IssueOrders( COrderVector orders );
+	// Issue orders to the game, returns non-zero if orders are incorrect
+	int IssueOrders( player_id_t player, std::string orders );
+	int IssueOrders( player_id_t player, COrderVector orders );
 
 	// Simulate and progress to the next turn
-	bool NextTurn();
+	// Returns non-zero if simulation failed
+	int SimulateToNextTurn();
+
+	// Add a unit, nonzero return value indicates error
+	int AddUnit( std::shared_ptr<CUnit> unit );
+		
+	// Add a units, nonzero return value indicates error
+	int AddUnits( sharedUnitVector_t units );
 
 	// Get the number of units
 	inline unsigned int GetNumUnits() const { return m_allUnits.size(); }
@@ -46,11 +57,18 @@ private:
 	// Simulate all actions
 	bool SimulateActions();
 
+	// Verify any order
+	bool VerifyOrder( player_id_t player, COrder& order );
+
 	// Vector to store points to all units
-	sharedUnitVector_t m_allUnits;
+	sharedUnitVector_t 	m_allUnits;
 
 	// Orders to execute this turn
-	COrderVector m_orders;
+	COrderVector 		m_orders;
+
+	// Dimensions of the game
+	ucoord_t rows;
+	ucoord_t cols;
 };
 
 #endif //_GAME_H_
