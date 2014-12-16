@@ -29,7 +29,7 @@ const char* tests()
 	{
 		CUnit unit = CUnit::getUnitFromVis('v');
 		if( unit.getVisual() != 'v' )
-			return "failed to properly create V unit";
+			return "failed to properly create V unit with factory";
 	}
 
 	{
