@@ -59,6 +59,7 @@ const char* tests()
             CUnit unit = CUnit::getUnitFromVis('^');
             unit.setPos( {2,2} );
             unit.setPlayer(0);
+            unit.setTeam(Team::Red);
 
             game.AddUnit(std::move(unit));
         }
@@ -67,6 +68,7 @@ const char* tests()
             CUnit unit = CUnit::getUnitFromVis('^');
             unit.setPos( {2,2} );
             unit.setPlayer(0);
+            unit.setTeam(Team::Red);
 
             if( !game.AddUnit(std::move(unit)) )
                 return "Game should have rejected unit placed on the same spot";
@@ -86,6 +88,7 @@ const char* tests()
 
         unit.setPos( {2,2} );
         unit.setPlayer(0);
+        unit.setTeam(Team::Red);
 
         if ( game.AddUnit(std::move(unit)) )
             return "Game failed to add valid unit";
@@ -115,7 +118,8 @@ const char* tests()
             COrder order;
 
             unit.setPos( {0,0} );
-            unit.setPlayer(0);
+            unit.setPlayer(1);
+            unit.setTeam(Team::Blue);
 
             if ( game.AddUnit(std::move(unit)) )
                 return "Game failed to add valid unit";
@@ -130,7 +134,8 @@ const char* tests()
             CUnit unit = CUnit::getUnitFromVis('<');
 
             unit.setPos( {1,0} );
-            unit.setPlayer(1);
+            unit.setPlayer(2);
+            unit.setTeam(Team::Red);
 
             if ( game.AddUnit(std::move(unit)) )
                 return "Game failed to add valid unit";
@@ -146,6 +151,9 @@ const char* tests()
 
         if ( game.GetUnitByIndex(0).getID() != id )
             return "Game killed the wrong unit";
+
+        if ( game.CheckForWin() != Team::Blue )
+            return "Game failed to recognise a win for the right Team";
     }
 
     return 0;

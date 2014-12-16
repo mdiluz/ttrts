@@ -35,7 +35,7 @@ class CTTRTSGame
 public:
 
 	CTTRTSGame( ucoord_t c, ucoord_t r )
-	: dimentions( {c,r} )
+	: dimensions( c,r )
 	{
 
 	}
@@ -72,16 +72,18 @@ public:
 	// Get orders by index as above 
     inline const COrder& GetOrdersByIndex( unsigned int i ) const { return m_OrderUnitPairs[i].order; }
 
-	// Get dimentions
-    inline const uvector2& GetDimentions() const { return dimentions; }
+	// Get dimensions
+    inline const uvector2 &GetDimensions() const { return dimensions; }
+
+    // Check for a win, returns invalid for no win state reached
+    // Note: this function will return invalid a draw was reached
+    //       best practice would be to call with GetNumUnits() == 0
+    Team CheckForWin() const;
 	
 private:
 
     // Verify any order - non-zero is error
     int VerifyOrder( player_id_t player, const COrder& order ) const;
-
-    // Verify any order - non-zero is error
-    int VerifyUnit(  const CUnit& unit ) const;
 
     // Verify Position - non-zero is error
     int VerifyPos( uvector2 vec ) const;
@@ -99,7 +101,7 @@ private:
     CUnitVector                 m_deadUnits;
 
 	// Dimensions of the game
-	uvector2 dimentions;
+	uvector2 dimensions;
 };
 
 #endif //_GAME_H_

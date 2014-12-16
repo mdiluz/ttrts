@@ -24,7 +24,7 @@ COrder GetOrderFromString( const std::string& _order )
 	{
 		const std::string order_unit = order.substr(0, pos);
 
-		ret.unit = atoi( order_unit.c_str() );
+		ret.unit = (unit_id_t)atoi( order_unit.c_str() );
 
 		// Erase everything up to and including the delimiter
 		order.erase(0, pos + 1);

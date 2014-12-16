@@ -15,7 +15,7 @@ enum class order_c : char
     L = 'L',
     R = 'R',
     A = 'A',
-    INVALID
+    NUM_INVALID
 };
 
 // Container for an order
@@ -24,7 +24,7 @@ struct COrder
     // Base constructor makes invalid order
     COrder()
         : unit ( unit_id_invalid )
-        , order ( order_c::INVALID )
+        , order ( order_c::NUM_INVALID )
     {}
 
 	// Unit order is for

@@ -1,6 +1,7 @@
 #include "game.h"
 
 #include <algorithm>
+#include <string.h>
 
 // Interpret a string of orders
 int CTTRTSGame::IssueOrders( player_id_t player, const std::string& _orders )
@@ -68,8 +69,8 @@ int CTTRTSGame::IssueOrder( player_id_t player, const COrder& order )
 int CTTRTSGame::VerifyPos(uvector2 vec) const
 {
     // Simply check if within the bounds of our dimensions for now
-    if ( ( vec.x >= dimentions.x )
-        || ( vec.y >= dimentions.y ) )
+    if ( ( vec.x >= dimensions.x )
+        || ( vec.y >= dimensions.y ) )
     {
         return 1;
     }
@@ -224,20 +225,19 @@ int CTTRTSGame::SimulateToNextTurn()
 int CTTRTSGame::AddUnit( CUnit&& unit )
 {	
 	// Verify the unit
-	const int val = unit.valid();
-	if( val )
-		return val;
+	if( !unit.valid() )
+		return 1;
 
 	// Verify if the unit can be placed on the current board
 	const uvector2 pos = unit.getPos();
-    if( (pos.x >= dimentions.x) || (pos.y >= dimentions.y) )
-		return 1;
+    if( (pos.x >= dimensions.x) || (pos.y >= dimensions.y) )
+		return 2;
 
     // If any unit's position matches, reject this
     for ( const OrderUnitPair& pair: m_OrderUnitPairs )
     {
         if( pair.unit.getPos() == unit.getPos() )
-            return 2;
+            return 3;
     }
 
     // Add the unit with a blank order
@@ -314,4 +314,41 @@ CUnit& CTTRTSGame::GetUnitByID( unit_id_t id )
     // Return an invalid unit
     static CUnit invalid_unit;
     return invalid_unit;
+}
+
+// Check if we have a win state
+Team CTTRTSGame::CheckForWin() const
+{
+    // Array of units for each Team
+    unsigned int units[(int) Team::NUM_INVALID];
+    memset(units,0,sizeof(units));
+
+    // Count up all the units for each Team
+    for ( const OrderUnitPair& pair : m_OrderUnitPairs )
+    {
+        const int team = (int)pair.unit.getTeam();
+        units[team] += 1;
+    }
+
+    // Default winning Team to invalid (no win)
+    Team winningTeam = Team::NUM_INVALID;
+
+    // For each of the teams
+    for ( unsigned int i = 0; i < _countof(units); i++ )
+    {
+        // if there are still units in this Team, and the winning Team hasn't been set
+        if( units[i] > 0 && winningTeam == Team::NUM_INVALID )
+        {
+            winningTeam = (Team)i;
+        }
+        // Otherwise, if there are units in this Team and the winning Team HAS been set
+        else if ( units[i] > 0 )
+        {
+            // Set back to invalid and break out of the loop
+            winningTeam = Team::NUM_INVALID;
+            break;
+        }
+    }
+
+    return winningTeam;
 }

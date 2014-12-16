@@ -24,15 +24,14 @@ public:
 
     // Getters for all the members
 	inline const unit_id_t& 	getID() const 		{ return unit_id; }
-	inline const team_id_t& 	getTeam() const 	{ return team_id; }
+	inline const Team & 	getTeam() const 	{ return team_id; }
 	inline const player_id_t& 	getPlayer() const 	{ return player_id; }
 	inline const unitVis_c&		getVisual() const 	{ return unit_vis; }
     inline const dir_t&         getDir() const      { return dir; }
 
-	// Return non-zero values on error
-    inline int 	 setTeam(const team_id_t& v)  		{ return (v == team_id_invalid) ? 	-1 : (( team_id = v ), 0); }
-    inline int 	 setPlayer(const player_id_t& v)  	{ return (v == player_id_invalid) ? -1 : (( player_id = v ), 0); }
-    inline int	 setVisual(const unitVis_c& v)  	{ return (v == unitVis_invalid) ? 	-1 : (( unit_vis = v ), 0); }
+    inline Team setTeam(const Team & v)  		{ return (team_id = v); }
+    inline player_id_t 	 setPlayer(const player_id_t& v)  	{ return ( player_id = v ); }
+    inline unitVis_c	 setVisual(const unitVis_c& v)  	{ return ( unit_vis = v ); }
 
     // Set unit direction
     inline dir_t setDir(const dir_t& v)             { return (dir = v); }
@@ -69,7 +68,7 @@ private:
 	unitVis_c unit_vis;
 
 	// Team ID
-	team_id_t team_id;
+	Team team_id;
 
 	// Owner ID
 	player_id_t player_id;
@@ -88,7 +87,7 @@ typedef std::vector< CUnit > CUnitVector;
 inline bool CUnit::valid() const
 {
 	return (unit_id 	!= unit_id_invalid )
-		&& (team_id 	!= team_id_invalid )
+		&& (team_id 	!= Team::NUM_INVALID )
 		&& (player_id 	!= player_id_invalid)
 		&& (unit_vis 	!= unitVis_invalid);
 }

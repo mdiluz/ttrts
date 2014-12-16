@@ -7,6 +7,11 @@ struct uvector2;
 
 struct vector2
 {
+    vector2( coord_t _x, coord_t _y )
+    : x(_x)
+    , y(_y)
+    {}
+
 	coord_t x;
 	coord_t y;
 
@@ -27,6 +32,11 @@ struct vector2
 
 struct uvector2
 {
+    uvector2( ucoord_t _x, ucoord_t _y )
+    : x(_x)
+    , y(_y)
+    {}
+
 	ucoord_t x;
 	ucoord_t y;
 
@@ -54,22 +64,19 @@ inline vector2 vecFromDir( dir_t dir )
     {
     case dir_t::N:
         return { 0,1 };
-        break;
 
     case dir_t::E:
         return { 1,0 };
-        break;
 
     case dir_t::S:
         return { 0,-1 };
-        break;
 
     case dir_t::W:
         return { -1,0 };
-        break;
-    }
 
-    return { 0,0 };
+    default:
+        return { 0,0 };
+    }
 }
 
 #endif //_VECTOR2_H_

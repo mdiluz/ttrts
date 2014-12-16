@@ -17,7 +17,7 @@ We aim to create a simple terminal based rts where a user can program an AI to c
  5. repeat until an end state is reached
 4. once game is finished, host and clients disconnect and a winner is notified
 
-*see [the game directory](game) for full game rules*
+*see [game](game) for full game rules*
 
 ------------------------------------------------------------------------------------
 ## Source
@@ -48,7 +48,7 @@ Wrapper for user interface for the terminal, this only really needs three stages
 * Initialise the game with settings and connect the clients
 * Run the game simulation to it's conclusion
 * Display the game result
-* Acsii Colour wrapper for separate teams 
+* ASCII Colour wrapper for separate teams 
 
 ##### maths
 simple maths library for 2D calculations and types

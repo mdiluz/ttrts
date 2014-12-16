@@ -32,7 +32,7 @@ namespace
 // Plain constructor
 CUnit::CUnit()
 : unit_id 	( get_unique_unit_id() )
-, team_id 	( team_id_invalid )
+, team_id 	( Team::NUM_INVALID )
 , unit_vis 	( unitVis_invalid )
 , player_id ( player_id_invalid )
 , dir 		( dir_t::S )
