@@ -53,6 +53,18 @@ CUnit::CUnit(CUnit&& unit)
 	updateMyVisual();
 }
 
+
+CUnit& CUnit::operator=(CUnit&& unit)
+{
+    unit_id 	= std::move(unit.unit_id) ;
+    team_id 	= std::move(unit.team_id) ;
+    player_id   = std::move(unit.player_id) ;
+    unit_vis    = std::move(unit.unit_vis) ;
+    dir 		= std::move(unit.dir) ;
+    pos 		= std::move(unit.pos) ;
+    return *this;
+}
+
 CUnit CUnit::getUnitFromVis( unitVis_c vis )
 {
 	CUnit unit;

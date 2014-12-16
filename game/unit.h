@@ -14,7 +14,7 @@ public:
 
 	CUnit();
     CUnit(CUnit&& unit);
-    CUnit& operator=(CUnit&& unit) { *this = std::move(unit); return *this; }
+    CUnit& operator=(CUnit&& unit);
 	~CUnit() = default;
 
 	inline const unit_id_t& 	getID() const 		{ return unit_id; }
@@ -58,7 +58,7 @@ private:
 	unitVis_c 	updateMyVisual();
 
 	// Unit ID
-	const unit_id_t unit_id;
+    unit_id_t unit_id;
 
 	// Visual 
 	unitVis_c unit_vis;

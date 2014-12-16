@@ -70,7 +70,31 @@ const char* tests()
 
         if( game.GetNumUnits() )
             return "Game started with non-zero unit number";
-	}
+    }
+
+    {
+        CTTRTSGame game( 5, 5 );
+
+        {
+            CUnit unit = CUnit::getUnitFromVis('^');
+            unit.setPos( {2,2} );
+            unit.setPlayer(0);
+
+            game.AddUnit(std::move(unit));
+        }
+
+        {
+            CUnit unit = CUnit::getUnitFromVis('^');
+            unit.setPos( {2,2} );
+            unit.setPlayer(0);
+
+            if( !game.AddUnit(std::move(unit)) )
+                return "Game should have rejected unit placed on the same spot";
+
+            if( game.GetNumUnits() != 1 )
+                return "Game ended up with too many units";
+        }
+    }
 
     {
         CTTRTSGame game( 5, 5 );
@@ -100,30 +124,48 @@ const char* tests()
     }
 
     {
-        CTTRTSGame game( 5, 5 );
+        CTTRTSGame game( 2, 1 );
 
+        unit_id_t id;
         {
-            CUnit unit = CUnit::getUnitFromVis('^');
-            unit.setPos( {2,2} );
+            CUnit unit = CUnit::getUnitFromVis('>');
+            id = unit.getID();
+            COrder order;
+
+            unit.setPos( {0,0} );
             unit.setPlayer(0);
 
-            game.AddUnit(std::move(unit));
-        }
+            if ( game.AddUnit(std::move(unit)) )
+                return "Game failed to add valid unit";
 
+            order.unit = id;
+            order.order = order_c::A;
+
+            if( game.IssueOrder(0,order) )
+                return "Game failed to issue valid order";
+        }
         {
-            CUnit unit = CUnit::getUnitFromVis('^');
-            unit.setPos( {2,2} );
-            unit.setPlayer(0);
+            CUnit unit = CUnit::getUnitFromVis('<');
 
-            if( !game.AddUnit(std::move(unit)) )
-                return "Game should have rejected unit placed on the same spot";
+            unit.setPos( {1,0} );
+            unit.setPlayer(1);
 
-            if( game.GetNumUnits() != 1 )
-                return "Game ended up with too many units";
+            if ( game.AddUnit(std::move(unit)) )
+                return "Game failed to add valid unit";
         }
 
+        game.SimulateToNextTurn();
 
+        if ( game.GetNumUnits() != 1 )
+            return "Game failed to kill a unit when it logically should have";
+
+        if ( game.GetUnitByIndex(0).getDir() != dir_t::E )
+            return "Game killed the wrong unit";
+
+        if ( game.GetUnitByIndex(0).getID() != id )
+            return "Game killed the wrong unit";
     }
+
 
 	return nullptr;
 }

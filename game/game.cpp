@@ -141,7 +141,7 @@ int CTTRTSGame::SimulateToNextTurn()
                     // if the unit is infront of our unit, then add it to the kill list
                     if( pair2.unit.getPos() == infront )
                     {
-                        toKill.push_back(pair.unit.getID());
+                        toKill.push_back(pair2.unit.getID());
                         pair.order = COrder();
                         break;
                     }

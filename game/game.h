@@ -29,7 +29,7 @@ struct OrderUnitPair
     }
 
     // Move asignment operator
-    inline OrderUnitPair& operator=( OrderUnitPair&& rhs ) { *this = std::move(rhs); return *this; }
+    inline OrderUnitPair& operator=( OrderUnitPair&& rhs ) { this->unit = std::move(rhs.unit);this->order = rhs.order;rhs.order = COrder(); return *this; }
 
     CUnit unit;
     COrder order;
