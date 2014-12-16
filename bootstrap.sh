@@ -1,6 +1,7 @@
 #! /bin/bash
 
 echo "TTRTS: Running cmake"
+test ! -e build && mkdir build
 cd build/
 cmake ../source
 if [[ $? != 0 ]]; then
