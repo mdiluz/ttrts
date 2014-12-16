@@ -1,6 +1,5 @@
-build
-maps
-ttrts
+build/
+maps/
 *.user
 *.sublime*
-.idea
+*.idea
