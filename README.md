@@ -28,6 +28,7 @@ Wrapper for user interface for the terminal, this only really needs three stages
 * Initialise the game with settings and connect the clients
 * Run the game simulation to it's conclusion
 * Display the game result
+* Acsii Colour wrapper for separate teams 
 
 ### maths
 simple maths library for 2D calculations and types
