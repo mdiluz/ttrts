@@ -9,6 +9,9 @@
 
 #define UNIT_FORMATTER "UNIT:%u tm:%u vs:%c dr:%c ps:[%u,%u]"
 
+// force a reset of the unit ID value
+void forceResetUnitId();
+
 // Base unit type
 class CUnit
 {

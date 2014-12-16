@@ -4,11 +4,16 @@
 #include <map> // for std::map
 
 namespace
-{	
+{
 	// Helper function for generating unique unit ids during static init
-	unit_id_t get_unique_unit_id()
+	unit_id_t get_unique_unit_id(unit_id_t* set = nullptr)
 	{
 		static unit_id_t p = 0;
+
+        // If we have a set value, then set our int
+        if( set )
+            p = *set;
+
 		return p++;
 	}
 
@@ -28,6 +33,13 @@ namespace
 
 		return sk_visMap;
 	}
+}
+
+// force a reset of the unit ID value
+void forceResetUnitId()
+{
+    unit_id_t i = 0;
+    get_unique_unit_id(&i);
 }
 
 // Get a unit from a visual

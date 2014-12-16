@@ -193,16 +193,13 @@ const char* tests()
 // Main program entry point
 int main()
 {
-	std::cout<<"Running tests"<<std::endl;
-
 	const char* res = tests();
 
 	if( res )
 	{
-		std::cout<<"Tests failed - "<<res<<std::endl;
+		std::cout<<"ERROR: "<<res<<std::endl;
 		return -1;
 	}
 
-	std::cout<<"Tests succeeded"<<std::endl;
 	return 0;
 };
