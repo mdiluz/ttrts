@@ -136,6 +136,7 @@ const char* tests()
     // Test on a tiny board, whether a unit can correctly attack another
     {
         CTTRTSGame game( 2, 1 );
+        game.SetName("Test_578");
 
         unit_id_t id;
         {

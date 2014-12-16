@@ -92,6 +92,7 @@ public:
     // Set the game name
     // NOTE: Names with spaces not allowed
     inline std::string SetName( const std::string& in ) { return (name = in); }
+    inline std::string GetName() const                  { return name; }
 
     // Set the turn of the game
     inline int SetTurn( int in ) { return (turn = in); }

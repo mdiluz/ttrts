@@ -16,5 +16,8 @@ endif()
 # Subprojects
 add_subdirectory( ttrts )
 add_subdirectory( game )
-add_subdirectory( test )
 add_subdirectory( ui )
+
+# Auxhilary binaries
+add_subdirectory( test )
+add_subdirectory( gen )
