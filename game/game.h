@@ -62,6 +62,9 @@ private:
 	// Verify any order
 	int VerifyOrder( player_id_t player, const COrder& order );
 
+	// Verify any order
+	int VerifyUnit(  const CUnit& unit );
+
 	// Vector to store points to all units
 	sharedUnitVector_t 	m_allUnits;
 

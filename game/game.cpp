@@ -65,25 +65,36 @@ int CTTRTSGame::SimulateToNextTurn()
 
 // Add a unit, nonzero return value indicates error
 int CTTRTSGame::AddUnit( std::shared_ptr<CUnit> unit )
-{
+{	
+	// Verify the unit
+	const int val = unit->valid();
+	if( val )
+		return val;
+
+	// Verify if the unit can be placed on the current board
+	const uvector2 pos = unit->getPos();
+	if( (pos.x < cols) && (pos.y < rows) )
+		return 1;
+
+	m_allUnits.push_back(unit);
+
+
 	return 0;
 }
 	
 // Add a units, nonzero return value indicates error
 int CTTRTSGame::AddUnits( sharedUnitVector_t units )
-{
-	return 0;
-}
+{	
+	sharedUnitVector_t::iterator it;
 
-// Simulate all movements
-int CTTRTSGame::SimulateMovements()
-{
-	return 0;
-}
+	for ( it = units.begin(); it != units.end(); it++ )
+	{	
+		// Attempt the unit add
+		if ( AddUnit(*it) )
+			return 1;
+	}
 
-// Simulate all actions
-int CTTRTSGame::SimulateActions()
-{
+	// All units added successfully
 	return 0;
 }
 
@@ -106,4 +117,16 @@ int CTTRTSGame::VerifyOrder( player_id_t player, const COrder& order )
 
 	// for now, as long as the unit exists we can attempt the order
 	return unitFound;
+}
+
+// Simulate all movements
+int CTTRTSGame::SimulateMovements()
+{
+	return 0;
+}
+
+// Simulate all actions
+int CTTRTSGame::SimulateActions()
+{
+	return 0;
 }

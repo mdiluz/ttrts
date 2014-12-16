@@ -11,10 +11,13 @@ public:
 	CUnitV();
 	virtual ~CUnitV() = default;
 
-	virtual unitVis_c 	getVisual() const override;
-	virtual bool 		setFromVisual( unitVis_c& vis ) override;
+	// Set from a visual
+	virtual bool setFromVisual( unitVis_c& vis ) override;
 
 private:
+
+	// Update the visual of V
+	unitVis_c 	updateMyVisual();
 
 	// V also has a direction
 	dir_t dir;

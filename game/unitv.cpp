@@ -5,40 +5,55 @@
 CUnitV::CUnitV()
 : dir(dir_t::S)
 {
-
+	updateMyVisual();
 }
 
 
 // Map of visual representation of unitv
-static const std::map< dir_t, unitVis_c > sk_visMap =
-{
-	{dir_t::N,'^'},
-	{dir_t::E,'>'},
-	{dir_t::S,'v'},
-	{dir_t::W,'<'},
-};
-
-unitVis_c CUnitV::getVisual() const
-{
-	std::map< dir_t, char >::const_iterator it = sk_visMap.find(dir);
-
-	if( it == sk_visMap.end() )
+namespace 
+{	
+	typedef std::map< dir_t, unitVis_c > dir_to_vis_map;
+	
+	// Helper function to get the vis map during static init
+	const dir_to_vis_map& get_vis_map()
 	{
-		return 0;
-	}
+		static const dir_to_vis_map sk_visMap =
+		{
+			{dir_t::N,'^'},
+			{dir_t::E,'>'},
+			{dir_t::S,'v'},
+			{dir_t::W,'<'},
+		};
 
-	return it->second;
+		return sk_visMap;
+	}
+}
+
+// Update the visual representation of the unit
+unitVis_c CUnitV::updateMyVisual()
+{
+	// Start at invalid
+	setVisual(unitVis_invalid);
+
+	dir_to_vis_map::const_iterator it = get_vis_map().find(dir);
+
+	// If found set to new vis
+	if( it != get_vis_map().end() )
+		setVisual(it->second);
+
+	return getVisual();
 }
 
 bool CUnitV::setFromVisual( unitVis_c& vis )
 {
-	std::map< dir_t, char >::const_iterator it;
+	dir_to_vis_map::const_iterator it;
 
-	for( it = sk_visMap.begin(); it != sk_visMap.end(); it++ )
+	for( it = get_vis_map().begin(); it != get_vis_map().end(); it++ )
 	{
 		if( it->second == vis )
 		{
 			dir == it->first;
+			updateMyVisual();
 			return true;
 		}
 	}
