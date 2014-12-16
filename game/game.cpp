@@ -25,9 +25,9 @@ int CTTRTSGame::IssueOrders( player_id_t player, const std::string& _orders )
 int CTTRTSGame::IssueOrders( player_id_t player, const COrderVector& orders )
 {
 	// verify all the orders
-	for ( COrderVector::const_iterator it = orders.begin(); it != orders.end(); it++ )
+    for ( auto order : orders )
 	{
-		if ( IssueOrder(player,*it) )
+        if ( IssueOrder(player,order) )
 			return 1;
 	}
 
@@ -51,11 +51,52 @@ int CTTRTSGame::SimulateToNextTurn()
 {
 	int error;
 
-	// Simulate all movements first
-	error = SimulateMovements();
+    OrderUnitPairVector orderPairs;
 
-	// Simulate all the actions
-	error = SimulateActions();
+    // Grab all movement orders
+    for ( auto order : m_orders )
+    {
+        const OrderUnitPair pair = { order, GetUnitByID(order.unit) };
+        orderPairs.push_back(pair);
+    }
+
+    // Attempt all movement orders
+    for ( auto pair : orderPairs )
+    {
+        switch (  pair.order.order )
+        {
+        case order_c::F:
+            {
+                // Verify new unit position will be on the board
+            }
+            break;
+        }
+    }
+
+    // Vector of units to kill
+    std::vector< unit_id_t > toKill;
+
+    // Attempt all actions
+    for ( auto pair : orderPairs )
+    {
+        switch (  pair.order.order )
+        {
+        case order_c::A:
+            {
+                // Verify that there's a unit in front to attack
+            }
+            break;
+        case order_c::L:
+        case order_c::R:
+            // Nothing needed here, these orders can always be carried out
+            break;
+        }
+    }
+
+    for ( auto id : toKill )
+    {
+
+    }
 
 	// Clear all orders
 	m_orders.resize(0);
@@ -105,9 +146,9 @@ int CTTRTSGame::VerifyOrder( player_id_t player, const COrder& order ) const
 
 	// Attempt to find the unit
 	bool unitFound = false;
-	for ( CUnitVector::const_iterator it = m_allUnits.begin(); it != m_allUnits.end(); it++ )
+    for ( const CUnit& unit : m_allUnits )
 	{
-		if ( (*it).getID() == unitID )
+        if ( unit.getID() == unitID )
 		{
 			unitFound = true;
 			break;
@@ -124,79 +165,14 @@ const CUnit& CTTRTSGame::GetUnitByID( unit_id_t id ) const
 {
     CUnitVector::const_iterator it;
 
-    for ( it = m_allUnits.begin(); it != m_allUnits.end(); it++ )
+    for ( const CUnit& unit : m_allUnits )
     {
         // Attempt the unit add
-        if ( (*it).getID()  )
-            return *it;
+        if ( unit.getID()  )
+            return unit;
     }
 
     // Return an invalid unit
     static CUnit invalid_unit;
     return invalid_unit;
-}
-
-// Verify an order unit pair
-int CTTRTSGame::VerifyOrderUnitPair( const OrderUnitPair& pair ) const
-{
-    switch ( pair.order.order )
-    {
-    case order_c::F:
-    {
-        // Verify new unit position will be on the board
-    }
-        break;
-    case order_c::L:
-    case order_c::R:
-    case order_c::A:
-        // Nothing needed here, orders can always be carried out
-        break;
-    }
-
-    return 0;
-}
-
-// Simulate all movements
-int CTTRTSGame::SimulateMovements()
-{
-    OrderUnitPairVector movements;
-
-    // Grab all movement orders
-	for ( COrderVector::const_iterator it = m_orders.begin(); it != m_orders.end(); it++ )
-	{
-		if( isMovementOrder(*it) )
-        {
-            const OrderUnitPair pair = { *it, GetUnitByID((*it).unit) };
-            movements.push_back(pair);
-        }
-	}
-
-    // Remove all orders with straight up impossible movements
-    for ( OrderUnitPairVector::const_iterator it = movements.begin(); it != movements.end(); it++ )
-    {
-        if( VerifyOrderUnitPair(*it) )
-        {
-
-        }
-    }
-
-	// Calculate movements
-
-	return 0;
-}
-
-// Simulate all actions
-int CTTRTSGame::SimulateActions()
-{
-	// Grab all action orders
-	COrderVector actions;
-	for ( COrderVector::const_iterator it = m_orders.begin(); it != m_orders.end(); it++ )
-	{
-		if( isActionOrder(*it) )
-			actions.push_back(*it);
-	}
-
-	// Calculate actions
-
-	return 0;
 }

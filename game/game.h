@@ -67,14 +67,6 @@ public:
 	
 private:
 
-	// Simulate all movements
-	int SimulateMovements();
-
-	// Simulate all actions
-	int SimulateActions();
-
-    int VerifyOrderUnitPair( const OrderUnitPair& pair ) const;
-
 	// Verify any order
     int VerifyOrder( player_id_t player, const COrder& order ) const;
 
