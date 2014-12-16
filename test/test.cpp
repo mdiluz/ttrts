@@ -3,6 +3,7 @@
 #include "unitv.h"
 #include "board.h"
 #include "orders.h"
+#include "game.h"
 
 const char* tests()
 {
@@ -16,6 +17,13 @@ const char* tests()
 		CUnitV myV;
 		if( myV.getVisual() != 'v' && myV.getVisual() != '<' && myV.getVisual() != '^' && myV.getVisual() != '>' )
 			 return "failed to properly create V unit";
+	}
+
+	{
+		CUnitV myV;
+		CUnitV myV2;
+		if( myV.getID() == myV2.getID() )
+			 return "Unit IDs the same";
 	}
 
 	{
@@ -53,6 +61,18 @@ const char* tests()
 
 		if (isMovementOrder(order) )
 			return "Wrongly detected an movement order";
+	}
+
+	{
+		CTTRTSGame game( 15, 10 );
+		if( game.SimulateToNextTurn() )
+			return "Failed to simulate a blank game";
+
+		if( game.GetNumOrders() )
+			return "Game started with non-zero order number";
+
+		if( game.GetNumUnits() )
+			return "Game started with non-zero unit number";
 	}
 
 	return nullptr;
