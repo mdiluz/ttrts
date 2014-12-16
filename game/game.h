@@ -7,7 +7,7 @@
 
 #include <memory> // unique_ptr and shared_ptr
 
-typedef std::vector< std::shared_ptr<CUnit> > sharedUnitVector_t;
+typedef std::vector< CUnit > CUnitVector;
 
 class CTTRTSGame
 {
@@ -33,16 +33,16 @@ public:
 	int SimulateToNextTurn();
 
 	// Add a unit, nonzero return value indicates error
-	int AddUnit( std::shared_ptr<CUnit> unit );
+	int AddUnit( CUnit&& unit );
 		
 	// Add a units, nonzero return value indicates error
-	int AddUnits( sharedUnitVector_t units );
+	int AddUnits( CUnitVector&& units );
 
 	// Get the number of units
 	inline unsigned int GetNumUnits() const { return m_allUnits.size(); }
 
 	// Get unit by index as above (not unit ID)
-	inline const CUnit& GetUnitByIndex( unsigned int i ) const { return *m_allUnits[i]; }
+	inline const CUnit& GetUnitByIndex( unsigned int i ) const { return m_allUnits[i]; }
 	
 	// Get the number of order
 	inline unsigned int GetNumOrders() const { return m_orders.size(); }
@@ -68,7 +68,7 @@ private:
 	int VerifyUnit(  const CUnit& unit );
 
 	// Vector to store points to all units
-	sharedUnitVector_t 	m_allUnits;
+	CUnitVector 		m_allUnits;
 
 	// Orders to execute this turn
 	COrderVector 		m_orders;

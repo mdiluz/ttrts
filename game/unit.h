@@ -11,8 +11,10 @@
 class CUnit
 {
 public:
-	virtual ~CUnit() = default;
 
+	CUnit();
+	CUnit(CUnit&& unit);
+	~CUnit() = default;
 
 	inline const unit_id_t& 	getID() const 		{ return unit_id; }
 	inline const team_id_t& 	getTeam() const 	{ return team_id; }
@@ -31,18 +33,19 @@ public:
 	inline bool valid() const;
 
 	// Set a unit based solely on it's visual
-	// Maybe make non-virtual at some point to avoid vtable lookups
-	virtual bool 		setFromVisual(unitVis_c& vis) = 0;
+	bool 		setFromVisual( const unitVis_c& vis);
 
 	// Factory function for creating units from a visual
-	static std::unique_ptr<CUnit> getUnitFromVis( unitVis_c vis );
+	static CUnit&& getUnitFromVis( unitVis_c vis );
+
 
 protected:
 	
-	// Protected constructor, cannot be constructed as base type
-	CUnit();
 
 private:
+
+	// Update the visual of V
+	unitVis_c 	updateMyVisual();
 
 	// Unit ID
 	const unit_id_t unit_id;
@@ -56,8 +59,10 @@ private:
 	// Owner ID
 	player_id_t player_id;
 
+	// Direction
+	dir_t dir;
 	
-	// All units must have position
+	// Position
 	uvector2 pos;
 };
 

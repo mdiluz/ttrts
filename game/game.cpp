@@ -64,33 +64,32 @@ int CTTRTSGame::SimulateToNextTurn()
 }
 
 // Add a unit, nonzero return value indicates error
-int CTTRTSGame::AddUnit( std::shared_ptr<CUnit> unit )
+int CTTRTSGame::AddUnit( CUnit&& unit )
 {	
 	// Verify the unit
-	const int val = unit->valid();
+	const int val = unit.valid();
 	if( val )
 		return val;
 
 	// Verify if the unit can be placed on the current board
-	const uvector2 pos = unit->getPos();
+	const uvector2 pos = unit.getPos();
 	if( (pos.x < dimentions.x) && (pos.y < dimentions.y) )
 		return 1;
 
-	m_allUnits.push_back(unit);
-
+	m_allUnits.push_back(std::move(unit));
 
 	return 0;
 }
 	
 // Add a units, nonzero return value indicates error
-int CTTRTSGame::AddUnits( sharedUnitVector_t units )
+int CTTRTSGame::AddUnits( CUnitVector&& units )
 {	
-	sharedUnitVector_t::iterator it;
+	CUnitVector::iterator it;
 
 	for ( it = units.begin(); it != units.end(); it++ )
 	{	
 		// Attempt the unit add
-		if ( AddUnit(*it) )
+		if ( AddUnit( std::move(*it) )  )
 			return 1;
 	}
 
@@ -106,9 +105,9 @@ int CTTRTSGame::VerifyOrder( player_id_t player, const COrder& order )
 
 	// Attempt to find the unit
 	bool unitFound = false;
-	for ( sharedUnitVector_t::const_iterator it = m_allUnits.begin(); it != m_allUnits.end(); it++ )
+	for ( CUnitVector::const_iterator it = m_allUnits.begin(); it != m_allUnits.end(); it++ )
 	{
-		if ( (*it)->getID() == unitID )
+		if ( (*it).getID() == unitID )
 		{
 			unitFound = true;
 			break;

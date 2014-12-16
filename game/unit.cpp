@@ -1,7 +1,6 @@
 #include "unit.h"
 
-// Unit types
-#include "unitv.h"
+#include <map> // for std::map
 
 namespace
 {	
@@ -11,37 +10,83 @@ namespace
 		static unit_id_t p = 0;
 		return p++;
 	}
+
+	// Map of visual representation of unit V
+	typedef std::map< dir_t, unitVis_c > dir_to_vis_map;
+	
+	// Helper function to get the vis map during static init
+	const dir_to_vis_map& get_vis_map_V()
+	{
+		static const dir_to_vis_map sk_visMap =
+		{
+			{dir_t::N,'^'},
+			{dir_t::E,'>'},
+			{dir_t::S,'v'},
+			{dir_t::W,'<'},
+		};
+
+		return sk_visMap;
+	}
 }
 
+// Plain constructor
 CUnit::CUnit()
-: unit_id ( get_unique_unit_id() )
-, team_id ( team_id_invalid )
+: unit_id 	( get_unique_unit_id() )
+, team_id 	( team_id_invalid )
 , player_id ( player_id_invalid )
-, unit_vis ( unitVis_invalid )
+, unit_vis 	( unitVis_invalid )
+, dir 		( dir_t::S )
 {
-
+	updateMyVisual();
 };
 
-std::unique_ptr<CUnit> CUnit::getUnitFromVis( unitVis_c vis )
+// Move constructor
+CUnit::CUnit(CUnit&& unit)
+: unit_id 	( std::move(unit.unit_id) )
+, team_id 	( std::move(unit.team_id) )
+, player_id ( std::move(unit.player_id) )
+, unit_vis 	( std::move(unit.unit_vis) )
+, dir 		( std::move(unit.dir) )
 {
-	switch( vis )
+	updateMyVisual();
+}
+
+CUnit&& CUnit::getUnitFromVis( unitVis_c vis )
+{
+	CUnit unit;
+	unit.setFromVisual(vis);
+	return std::move(unit);
+}
+
+// Update the visual representation of the unit
+unitVis_c CUnit::updateMyVisual()
+{
+	// Start at invalid
+	setVisual(unitVis_invalid);
+
+	dir_to_vis_map::const_iterator it = get_vis_map_V().find(dir);
+
+	// If found set to new vis
+	if( it != get_vis_map_V().end() )
+		setVisual(it->second);
+
+	return getVisual();
+}
+
+bool CUnit::setFromVisual( const unitVis_c& vis )
+{
+	dir_to_vis_map::const_iterator it;
+
+	for( it = get_vis_map_V().begin(); it != get_vis_map_V().end(); it++ )
 	{
-		// Match with any image for a V
-		case '^':
-		case '>':
-		case 'v':
-		case '<':
+		if( it->second == vis )
 		{
-			// Create a V
-			std::unique_ptr<CUnit> p = std::unique_ptr<CUnit>(new CUnitV);
-			if( (bool)p && p->setFromVisual(vis) )
-			{
-				return std::move(p);
-			}
-			break;
+			dir == it->first;
+			updateMyVisual();
+			return true;
 		}
 	}
 
-	// No unit found, return nullptr
-	return std::move(std::unique_ptr<CUnit>(nullptr));
+	// No matching direction to visual
+	return false;
 }

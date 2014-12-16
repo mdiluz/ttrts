@@ -1,6 +1,5 @@
 #include <iostream>     // std::cout
 
-#include "unitv.h"
 #include "board.h"
 #include "orders.h"
 #include "game.h"
@@ -14,21 +13,22 @@ const char* tests()
 	}
 
 	{
-		CUnitV myV;
-		if( myV.getVisual() != 'v' && myV.getVisual() != '<' && myV.getVisual() != '^' && myV.getVisual() != '>' )
+		CUnit unit;
+		unit.setFromVisual('v');
+		if( unit.getVisual() != 118 )
 			 return "failed to properly create V unit";
 	}
 
 	{
-		CUnitV myV;
-		CUnitV myV2;
-		if( myV.getID() == myV2.getID() )
+		CUnit unit;
+		CUnit unit2;
+		if( unit.getID() == unit2.getID() )
 			 return "Unit IDs the same";
 	}
 
 	{
-		std::unique_ptr<CUnit> myV = CUnit::getUnitFromVis('v');
-		if( myV->getVisual() != 'v' )
+		CUnit unit = CUnit::getUnitFromVis('v');
+		if( unit.getVisual() != 'v' )
 			return "failed to properly create V unit";
 	}
 
