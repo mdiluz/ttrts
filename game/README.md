@@ -22,21 +22,21 @@ Commands take the form of a single char literal.
 All units have 1 health.
 
 
-## X
-X is your basic slow melee unit. It has very basic data and controls, basically acting like a turtle.
+## V
+V is your basic slow melee unit. It has very basic data and controls, basically acting like a turtle.
+Can be represented based on direction by `<` `^` `>` `v`
 
 ##### properties
 | property | type    | description                       |
 |:---------|:--------|:----------------------------------|
 | pos      | char[2] | x,y position on the board         |
-| dir      | char[2] | compass direction unit is facing  |
+| dir      | char    | compass direction unit is facing  |
 
 ##### commands
 | command  | description                                 |
 |:---------|:--------------------------------------------|
 | L/R      | turn left/right                             |
 | F        | move forward                                |
-| B        | move backward                               |
 | A        | deal 1 damage to unit directly in front     |
 
 --------------------------------------------------------
