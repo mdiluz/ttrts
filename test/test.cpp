@@ -1,8 +1,9 @@
-#include "board.h"
-
 #include <iostream>     // std::cout
 
 #include "unitv.h"
+#include "board.h"
+#include "orders.h"
+
 
 // Namespace for testing functions
 namespace tests
@@ -44,12 +45,28 @@ int main()
 	tests::test_CBoard();
 
 	{
+		std::cout<<"Basic V unit construction"<<std::endl;
 		CUnitV myV;
 		std::cout<<myV.getVisual()<<std::endl;
 	}
 
 	{
+		std::cout<<"CUnit factory V unit construction"<<std::endl;
 		std::unique_ptr<CUnit> myV = CUnit::getUnitFromVis('v');
-		std::cout<<myV->getVisual()<<std::endl;
+		if( myV->getVisual() != 'v' )
+			std::cout<<"ERROR, failed to properly create V unit"<<std::endl;
+	}
+
+	{
+		std::cout<<"COrder construction and conversion"<<std::endl;
+		COrder order;
+		order.order = 'F';
+		order.unit = 10;
+		std::string order_string = GetStringFromOrder(order);
+		std::cout<<order_string<<std::endl;
+		COrder order2 = GetOrderFromString(order_string);
+
+		if ( order2 != order )
+			std::cout<<"ERROR, failed order string conversion test"<<std::endl;
 	}
 };
