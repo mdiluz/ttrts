@@ -43,8 +43,13 @@ int main()
 {
 	tests::test_CBoard();
 
-	std::cout<<"Testing units"<<std::endl;
-	CUnitV myV;
+	{
+		CUnitV myV;
+		std::cout<<myV.getVisual()<<std::endl;
+	}
 
-	std::cout<<myV.getVisual()<<std::endl;
+	{
+		std::unique_ptr<CUnit> myV = CUnit::getUnitFromVis('v');
+		std::cout<<myV->getVisual()<<std::endl;
+	}
 };

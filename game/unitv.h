@@ -11,7 +11,8 @@ public:
 	CUnitV();
 	virtual ~CUnitV() = default;
 
-	virtual unitVis_c getVisual() const;
+	virtual unitVis_c 	getVisual() const override;
+	virtual bool 		setFromVisual( unitVis_c& vis ) override;
 
 private:
 

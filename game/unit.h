@@ -2,6 +2,7 @@
 #define _UNIT_H_
 
 #include <string>
+#include <memory>
 
 #include "vector2.h"
 
@@ -15,11 +16,15 @@ typedef char unitVis_c;
 class CUnit
 {
 public:
-
-	CUnit() = default;
 	virtual ~CUnit() = default;
 
-	virtual unitVis_c getVisual() const = 0;
+	virtual unitVis_c 	getVisual() const = 0;
+	virtual bool 		setFromVisual(unitVis_c& vis) = 0;
+
+	static std::unique_ptr<CUnit> getUnitFromVis( unitVis_c vis );
+
+protected:
+	CUnit() = default;
 
 private:
 
