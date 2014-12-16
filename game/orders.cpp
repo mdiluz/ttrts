@@ -8,7 +8,7 @@ std::string GetStringFromOrder(const COrder& order )
 	std::string ret;
 	ret += std::to_string(order.unit);
 	ret += ORDER_DELIMITER;
-	ret += order.order;
+    ret += (char)order.order;
 
 	return ret;
 }
@@ -30,7 +30,7 @@ COrder GetOrderFromString( const std::string& _order )
 		order.erase(0, pos + 1);
 
 		// Next single char is the order
-		ret.order = order[0];
+        ret.order = (order_c)order[0];
 	}
 
 	return ret;

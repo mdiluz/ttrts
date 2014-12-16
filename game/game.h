@@ -9,6 +9,15 @@
 
 typedef std::vector< CUnit > CUnitVector;
 
+// Type for order and unit pairs
+struct OrderUnitPair
+{
+    const COrder& order;
+    const CUnit& unit;
+};
+
+typedef std::vector< OrderUnitPair > OrderUnitPairVector;
+
 class CTTRTSGame
 {
 public:
@@ -44,6 +53,9 @@ public:
 	// Get unit by index as above (not unit ID)
 	inline const CUnit& GetUnitByIndex( unsigned int i ) const { return m_allUnits[i]; }
 	
+    // Get unit by unit ID
+    const CUnit& GetUnitByID( unit_id_t id ) const;
+
 	// Get the number of order
 	inline unsigned int GetNumOrders() const { return m_orders.size(); }
 
@@ -51,7 +63,7 @@ public:
 	inline const COrder& GetOrdersByIndex( unsigned int i ) const { return m_orders[i]; }
 
 	// Get dimentions
-	inline const uvector2& GetDimentions() const { return dimentions; };
+    inline const uvector2& GetDimentions() const { return dimentions; }
 	
 private:
 
@@ -61,11 +73,13 @@ private:
 	// Simulate all actions
 	int SimulateActions();
 
-	// Verify any order
-	int VerifyOrder( player_id_t player, const COrder& order );
+    int VerifyOrderUnitPair( const OrderUnitPair& pair ) const;
 
 	// Verify any order
-	int VerifyUnit(  const CUnit& unit );
+    int VerifyOrder( player_id_t player, const COrder& order ) const;
+
+	// Verify any order
+    int VerifyUnit(  const CUnit& unit ) const;
 
 	// Vector to store points to all units
 	CUnitVector 		m_allUnits;

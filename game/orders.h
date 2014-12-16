@@ -9,20 +9,26 @@
 #define ORDER_DELIMITER ' '
 
 // Type for all orders ( as a char )
-typedef char order_c;
+enum class order_c : char
+{
+    F = 'F',
+    L = 'L',
+    R = 'R',
+    A = 'A'
+};
 
 // Movement orders
 static const order_c sk_movementOrders[] = 
 {
-	'F',	// Forward
+    order_c::F,	// Forward
 };
 
 // Action orders
 static const order_c sk_actionOrders[] = 
 {
-	'L',	// Left
-	'R',	// Right
-	'A',	// Attack
+    order_c::L,	// Left
+    order_c::R,	// Right
+    order_c::A,	// Attack
 };
 
 // Container for an order

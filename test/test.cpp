@@ -34,7 +34,7 @@ const char* tests()
 
 	{
 		COrder order;
-		order.order = 'F';
+        order.order = order_c::F;
 		order.unit = 10;
 		std::string order_string = GetStringFromOrder(order);
 		COrder order2 = GetOrderFromString(order_string);
@@ -45,7 +45,7 @@ const char* tests()
 
 	{
 		COrder order;
-		order.order = 'F';
+        order.order = order_c::F;
 		if (!isMovementOrder(order) )
 			return "Failed to detect a movement order";
 
@@ -55,7 +55,7 @@ const char* tests()
 
 	{
 		COrder order;
-		order.order = 'L';
+        order.order = order_c::A;
 		if (! isActionOrder(order) )
 			return "Failed to detect a action order";
 

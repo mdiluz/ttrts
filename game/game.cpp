@@ -98,7 +98,7 @@ int CTTRTSGame::AddUnits( CUnitVector&& units )
 }
 
 // Verify any order
-int CTTRTSGame::VerifyOrder( player_id_t player, const COrder& order )
+int CTTRTSGame::VerifyOrder( player_id_t player, const COrder& order ) const
 {
 	// Grab the unit ID
 	const unit_id_t unitID = order.unit;
@@ -118,16 +118,67 @@ int CTTRTSGame::VerifyOrder( player_id_t player, const COrder& order )
 	return unitFound;
 }
 
+
+// Get unit by unit ID
+const CUnit& CTTRTSGame::GetUnitByID( unit_id_t id ) const
+{
+    CUnitVector::const_iterator it;
+
+    for ( it = m_allUnits.begin(); it != m_allUnits.end(); it++ )
+    {
+        // Attempt the unit add
+        if ( (*it).getID()  )
+            return *it;
+    }
+
+    // Return an invalid unit
+    static CUnit invalid_unit;
+    return invalid_unit;
+}
+
+// Verify an order unit pair
+int CTTRTSGame::VerifyOrderUnitPair( const OrderUnitPair& pair ) const
+{
+    switch ( pair.order.order )
+    {
+    case order_c::F:
+    {
+        // Verify new unit position will be on the board
+    }
+        break;
+    case order_c::L:
+    case order_c::R:
+    case order_c::A:
+        // Nothing needed here, orders can always be carried out
+        break;
+    }
+
+    return 0;
+}
+
 // Simulate all movements
 int CTTRTSGame::SimulateMovements()
 {
-	// Grab all movement orders
-	COrderVector movements;
+    OrderUnitPairVector movements;
+
+    // Grab all movement orders
 	for ( COrderVector::const_iterator it = m_orders.begin(); it != m_orders.end(); it++ )
 	{
 		if( isMovementOrder(*it) )
-			movements.push_back(*it);
+        {
+            const OrderUnitPair pair = { *it, GetUnitByID((*it).unit) };
+            movements.push_back(pair);
+        }
 	}
+
+    // Remove all orders with straight up impossible movements
+    for ( OrderUnitPairVector::const_iterator it = movements.begin(); it != movements.end(); it++ )
+    {
+        if( VerifyOrderUnitPair(*it) )
+        {
+
+        }
+    }
 
 	// Calculate movements
 
