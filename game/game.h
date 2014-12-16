@@ -5,10 +5,6 @@
 #include "gametypes.h"
 #include "orders.h"
 
-#include <memory> // unique_ptr and shared_ptr
-
-typedef std::vector< CUnit > CUnitVector;
-
 // Type for order and unit pairs
 struct OrderUnitPair
 {
@@ -16,25 +12,22 @@ struct OrderUnitPair
     OrderUnitPair( OrderUnitPair&& other )
         : unit ( std::move(other.unit) )
         , order ( other.order )
-    {
-
-    }
+    {}
 
     // Multi parameter constructor
     OrderUnitPair( CUnit&& u, COrder o )
         : unit ( std::move(u) )
         , order ( o )
-    {
-
-    }
+    {}
 
     // Move asignment operator
     inline OrderUnitPair& operator=( OrderUnitPair&& rhs ) { this->unit = std::move(rhs.unit);this->order = rhs.order;rhs.order = COrder(); return *this; }
 
-    CUnit unit;
-    COrder order;
+    CUnit unit;     // The unit
+    COrder order;   // Order for this unit from this turn
 };
 
+// Typedef for a vector of these unit pairs
 typedef std::vector< OrderUnitPair > OrderUnitPairVector;
 
 class CTTRTSGame
@@ -54,6 +47,7 @@ public:
 	int IssueOrders( player_id_t player, const std::string& orders );
 	int IssueOrders( player_id_t player, const COrderVector& orders );
 
+    // Issue a single order, returns non-zero for rejection
 	int IssueOrder( player_id_t player, const COrder& order );
 
 	// Simulate and progress to the next turn

@@ -39,7 +39,7 @@ CUnit::CUnit()
 , pos 		( { ucoord_invalid, ucoord_invalid } )
 {
 	updateMyVisual();
-};
+}
 
 // Move constructor
 CUnit::CUnit(CUnit&& unit)
@@ -54,6 +54,7 @@ CUnit::CUnit(CUnit&& unit)
 }
 
 
+// Move asignment operator
 CUnit& CUnit::operator=(CUnit&& unit)
 {
     unit_id 	= std::move(unit.unit_id) ;
@@ -65,6 +66,7 @@ CUnit& CUnit::operator=(CUnit&& unit)
     return *this;
 }
 
+// Get a unit from a visual
 CUnit CUnit::getUnitFromVis( unitVis_c vis )
 {
 	CUnit unit;
@@ -87,6 +89,7 @@ unitVis_c CUnit::updateMyVisual()
 	return getVisual();
 }
 
+// Set the unit from visual
 bool CUnit::setFromVisual( const unitVis_c& vis )
 {
 	dir_to_vis_map::const_iterator it;

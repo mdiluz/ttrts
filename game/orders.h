@@ -18,29 +18,14 @@ enum class order_c : char
     INVALID
 };
 
-// Movement orders
-static const order_c sk_movementOrders[] = 
-{
-    order_c::F,	// Forward
-};
-
-// Action orders
-static const order_c sk_actionOrders[] = 
-{
-    order_c::L,	// Left
-    order_c::R,	// Right
-    order_c::A,	// Attack
-};
-
 // Container for an order
 struct COrder
 {
+    // Base constructor makes invalid order
     COrder()
         : unit ( unit_id_invalid )
         , order ( order_c::INVALID )
-    {
-
-    }
+    {}
 
 	// Unit order is for
 	unit_id_t unit;
@@ -66,8 +51,5 @@ typedef std::vector<COrder> COrderVector;
 // string <--> order conversion functions
 std::string GetStringFromOrder(const COrder& order );
 COrder GetOrderFromString( const std::string& order );
-
-bool isMovementOrder( const COrder& order );
-bool isActionOrder( const COrder& order );
 
 #endif //_ORDERS_H_

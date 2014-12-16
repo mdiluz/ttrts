@@ -35,25 +35,3 @@ COrder GetOrderFromString( const std::string& _order )
 
 	return ret;
 }
-
-bool isMovementOrder( const COrder& order )
-{
-	const order_c c = order.order;
-	for ( unsigned int i = 0; i < _countof(sk_movementOrders); i++ )
-	{
-		if ( c == sk_movementOrders[i] )
-			return true;
-	}
-	return false;
-}
-
-bool isActionOrder( const COrder& order )
-{
-	const order_c c = order.order;
-	for ( unsigned int i = 0; i < _countof(sk_actionOrders); i++ )
-	{
-		if ( c == sk_actionOrders[i] )
-			return true;
-	}
-	return false;
-}

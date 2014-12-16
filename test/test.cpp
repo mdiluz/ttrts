@@ -41,28 +41,6 @@ const char* tests()
 			return "failed order string conversion test";
 	}
 
-    // Test if movement order is correctly recognised
-	{
-		COrder order;
-        order.order = order_c::F;
-		if (!isMovementOrder(order) )
-			return "Failed to detect a movement order";
-
-		if (isActionOrder(order) )
-			return "Wrongly detected an action order";
-	}
-
-    // Test if Attack order is correctly recognised
-	{
-		COrder order;
-        order.order = order_c::A;
-		if (! isActionOrder(order) )
-			return "Failed to detect a action order";
-
-		if (isMovementOrder(order) )
-			return "Wrongly detected an movement order";
-	}
-
     // Test of the game can logically handle a blank game
 	{
 		CTTRTSGame game( 15, 10 );
