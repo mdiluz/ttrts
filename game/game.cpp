@@ -73,6 +73,9 @@ uvector2 CTTRTSGame::GetNewPosition( const OrderUnitPair& pair ) const
     {
     case order_c::F:
         return pair.unit.getInFront();
+        break;
+    default:
+        break;
     }
 
     return { ucoord_invalid,ucoord_invalid };
@@ -118,6 +121,8 @@ int CTTRTSGame::SimulateToNextTurn()
                 }
             }
             break;
+        default:
+            break;
         }
     }
 
@@ -159,6 +164,8 @@ int CTTRTSGame::SimulateToNextTurn()
                 pair.unit.turnRight();
                 pair.order = COrder();
             }
+            break;
+        default:
             break;
         }
     }

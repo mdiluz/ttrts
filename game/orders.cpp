@@ -19,7 +19,7 @@ COrder GetOrderFromString( const std::string& _order )
 	std::string order = _order;
 	COrder ret;
 
-	int pos = order.find(ORDER_DELIMITER);
+    size_t pos = order.find(ORDER_DELIMITER);
 	if( pos != std::string::npos )
 	{
 		const std::string order_unit = order.substr(0, pos);
