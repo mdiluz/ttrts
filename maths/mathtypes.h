@@ -3,6 +3,11 @@
 
 #include <limits>       // std::numeric_limits
 
+#include "stdlib.h" // for size_t
+
+template<class T, size_t N>
+constexpr size_t _countof(T (&)[N]) { return N; }
+
 // Coordinate types
 typedef short 			coord_t;
 typedef unsigned short 	ucoord_t;

@@ -122,11 +122,31 @@ int CTTRTSGame::VerifyOrder( player_id_t player, const COrder& order )
 // Simulate all movements
 int CTTRTSGame::SimulateMovements()
 {
+	// Grab all movement orders
+	COrderVector movements;
+	for ( COrderVector::const_iterator it = m_orders.begin(); it != m_orders.end(); it++ )
+	{
+		if( isMovementOrder(*it) )
+			movements.push_back(*it);
+	}
+
+	// Calculate movements
+
 	return 0;
 }
 
 // Simulate all actions
 int CTTRTSGame::SimulateActions()
 {
+	// Grab all action orders
+	COrderVector actions;
+	for ( COrderVector::const_iterator it = m_orders.begin(); it != m_orders.end(); it++ )
+	{
+		if( isActionOrder(*it) )
+			actions.push_back(*it);
+	}
+
+	// Calculate actions
+
 	return 0;
 }

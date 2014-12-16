@@ -1,7 +1,9 @@
 #include "orders.h"
 
+#include "mathtypes.h"
+
 // Convert an order to a string
-std::string GetStringFromOrder( COrder& order )
+std::string GetStringFromOrder(const COrder& order )
 {
 	std::string ret;
 	ret += std::to_string(order.unit);
@@ -12,8 +14,9 @@ std::string GetStringFromOrder( COrder& order )
 }
 
 // Convert a string to an order
-COrder GetOrderFromString( std::string order )
+COrder GetOrderFromString( const std::string& _order )
 {
+	std::string order = _order;
 	COrder ret;
 
 	int pos = order.find(ORDER_DELIMITER);
@@ -31,4 +34,26 @@ COrder GetOrderFromString( std::string order )
 	}
 
 	return ret;
+}
+
+bool isMovementOrder( const COrder& order )
+{
+	const order_c c = order.order;
+	for ( unsigned int i = 0; i < _countof(sk_movementOrders); i++ )
+	{
+		if ( c == sk_movementOrders[i] )
+			return true;
+	}
+	return false;
+}
+
+bool isActionOrder( const COrder& order )
+{
+	const order_c c = order.order;
+	for ( unsigned int i = 0; i < _countof(sk_actionOrders); i++ )
+	{
+		if ( c == sk_actionOrders[i] )
+			return true;
+	}
+	return false;
 }
