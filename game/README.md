@@ -1,4 +1,4 @@
-ttrts Game Design
+Game Design
 =================
 
 The game takes place in a series of simultaneous turns on an arbitrarily sized 2D board.
@@ -11,43 +11,22 @@ The engine then takes all commands, evaluates all movement first simultaneously,
 
 All attempted movement to the same square by two or more units will fail.
 
+Friendly fire is enabled by default
+
 --------------------------------------------------------
+
 Units
 -----
 
 Currently only one unit, this will be expanded in the future.
 
-Units have a set of properties, and commands than can be issued. 
-Commands take the form of a single char literal.
-All units have 1 health.
+Units have a set of properties, and commands than can be issued.
 
-
-## V
-V is your basic slow melee unit. It has very basic data and controls, basically acting like a turtle.
-Can be represented based on direction by `<` `^` `>` `v`
+All units take one hit to kill.
 
 ##### properties
-| property | type    | description                       |
-|:---------|:--------|:----------------------------------|
-| pos      | char[2] | x,y position on the board         |
-| dir      | char    | compass direction unit is facing  |
+See [the unit header](unit.h) for full details on unit properties
 
-##### commands
-| command  | description                                 |
-|:---------|:--------------------------------------------|
-| L/R      | turn left/right                             |
-| F        | move forward                                |
-| A        | deal 1 damage to unit directly in front     |
-
---------------------------------------------------------
-The Board
---------
-
-As an example, let's start with a basic starting `[10,5]` board
-````
-0000000000
-0000000000
-0000000000
-0000000000
-0000000000
-````
+##### orders
+Commands take the form of a single char literal.
+See [the order header](order.h) for details on the orders
