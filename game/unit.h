@@ -100,7 +100,7 @@ inline bool CUnit::valid() const
 CUnit GetUnitFromVis( unitVis_c vis );
 
 // Unit <--> string conversion functions
-#define UNIT_FORMATTER "UNIT id:%u tm:%u pl:%u vs:%c dr:%c ps:%u,%u"
+#define UNIT_FORMATTER "UNIT:%u tm:%u pl:%u vs:%c dr:%c ps:[%u,%u]"
 std::string GetStringFromUnit(const CUnit& unit );
 CUnit GetUnitFromString(const std::string& unit );
 

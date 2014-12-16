@@ -218,6 +218,9 @@ int CTTRTSGame::SimulateToNextTurn()
         pair.order = COrder();
     }
 
+    // Increment the current turn
+    turn++;
+
 	return error;
 }
 
@@ -351,4 +354,27 @@ Team CTTRTSGame::CheckForWin() const
     }
 
     return winningTeam;
+}
+
+// Get the game information as a string
+std::string CTTRTSGame::GetStateAsString() const
+{
+    // Print out the header
+    char header[64];
+    snprintf(header, 512, GAME_HEADER_FORMATTER , turn, dimensions.x, dimensions.y );
+
+    // Gather unit information
+    std::string units;
+    for ( const OrderUnitPair& pair : m_OrderUnitPairs )
+    {
+        units += GetStringFromUnit(pair.unit);
+        units += '\n';
+    }
+
+    // Append the header and units
+    std::string state(header);
+    state += '\n';
+    state += units;
+
+    return state;
 }

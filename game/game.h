@@ -36,6 +36,7 @@ public:
 
 	CTTRTSGame( ucoord_t c, ucoord_t r )
 	: dimensions( c,r )
+    , turn (0)
 	{
 
 	}
@@ -79,6 +80,9 @@ public:
     // Note: this function will return invalid a draw was reached
     //       best practice would be to call with GetNumUnits() == 0
     Team CheckForWin() const;
+
+    // Get the game information as a string
+    std::string GetStateAsString() const;
 	
 private:
 
@@ -102,6 +106,11 @@ private:
 
 	// Dimensions of the game
 	uvector2 dimensions;
+
+    // Int to store the current turn
+    unsigned int turn;
 };
+
+#define GAME_HEADER_FORMATTER "===== GAME TURN =====\nSIZE:[%u,%u]\nTURN:%u"
 
 #endif //_GAME_H_

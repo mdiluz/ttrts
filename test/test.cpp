@@ -180,6 +180,8 @@ const char* tests()
 
         if ( game.CheckForWin() != Team::Blue )
             return "Game failed to recognise a win for the right Team";
+
+        std::cout<<game.GetStateAsString()<<std::endl;
     }
 
     return 0;

@@ -45,7 +45,7 @@ inline bool COrder::operator== ( const COrder& rhs ) const
 // Typedef a vector of orders
 typedef std::vector<COrder> COrderVector;
 
-#define ORDER_FORMATTER "ORDER co:%c un:%u"
+#define ORDER_FORMATTER "ORDER:%c id:%u"
 
 // string <--> order conversion functions
 std::string GetStringFromOrder(const COrder& order );
