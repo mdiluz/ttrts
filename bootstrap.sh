@@ -20,7 +20,8 @@ if [[ $? != 0 ]]; then
 fi
 
 echo "TTRTS: Generating maps"
-cd ../games
+test ! -e ../maps && mkdir ../maps
+cd ../maps
 ./../build/gen/ttrts-gen
 if [[ $? != 0 ]]; then
     echo "TTRTS: Generating maps, exiting Bootstrap"
