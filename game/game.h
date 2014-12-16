@@ -12,8 +12,27 @@ typedef std::vector< CUnit > CUnitVector;
 // Type for order and unit pairs
 struct OrderUnitPair
 {
-    const COrder& order;
-    const CUnit& unit;
+    // Straight up move constructor
+    OrderUnitPair( OrderUnitPair&& other )
+        : unit ( std::move(other.unit) )
+        , order ( other.order )
+    {
+
+    }
+
+    // Multi parameter constructor
+    OrderUnitPair( CUnit&& u, COrder o )
+        : unit ( std::move(u) )
+        , order ( o )
+    {
+
+    }
+
+    // Move asignment operator
+    inline OrderUnitPair& operator=( OrderUnitPair&& rhs ) { *this = std::move(rhs); return *this; }
+
+    CUnit unit;
+    COrder order;
 };
 
 typedef std::vector< OrderUnitPair > OrderUnitPairVector;
@@ -48,36 +67,42 @@ public:
 	int AddUnits( CUnitVector&& units );
 
 	// Get the number of units
-	inline unsigned int GetNumUnits() const { return m_allUnits.size(); }
+    inline unsigned int GetNumUnits() const { return m_OrderUnitPairs.size(); }
 
 	// Get unit by index as above (not unit ID)
-	inline const CUnit& GetUnitByIndex( unsigned int i ) const { return m_allUnits[i]; }
+    inline const CUnit& GetUnitByIndex( unsigned int i ) const { return m_OrderUnitPairs[i].unit; }
 	
     // Get unit by unit ID
-    const CUnit& GetUnitByID( unit_id_t id ) const;
-
-	// Get the number of order
-	inline unsigned int GetNumOrders() const { return m_orders.size(); }
+    const CUnit& GetUnitByIDConst( unit_id_t id ) const;
 
 	// Get orders by index as above 
-	inline const COrder& GetOrdersByIndex( unsigned int i ) const { return m_orders[i]; }
+    inline const COrder& GetOrdersByIndex( unsigned int i ) const { return m_OrderUnitPairs[i].order; }
 
 	// Get dimentions
     inline const uvector2& GetDimentions() const { return dimentions; }
 	
 private:
 
-	// Verify any order
+    // Verify any order - non-zero is error
     int VerifyOrder( player_id_t player, const COrder& order ) const;
 
-	// Verify any order
+    // Verify any order - non-zero is error
     int VerifyUnit(  const CUnit& unit ) const;
 
-	// Vector to store points to all units
-	CUnitVector 		m_allUnits;
+    // Verify Position - non-zero is error
+    int VerifyPos( uvector2 vec ) const;
 
-	// Orders to execute this turn
-	COrderVector 		m_orders;
+    // Get a units new position after an order
+    uvector2 GetNewPosition( const OrderUnitPair& pair ) const;
+
+    // Get unit by unit ID
+    CUnit& GetUnitByID( unit_id_t id );
+
+	// Vector to store points to all units
+    OrderUnitPairVector 		m_OrderUnitPairs;
+
+    // List of dead units
+    CUnitVector                 m_deadUnits;
 
 	// Dimensions of the game
 	uvector2 dimentions;

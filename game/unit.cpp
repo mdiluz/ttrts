@@ -36,6 +36,7 @@ CUnit::CUnit()
 , player_id ( player_id_invalid )
 , unit_vis 	( unitVis_invalid )
 , dir 		( dir_t::S )
+, pos 		( { ucoord_invalid, ucoord_invalid } )
 {
 	updateMyVisual();
 };
@@ -47,6 +48,7 @@ CUnit::CUnit(CUnit&& unit)
 , player_id ( std::move(unit.player_id) )
 , unit_vis 	( std::move(unit.unit_vis) )
 , dir 		( std::move(unit.dir) )
+, pos 		( std::move(unit.pos) )
 {
 	updateMyVisual();
 }
@@ -81,7 +83,7 @@ bool CUnit::setFromVisual( const unitVis_c& vis )
 	{
 		if( it->second == vis )
 		{
-			dir == it->first;
+            dir = it->first;
 			updateMyVisual();
 			return true;
 		}
@@ -89,4 +91,92 @@ bool CUnit::setFromVisual( const unitVis_c& vis )
 
 	// No matching direction to visual
 	return false;
+}
+
+// Turn unit left
+dir_t CUnit::turnLeft()
+{
+    switch( dir )
+    {
+    case dir_t::N:
+        dir = dir_t::W;
+        break;
+
+    case dir_t::E:
+        dir = dir_t::N;
+        break;
+
+    case dir_t::S:
+        dir = dir_t::E;
+        break;
+
+    case dir_t::W:
+        dir = dir_t::S;
+        break;
+    }
+
+    updateMyVisual();
+
+    return getDir();
+}
+
+// Turn unit right
+dir_t CUnit::turnRight()
+{
+    switch( dir )
+    {
+    case dir_t::N:
+        dir = dir_t::E;
+        break;
+
+    case dir_t::E:
+        dir = dir_t::S;
+        break;
+
+    case dir_t::S:
+        dir = dir_t::W;
+        break;
+
+    case dir_t::W:
+        dir = dir_t::N;
+        break;
+    }
+
+    updateMyVisual();
+
+    return getDir();
+}
+
+// Turn unit around
+dir_t CUnit::turnAround()
+{
+    switch( dir )
+    {
+    case dir_t::N:
+        dir = dir_t::S;
+        break;
+
+    case dir_t::E:
+        dir = dir_t::W;
+        break;
+
+    case dir_t::S:
+        dir = dir_t::N;
+        break;
+
+    case dir_t::W:
+        dir = dir_t::E;
+        break;
+    }
+
+    updateMyVisual();
+
+    return getDir();
+}
+
+// Get the co-ordinate infront of the unit
+uvector2 CUnit::getInFront() const
+{
+    vector2 delta = vecFromDir(dir);
+    return pos + delta;
 }

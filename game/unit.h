@@ -13,21 +13,27 @@ class CUnit
 public:
 
 	CUnit();
-	CUnit(CUnit&& unit);
+    CUnit(CUnit&& unit);
+    CUnit& operator=(CUnit&& unit) { *this = std::move(unit); return *this; }
 	~CUnit() = default;
 
 	inline const unit_id_t& 	getID() const 		{ return unit_id; }
 	inline const team_id_t& 	getTeam() const 	{ return team_id; }
 	inline const player_id_t& 	getPlayer() const 	{ return player_id; }
 	inline const unitVis_c&		getVisual() const 	{ return unit_vis; }
+    inline const dir_t&         getDir() const      { return dir; }
 
 	// Return non-zero values on error
-	inline int 	setTeam(const team_id_t& v)  		{ return (v == team_id_invalid) ? 	-1 : (( team_id = v ), 0); }
-	inline int 	setPlayer(const player_id_t& v)  	{ return (v == player_id_invalid) ? -1 : (( player_id = v ), 0); }
-	inline int	setVisual(const unitVis_c& v)  		{ return (v == unitVis_invalid) ? 	-1 : (( unit_vis = v ), 0); }
+    inline int 	 setTeam(const team_id_t& v)  		{ return (v == team_id_invalid) ? 	-1 : (( team_id = v ), 0); }
+    inline int 	 setPlayer(const player_id_t& v)  	{ return (v == player_id_invalid) ? -1 : (( player_id = v ), 0); }
+    inline int	 setVisual(const unitVis_c& v)  	{ return (v == unitVis_invalid) ? 	-1 : (( unit_vis = v ), 0); }
+    inline dir_t setDir(const dir_t& v)             { return (dir = v); }
 
 	inline const uvector2& 		getPos() const 						{ return pos; }
 	inline void 				setPos(const uvector2& v)  			{ pos = v; }
+
+    // Get the co-ordinate infront of the unit
+    uvector2 getInFront() const;
 
 	// Check unit is valid
 	inline bool valid() const;
@@ -37,6 +43,10 @@ public:
 
 	// Factory function for creating units from a visual
     static CUnit getUnitFromVis( unitVis_c vis );
+
+    dir_t turnLeft();
+    dir_t turnRight();
+    dir_t turnAround();
 
 
 protected:

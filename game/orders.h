@@ -14,7 +14,8 @@ enum class order_c : char
     F = 'F',
     L = 'L',
     R = 'R',
-    A = 'A'
+    A = 'A',
+    INVALID
 };
 
 // Movement orders
@@ -34,6 +35,13 @@ static const order_c sk_actionOrders[] =
 // Container for an order
 struct COrder
 {
+    COrder()
+        : unit ( unit_id_invalid )
+        , order ( order_c::INVALID )
+    {
+
+    }
+
 	// Unit order is for
 	unit_id_t unit;
 

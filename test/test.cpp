@@ -68,12 +68,33 @@ const char* tests()
 		if( game.SimulateToNextTurn() )
 			return "Failed to simulate a blank game";
 
-		if( game.GetNumOrders() )
-			return "Game started with non-zero order number";
-
-		if( game.GetNumUnits() )
-			return "Game started with non-zero unit number";
+        if( game.GetNumUnits() )
+            return "Game started with non-zero unit number";
 	}
+
+    {
+        CTTRTSGame game( 5, 5 );
+
+        CUnit unit = CUnit::getUnitFromVis('>');
+        const unit_id_t id = unit.getID();
+        COrder order;
+
+        unit.setPos( {2,2} );
+        unit.setPlayer(0);
+
+        game.AddUnit(std::move(unit));
+
+        order.unit = id;
+        order.order = order_c::F;
+
+        game.IssueOrder(0,order);
+
+        game.SimulateToNextTurn();
+
+        if( game.GetUnitByIDConst(id).getPos() != uvector2{3,2} )
+            return "Simple movement order failed";
+
+    }
 
 	return nullptr;
 }
