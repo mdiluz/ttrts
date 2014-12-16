@@ -7,7 +7,7 @@
 #include "gametypes.h"
 #include "vector2.h"
 
-#define UNIT_FORMATTER "UNIT:%u tm:%u pl:%u vs:%c dr:%c ps:[%u,%u]"
+#define UNIT_FORMATTER "UNIT:%u tm:%u vs:%c dr:%c ps:[%u,%u]"
 
 // Base unit type
 class CUnit
@@ -37,14 +37,12 @@ public:
     // Getters for all the members
 	inline const unit_id_t& 	getID() const 		{ return unit_id; }
 	inline const Team & 		getTeam() const 	{ return team_id; }
-	inline const player_id_t& 	getPlayer() const 	{ return player_id; }
 	inline const unitVis_c&		getVisual() const 	{ return unit_vis; }
     inline const dir_t&         getDir() const      { return dir; }
 	inline const uvector2& 		getPos() const 						{ return pos; }
 
 	// Set
     inline Team 			setTeam(const Team & v)  		{ return (team_id = v); }
-    inline player_id_t 	 	setPlayer(const player_id_t& v) { return ( player_id = v ); }
     inline unitVis_c	 	setVisual(const unitVis_c& v)  	{ return ( unit_vis = v ); }
     inline dir_t 			setDir(const dir_t& v)          { return (dir = v); }
 	inline void 			setPos(const uvector2& v)  		{ pos = v; }
@@ -77,9 +75,6 @@ private:
 	// Team ID
 	Team team_id;
 
-	// Owner ID
-	player_id_t player_id;
-
 	// Direction
 	dir_t dir;
 	
@@ -95,7 +90,6 @@ inline bool CUnit::valid() const
 {
 	return (unit_id 	!= unit_id_invalid )
 		&& (team_id 	!= Team::NUM_INVALID )
-		&& (player_id 	!= player_id_invalid)
 		&& (unit_vis 	!= unitVis_invalid);
 }
 

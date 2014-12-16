@@ -14,11 +14,9 @@ enum class Team : char
 };
 
 
-typedef unsigned char       player_id_t;     // Type for player IDs
 typedef unsigned short      unit_id_t;       // Type for unit IDs
 typedef char                unitVis_c;       // Typedef for unit visual representations
 
-static const player_id_t 	player_id_invalid 	= std::numeric_limits<player_id_t>::max();
 static const unit_id_t 		unit_id_invalid 	= std::numeric_limits<unit_id_t>::max();
 static const unitVis_c 		unitVis_invalid 	= std::numeric_limits<unitVis_c>::max();
 

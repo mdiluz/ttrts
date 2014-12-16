@@ -37,7 +37,6 @@ const char* tests()
     {
         CUnit unit1;
         unit1.setFromVisual('v');
-        unit1.setPlayer(0);
         unit1.setTeam(Team::Green);
         unit1.setPos( uvector2(5,10) );
 
@@ -84,7 +83,6 @@ const char* tests()
         {
             CUnit unit = CUnit::GetUnitFromVis('^');
             unit.setPos( {2,2} );
-            unit.setPlayer(0);
             unit.setTeam(Team::Red);
 
             game.AddUnit(std::move(unit));
@@ -93,7 +91,6 @@ const char* tests()
         {
             CUnit unit = CUnit::GetUnitFromVis('^');
             unit.setPos( {2,2} );
-            unit.setPlayer(0);
             unit.setTeam(Team::Red);
 
             if( !game.AddUnit(std::move(unit)) )
@@ -113,7 +110,6 @@ const char* tests()
         COrder order;
 
         unit.setPos( {2,2} );
-        unit.setPlayer(0);
         unit.setTeam(Team::Red);
 
         if ( game.AddUnit(std::move(unit)) )
@@ -122,7 +118,7 @@ const char* tests()
         order.unit = id;
         order.command = command_c::F;
 
-        if( game.IssueOrder(0,order) )
+        if( game.IssueOrder(Team::Red,order) )
             return "Game failed to issue valid order";
 
         if (game.SimulateToNextTurn() )
@@ -145,7 +141,6 @@ const char* tests()
             COrder order;
 
             unit.setPos( {0,0} );
-            unit.setPlayer(1);
             unit.setTeam(Team::Blue);
 
             if ( game.AddUnit(std::move(unit)) )
@@ -154,14 +149,13 @@ const char* tests()
             order.unit = id;
             order.command = command_c::A;
 
-            if( game.IssueOrder(0,order) )
+            if( game.IssueOrder(Team::Blue,order) )
                 return "Game failed to issue valid order";
         }
         {
             CUnit unit = CUnit::GetUnitFromVis('<');
 
             unit.setPos( {1,0} );
-            unit.setPlayer(2);
             unit.setTeam(Team::Red);
 
             if ( game.AddUnit(std::move(unit)) )

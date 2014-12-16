@@ -30,7 +30,7 @@ CTTRTSGame& CTTRTSGame::operator=(CTTRTSGame&& game)
 }
 
 // Interpret a string of orders
-int CTTRTSGame::IssueOrders( player_id_t player, const std::string& _orders )
+int CTTRTSGame::IssueOrders( Team team, const std::string& _orders )
 {
 	COrderVector orderVector;
 
@@ -53,17 +53,17 @@ int CTTRTSGame::IssueOrders( player_id_t player, const std::string& _orders )
 	}
 
     // Call our add order by vector method
-	return IssueOrders(player,orderVector);
+	return IssueOrders(team,orderVector);
 }
 
 // Issue orders by vector to the game
-int CTTRTSGame::IssueOrders( player_id_t player, const COrderVector& orders )
+int CTTRTSGame::IssueOrders( Team team, const COrderVector& orders )
 {
 	// verify all the orders
     for ( auto order : orders )
 	{
         // If any order returns non-zero, back out
-        if ( IssueOrder(player,order) )
+        if ( IssueOrder(team,order) )
 			return 1;
 	}
 
@@ -71,10 +71,10 @@ int CTTRTSGame::IssueOrders( player_id_t player, const COrderVector& orders )
 }
 
 // Issue a single order
-int CTTRTSGame::IssueOrder( player_id_t player, const COrder& order )
+int CTTRTSGame::IssueOrder( Team team, const COrder& order )
 {
     // Verify the order
-	if ( VerifyOrder(player,order) )
+	if ( VerifyOrder(team,order) )
 			return 1;
 
     // Get the right unit for the order
@@ -290,7 +290,7 @@ int CTTRTSGame::AddUnits( CUnitVector&& units )
 }
 
 // Verify any order
-int CTTRTSGame::VerifyOrder( player_id_t player, const COrder& order ) const
+int CTTRTSGame::VerifyOrder( Team team, const COrder& order ) const
 {
     int ret = 1;
 

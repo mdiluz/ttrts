@@ -48,7 +48,6 @@ std::string CUnit::GetStringFromUnit(const CUnit& unit )
     snprintf(buff,128, UNIT_FORMATTER,
             unit.unit_id,
             (int)unit.team_id,
-            unit.player_id,
             unit.unit_vis,
             unit.dir,
             unit.pos.x,
@@ -65,7 +64,6 @@ CUnit CUnit::GetUnitFromString(const std::string& unit )
 
     unsigned int id;
     int team;
-    unsigned int player;
     char vis;
     char dir;
     unsigned int posx;
@@ -74,7 +72,6 @@ CUnit CUnit::GetUnitFromString(const std::string& unit )
     sscanf(unit.c_str(), UNIT_FORMATTER,
             &id,
             &team,
-            &player,
             &vis,
             &dir,
             &posx,
@@ -82,7 +79,6 @@ CUnit CUnit::GetUnitFromString(const std::string& unit )
 
     ret.unit_id = (unit_id_t)id;
     ret.team_id = (Team)team;
-    ret.player_id = (player_id_t)player;
     ret.unit_vis = (unitVis_c)vis;
     ret.dir = (dir_t)dir;
     ret.pos = uvector2(posx,posy);
@@ -95,7 +91,6 @@ CUnit::CUnit()
 : unit_id 	( get_unique_unit_id() )
 , team_id 	( Team::NUM_INVALID )
 , unit_vis 	( unitVis_invalid )
-, player_id ( player_id_invalid )
 , dir 		( dir_t::S )
 , pos 		( { ucoord_invalid, ucoord_invalid } )
 {
@@ -106,7 +101,6 @@ CUnit::CUnit()
 CUnit::CUnit(CUnit&& unit)
 : unit_id 	( std::move(unit.unit_id) )
 , team_id 	( std::move(unit.team_id) )
-, player_id ( std::move(unit.player_id) )
 , unit_vis 	( std::move(unit.unit_vis) )
 , dir 		( std::move(unit.dir) )
 , pos 		( std::move(unit.pos) )
@@ -120,7 +114,6 @@ CUnit& CUnit::operator=(CUnit&& unit)
 {
     unit_id 	= std::move(unit.unit_id) ;
     team_id 	= std::move(unit.team_id) ;
-    player_id   = std::move(unit.player_id) ;
     unit_vis    = std::move(unit.unit_vis) ;
     dir 		= std::move(unit.dir) ;
     pos 		= std::move(unit.pos) ;
@@ -132,7 +125,6 @@ bool CUnit::operator==(const CUnit& rhs)
 {
     return (unit_id == rhs.unit_id)
         && (team_id == rhs.team_id)
-        && (player_id == rhs.player_id)
         && (unit_vis == rhs.unit_vis)
         && (dir == rhs.dir)
         && (pos == rhs.pos);

@@ -68,9 +68,9 @@ public:
     std::string GetStateAsString() const;
 
 	// Issue orders to the game, returns non-zero if orders are incorrect
-	int IssueOrders( player_id_t player, const std::string& orders );
-	int IssueOrders( player_id_t player, const COrderVector& orders );
-	int IssueOrder( player_id_t player, const COrder& order );
+	int IssueOrders( Team team, const std::string& orders );
+	int IssueOrders( Team team, const COrderVector& orders );
+	int IssueOrder( Team team, const COrder& order );
 
 	// Add a units to the game, nonzero return value indicates error
 	int AddUnit( CUnit&& unit );
@@ -100,7 +100,7 @@ public:
 private:
 
     // Verify any order or position - non-zero is error
-    int VerifyOrder( player_id_t player, const COrder& order ) const;
+    int VerifyOrder( Team team, const COrder& order ) const;
     int VerifyPos( uvector2 vec ) const;
 
     // Get a units new position after an order
