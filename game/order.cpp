@@ -1,8 +1,6 @@
 #include <string.h>
 #include "order.h"
 
-#include "mathtypes.h"
-
 // Convert an order to a string
 std::string GetStringFromOrder(const COrder& order )
 {

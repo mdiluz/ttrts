@@ -3,6 +3,32 @@
 #include <algorithm>
 #include <string.h>
 
+CTTRTSGame::CTTRTSGame( ucoord_t c, ucoord_t r )
+: dimensions( c,r )
+, turn (0), name ( "Custom_Game" )
+{
+
+}
+
+// Move constructor
+CTTRTSGame::CTTRTSGame(CTTRTSGame&& game)
+: m_OrderUnitPairs(std::move(game.m_OrderUnitPairs))
+, dimensions(std::move(game.dimensions))
+, turn(std::move(game.turn))
+, name(std::move(game.name))
+{
+
+}
+
+CTTRTSGame& CTTRTSGame::operator=(CTTRTSGame&& game)
+{
+    m_OrderUnitPairs = std::move(game.m_OrderUnitPairs);
+    dimensions = std::move(game.dimensions);
+    turn = std::move(game.turn);
+    name = std::move(game.name);
+    return *this;
+}
+
 // Interpret a string of orders
 int CTTRTSGame::IssueOrders( player_id_t player, const std::string& _orders )
 {
@@ -201,9 +227,6 @@ int CTTRTSGame::SimulateToNextTurn()
         {
             if( (*it).unit.getID() == id )
             {
-                // Add the dead unit to our dead unit list
-                m_deadUnits.push_back(std::move((*it).unit));
-
                 // Remove the unit from our alive unit pairs
                 m_OrderUnitPairs.erase(it);
                 break;
@@ -361,20 +384,52 @@ std::string CTTRTSGame::GetStateAsString() const
 {
     // Print out the header
     char header[64];
-    snprintf(header, 512, GAME_HEADER_FORMATTER , turn, dimensions.x, dimensions.y );
+    snprintf(header, 512, GAME_HEADER_FORMATTER , name.c_str(), dimensions.x, dimensions.y, turn );
 
     // Gather unit information
     std::string units;
     for ( const OrderUnitPair& pair : m_OrderUnitPairs )
     {
-        units += GetStringFromUnit(pair.unit);
+        units += CUnit::GetStringFromUnit(pair.unit);
         units += '\n';
     }
 
     // Append the header and units
     std::string state(header);
     state += '\n';
+    state += GAME_HEADER_DELIMITER;
     state += units;
 
     return state;
+}
+
+// Get the game information as a string
+CTTRTSGame CTTRTSGame::CreateFromString( const std::string& input )
+{
+    size_t headerEnd = input.find(GAME_HEADER_DELIMITER);
+
+    std::string header = input.substr(0, headerEnd);
+    std::string units = input.substr(headerEnd + strlen(GAME_HEADER_DELIMITER));
+
+    // Grab information from the header
+    char buf[64];
+    unsigned int turn;
+    unsigned int sizex;
+    unsigned int sizey;
+    sscanf(header.c_str(), GAME_HEADER_FORMATTER, buf, &sizex, &sizey, &turn );
+
+    CTTRTSGame game(sizex,sizey);
+    game.SetName(buf);
+    game.SetTurn(turn);
+
+    // For each line, construct a unit
+    size_t pos;
+    while ( ( pos = units.find('\n') ) != std::string::npos )
+    {
+        std::string unit_string = units.substr(0,pos);
+        units.erase(0,pos+1);
+        game.AddUnit(CUnit::GetUnitFromString(unit_string));
+    }
+
+    return game;
 }

@@ -31,7 +31,7 @@ namespace
 }
 
 // Get a unit from a visual
-CUnit GetUnitFromVis( unitVis_c vis )
+CUnit CUnit::GetUnitFromVis( unitVis_c vis )
 {
     CUnit unit;
     unit.setFromVisual(vis);
@@ -40,26 +40,26 @@ CUnit GetUnitFromVis( unitVis_c vis )
 
 // Get a string descriptor of a unit
 // "U id:[unit_id] team:[team_id] player:[player_id] vis:[unit_vis] dir:[dir] pos:[pos.x],[pos.y]"
-std::string GetStringFromUnit(const CUnit& unit )
+std::string CUnit::GetStringFromUnit(const CUnit& unit )
 {
     static char buff[128];
     memset(buff,0,sizeof(buff));
 
     snprintf(buff,128, UNIT_FORMATTER,
-            unit.getID(),
-            (int)unit.getTeam(),
-            unit.getPlayer(),
-            unit.getVisual(),
-            unit.getDir(),
-            unit.getPos().x,
-            unit.getPos().y );
+            unit.unit_id,
+            (int)unit.team_id,
+            unit.player_id,
+            unit.unit_vis,
+            unit.dir,
+            unit.pos.x,
+            unit.pos.y );
 
     return buff;
 }
 
 // Get a unit from a string descriptor
 // "U id:[unit_id] team:[team_id] player:[player_id] vis:[unit_vis] dir:[dir] pos:[pos.x],[pos.y]"
-CUnit GetUnitFromString(const std::string& unit )
+CUnit CUnit::GetUnitFromString(const std::string& unit )
 {
     CUnit ret;
 
@@ -80,12 +80,12 @@ CUnit GetUnitFromString(const std::string& unit )
             &posx,
             &posy );
 
-    ret.setIDForced((unit_id_t)id);
-    ret.setTeam((Team)team);
-    ret.setPlayer((player_id_t)player);
-    ret.setVisual((unitVis_c)vis);
-    ret.setDir((dir_t)dir);
-    ret.setPos(uvector2(posx,posy));
+    ret.unit_id = (unit_id_t)id;
+    ret.team_id = (Team)team;
+    ret.player_id = (player_id_t)player;
+    ret.unit_vis = (unitVis_c)vis;
+    ret.dir = (dir_t)dir;
+    ret.pos = uvector2(posx,posy);
 
     return ret;
 }

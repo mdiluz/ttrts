@@ -6,6 +6,8 @@
 
 #include "gametypes.h"
 
+#define ORDER_FORMATTER "ORDER:%c id:%u"
+
 // Type for all orders ( as a char )
 enum class command_c : char
 {
@@ -44,8 +46,6 @@ inline bool COrder::operator== ( const COrder& rhs ) const
 
 // Typedef a vector of orders
 typedef std::vector<COrder> COrderVector;
-
-#define ORDER_FORMATTER "ORDER:%c id:%u"
 
 // string <--> order conversion functions
 std::string GetStringFromOrder(const COrder& order );

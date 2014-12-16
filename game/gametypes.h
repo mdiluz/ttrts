@@ -13,16 +13,11 @@ enum class Team : char
     NUM_INVALID
 };
 
-// Type for player IDs
-typedef unsigned char player_id_t;
 
-// Type for unit IDs
-typedef unsigned short unit_id_t;
+typedef unsigned char       player_id_t;     // Type for player IDs
+typedef unsigned short      unit_id_t;       // Type for unit IDs
+typedef char                unitVis_c;       // Typedef for unit visual representations
 
-// Typedef for unit visual representations
-typedef char unitVis_c;
-
-// Invalid data for above types
 static const player_id_t 	player_id_invalid 	= std::numeric_limits<player_id_t>::max();
 static const unit_id_t 		unit_id_invalid 	= std::numeric_limits<unit_id_t>::max();
 static const unitVis_c 		unitVis_invalid 	= std::numeric_limits<unitVis_c>::max();

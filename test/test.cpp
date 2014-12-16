@@ -26,8 +26,8 @@ const char* tests()
     {
         CUnit unit1;
 
-        std::string unit1Desc = GetStringFromUnit(unit1);
-        CUnit unit2 = GetUnitFromString(unit1Desc);
+        std::string unit1Desc = CUnit::GetStringFromUnit(unit1);
+        CUnit unit2 = CUnit::GetUnitFromString(unit1Desc);
 
         if ( unit1 != unit2 )
             return "Failed to convert an empty unit to string and back";
@@ -41,8 +41,8 @@ const char* tests()
         unit1.setTeam(Team::Green);
         unit1.setPos( uvector2(5,10) );
 
-        std::string unit1Desc = GetStringFromUnit(unit1);
-        CUnit unit2 = GetUnitFromString(unit1Desc);
+        std::string unit1Desc = CUnit::GetStringFromUnit(unit1);
+        CUnit unit2 = CUnit::GetUnitFromString(unit1Desc);
 
         if ( unit1 != unit2 )
             return "Failed to convert custom unit to string and back";
@@ -50,7 +50,7 @@ const char* tests()
 
     // Test if we can successfully create a unit from a visual
 	{
-		CUnit unit = GetUnitFromVis('v');
+		CUnit unit = CUnit::GetUnitFromVis('v');
 		if( unit.getVisual() != 'v' )
 			return "failed to properly create V unit with factory";
 	}
@@ -82,7 +82,7 @@ const char* tests()
         CTTRTSGame game( 5, 5 );
 
         {
-            CUnit unit = GetUnitFromVis('^');
+            CUnit unit = CUnit::GetUnitFromVis('^');
             unit.setPos( {2,2} );
             unit.setPlayer(0);
             unit.setTeam(Team::Red);
@@ -91,7 +91,7 @@ const char* tests()
         }
 
         {
-            CUnit unit = GetUnitFromVis('^');
+            CUnit unit = CUnit::GetUnitFromVis('^');
             unit.setPos( {2,2} );
             unit.setPlayer(0);
             unit.setTeam(Team::Red);
@@ -108,7 +108,7 @@ const char* tests()
     {
         CTTRTSGame game( 5, 5 );
 
-        CUnit unit = GetUnitFromVis('>');
+        CUnit unit = CUnit::GetUnitFromVis('>');
         const unit_id_t id = unit.getID();
         COrder order;
 
@@ -139,7 +139,7 @@ const char* tests()
 
         unit_id_t id;
         {
-            CUnit unit = GetUnitFromVis('>');
+            CUnit unit = CUnit::GetUnitFromVis('>');
             id = unit.getID();
             COrder order;
 
@@ -157,7 +157,7 @@ const char* tests()
                 return "Game failed to issue valid order";
         }
         {
-            CUnit unit = GetUnitFromVis('<');
+            CUnit unit = CUnit::GetUnitFromVis('<');
 
             unit.setPos( {1,0} );
             unit.setPlayer(2);
@@ -181,7 +181,15 @@ const char* tests()
         if ( game.CheckForWin() != Team::Blue )
             return "Game failed to recognise a win for the right Team";
 
-        std::cout<<game.GetStateAsString()<<std::endl;
+        std::string game_string = game.GetStateAsString();
+        CTTRTSGame game2 = CTTRTSGame::CreateFromString(game_string);
+
+        std::string game2_string = game2.GetStateAsString();
+
+        // Try matching up the game descriptors
+        if( game_string != game2_string )
+            return "Generating new game from string failed";
+
     }
 
     return 0;
