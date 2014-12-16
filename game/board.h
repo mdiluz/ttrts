@@ -11,7 +11,7 @@ typedef std::vector< unitType_c > vunitType_c;
 
 // Invalid value for the board square
 constexpr unitType_c square_invalid = std::numeric_limits<unitType_c>::max();
-constexpr unitType_c square_empty = 32; // 32 is ascii empty
+constexpr unitType_c square_empty = ' ';
 
 // Class to store simple data about a board
 class CBoard
