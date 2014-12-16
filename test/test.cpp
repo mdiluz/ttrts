@@ -6,19 +6,15 @@
 
 const char* tests()
 {
-	{
-		CBoard board = CBoard(10,5);
-		board.clear();
-		board.fill(48);
-	}
-
+    // Test if we can properly set a unit's visual
 	{
 		CUnit unit;
 		unit.setFromVisual('v');
-		if( unit.getVisual() != 118 )
+        if( unit.getVisual() != 'v' )
 			 return "failed to properly create V unit";
 	}
 
+    // Test unique unit IDs
 	{
 		CUnit unit;
 		CUnit unit2;
@@ -26,12 +22,14 @@ const char* tests()
 			 return "Unit IDs the same";
 	}
 
+    // Test if we can successfully create a unit from a visual
 	{
 		CUnit unit = CUnit::getUnitFromVis('v');
 		if( unit.getVisual() != 'v' )
 			return "failed to properly create V unit with factory";
 	}
 
+    // Test if we can successfully convert orders back and forth
 	{
 		COrder order;
         order.order = order_c::F;
@@ -43,6 +41,7 @@ const char* tests()
 			return "failed order string conversion test";
 	}
 
+    // Test if movement order is correctly recognised
 	{
 		COrder order;
         order.order = order_c::F;
@@ -53,6 +52,7 @@ const char* tests()
 			return "Wrongly detected an action order";
 	}
 
+    // Test if Attack order is correctly recognised
 	{
 		COrder order;
         order.order = order_c::A;
@@ -63,6 +63,7 @@ const char* tests()
 			return "Wrongly detected an movement order";
 	}
 
+    // Test of the game can logically handle a blank game
 	{
 		CTTRTSGame game( 15, 10 );
 		if( game.SimulateToNextTurn() )
@@ -72,6 +73,7 @@ const char* tests()
             return "Game started with non-zero unit number";
     }
 
+    // Test if the game correctly rejects units placed ontop of others
     {
         CTTRTSGame game( 5, 5 );
 
@@ -96,6 +98,7 @@ const char* tests()
         }
     }
 
+    // Test on a small board if a movement command succeeds correctly
     {
         CTTRTSGame game( 5, 5 );
 
@@ -123,6 +126,7 @@ const char* tests()
 
     }
 
+    // Test on a tiny board, whether a unit can correctly attack another
     {
         CTTRTSGame game( 2, 1 );
 
@@ -166,8 +170,7 @@ const char* tests()
             return "Game killed the wrong unit";
     }
 
-
-	return nullptr;
+    return 0;
 }
 
 // Main program entry point
