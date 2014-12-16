@@ -6,9 +6,10 @@
 std::string GetStringFromOrder(const COrder& order )
 {
 	std::string ret;
+	ret += "O:";
+	ret += (char)order.order;
+	ret += " U:";
 	ret += std::to_string(order.unit);
-	ret += ORDER_DELIMITER;
-    ret += (char)order.order;
 
 	return ret;
 }
@@ -19,19 +20,18 @@ COrder GetOrderFromString( const std::string& _order )
 	std::string order = _order;
 	COrder ret;
 
-    size_t pos = order.find(ORDER_DELIMITER);
-	if( pos != std::string::npos )
-	{
-		const std::string order_unit = order.substr(0, pos);
+	if( order.substr(0, 2) != "O:" )
+		return COrder();
+	order.erase(0, 2); // Erase the O: prefix
 
-		ret.unit = (unit_id_t)atoi( order_unit.c_str() );
+	ret.order = (order_c)order[0]; // Grab single char oder
+	order.erase(0, 2); // Erase the order and a space
 
-		// Erase everything up to and including the delimiter
-		order.erase(0, pos + 1);
+	if( order.substr(0, 2) != "U:" )
+		return COrder();
+	order.erase(0, 2); // Erase the U: prefix
 
-		// Next single char is the order
-        ret.order = (order_c)order[0];
-	}
+	ret.unit = (unit_id_t)atoi( order.c_str() ); // Grab the unit ID
 
 	return ret;
 }

@@ -6,8 +6,6 @@
 
 #include "gametypes.h"
 
-#define ORDER_DELIMITER ' '
-
 // Type for all orders ( as a char )
 enum class order_c : char
 {
@@ -47,7 +45,7 @@ inline bool COrder::operator== ( const COrder& rhs ) const
 // Typedef a vector of orders
 typedef std::vector<COrder> COrderVector;
 
-// Order strings stored as simply "[unit id] [order char]"
+// Order strings stored as simply "O:[order char] U:[unit id]"
 // string <--> order conversion functions
 std::string GetStringFromOrder(const COrder& order );
 COrder GetOrderFromString( const std::string& order );

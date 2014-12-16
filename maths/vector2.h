@@ -7,6 +7,7 @@ struct uvector2;
 
 struct vector2
 {
+    vector2() : x (0), y (0) {}
     vector2( coord_t _x, coord_t _y )
     : x(_x)
     , y(_y)
@@ -32,6 +33,7 @@ struct vector2
 
 struct uvector2
 {
+    uvector2() : x (0), y (0) {}
     uvector2( ucoord_t _x, ucoord_t _y )
     : x(_x)
     , y(_y)

@@ -22,9 +22,35 @@ const char* tests()
 			 return "Unit IDs the same";
 	}
 
+    // Test basic invalid unit conversion
+    {
+        CUnit unit1;
+
+        std::string unit1Desc = GetStringFromUnit(unit1);
+        CUnit unit2 = GetUnitFromString(unit1Desc);
+
+        if ( unit1 != unit2 )
+            return "Failed to convert an empty unit to string and back";
+    }
+
+    // Test custom unit conversion
+    {
+        CUnit unit1;
+        unit1.setFromVisual('v');
+        unit1.setPlayer(0);
+        unit1.setTeam(Team::Green);
+        unit1.setPos( uvector2(5,10) );
+
+        std::string unit1Desc = GetStringFromUnit(unit1);
+        CUnit unit2 = GetUnitFromString(unit1Desc);
+
+        if ( unit1 != unit2 )
+            return "Failed to convert custom unit to string and back";
+    }
+
     // Test if we can successfully create a unit from a visual
 	{
-		CUnit unit = CUnit::getUnitFromVis('v');
+		CUnit unit = GetUnitFromVis('v');
 		if( unit.getVisual() != 'v' )
 			return "failed to properly create V unit with factory";
 	}
@@ -56,7 +82,7 @@ const char* tests()
         CTTRTSGame game( 5, 5 );
 
         {
-            CUnit unit = CUnit::getUnitFromVis('^');
+            CUnit unit = GetUnitFromVis('^');
             unit.setPos( {2,2} );
             unit.setPlayer(0);
             unit.setTeam(Team::Red);
@@ -65,7 +91,7 @@ const char* tests()
         }
 
         {
-            CUnit unit = CUnit::getUnitFromVis('^');
+            CUnit unit = GetUnitFromVis('^');
             unit.setPos( {2,2} );
             unit.setPlayer(0);
             unit.setTeam(Team::Red);
@@ -82,7 +108,7 @@ const char* tests()
     {
         CTTRTSGame game( 5, 5 );
 
-        CUnit unit = CUnit::getUnitFromVis('>');
+        CUnit unit = GetUnitFromVis('>');
         const unit_id_t id = unit.getID();
         COrder order;
 
@@ -113,7 +139,7 @@ const char* tests()
 
         unit_id_t id;
         {
-            CUnit unit = CUnit::getUnitFromVis('>');
+            CUnit unit = GetUnitFromVis('>');
             id = unit.getID();
             COrder order;
 
@@ -131,7 +157,7 @@ const char* tests()
                 return "Game failed to issue valid order";
         }
         {
-            CUnit unit = CUnit::getUnitFromVis('<');
+            CUnit unit = GetUnitFromVis('<');
 
             unit.setPos( {1,0} );
             unit.setPlayer(2);
