@@ -1,8 +1,8 @@
 #ifndef _BOARD_H_
 #define _BOARD_H_
 
+#include "gametypes.h"
 #include "basetypes.h"
-#include "unit.h"
 
 #include <limits>       // std::numeric_limits
 #include <vector>   	// std::vector

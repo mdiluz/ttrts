@@ -7,12 +7,6 @@
 #include "gametypes.h"
 #include "vector2.h"
 
-// Type for the unit type-id
-typedef char unitType_c;
-
-// Typedef for unit visual representations
-typedef char unitVis_c;
-
 // Base unit type
 class CUnit
 {
