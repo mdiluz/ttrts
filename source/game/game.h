@@ -96,6 +96,10 @@ public:
 
     // Set the turn of the game
     inline int SetTurn( int in ) { return (turn = in); }
+    inline int GetTurn() const   { return turn; }
+
+    // Get a vector of the teams in the current game
+    std::vector<Team> GetTeams() const;
 	
 private:
 

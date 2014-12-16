@@ -342,6 +342,25 @@ CUnit& CTTRTSGame::GetUnitByID( unit_id_t id )
     return invalid_unit;
 }
 
+// Get a vector of the teams in the current game
+std::vector<Team> CTTRTSGame::GetTeams() const
+{
+    std::vector<Team> teams;
+    teams.reserve(GetNumUnits());
+
+    // Grab all teams
+    for ( const OrderUnitPair& pair : m_OrderUnitPairs )
+    {
+        teams.push_back(pair.unit.getTeam());
+    }
+
+    // Remove dupes
+    std::sort( teams.begin(), teams.end() );
+    teams.erase( std::unique( teams.begin(), teams.end() ), teams.end() );
+
+    return teams;
+}
+
 // Check if we have a win state
 Team CTTRTSGame::CheckForWin() const
 {
