@@ -5,8 +5,14 @@
 
 struct vector2
 {
-	square_t x;
-	square_t y;
+	coord_t x;
+	coord_t y;
+};
+
+struct uvector2
+{
+	ucoord_t x;
+	ucoord_t y;
 };
 
 #endif //_VECTOR2_H_
