@@ -6,19 +6,26 @@
 int CTTRTSGame::IssueOrders( player_id_t player, const std::string& _orders )
 {
 	COrderVector orderVector;
-	std::string orders = _orders;
 
+    // Copy the const orders into a buffer we can edit
+    std::string orders = _orders;
+
+    // Find a line end
 	size_t pos;
-	while ( (pos = orders.find("\n")) != std::string::npos ) 
+    while ( (pos = orders.find('\n')) != std::string::npos )
 	{
+        // Grab the string up to the line end
 		const std::string sorder = orders.substr(0, pos);
+
+        // Erase all of string up to and including the line end
 		orders.erase(0,pos+1);
 
+        // Create an order from the string and push it back
 		COrder order = GetOrderFromString( sorder );
-
 		orderVector.push_back(order);
 	}
 
+    // Call our add order by vector method
 	return IssueOrders(player,orderVector);
 }
 
@@ -28,6 +35,7 @@ int CTTRTSGame::IssueOrders( player_id_t player, const COrderVector& orders )
 	// verify all the orders
     for ( auto order : orders )
 	{
+        // If any order returns non-zero, back out
         if ( IssueOrder(player,order) )
 			return 1;
 	}
@@ -38,9 +46,11 @@ int CTTRTSGame::IssueOrders( player_id_t player, const COrderVector& orders )
 // Issue a single order
 int CTTRTSGame::IssueOrder( player_id_t player, const COrder& order )
 {
+    // Verify the order
 	if ( VerifyOrder(player,order) )
 			return 1;
 
+    // Get the right unit for the order
     for ( OrderUnitPair& pair : m_OrderUnitPairs )
     {
         if ( pair.unit.getID() == order.unit )
@@ -50,12 +60,14 @@ int CTTRTSGame::IssueOrder( player_id_t player, const COrder& order )
         }
     }
 
-    return 1;
+    // Unit was not found, return 2
+    return 2;
 }
 
 // Verify a position
 int CTTRTSGame::VerifyPos(uvector2 vec) const
 {
+    // Simply check if within the bounds of our dimensions for now
     if ( ( vec.x >= dimentions.x )
         || ( vec.y >= dimentions.y ) )
     {
@@ -69,16 +81,18 @@ int CTTRTSGame::VerifyPos(uvector2 vec) const
 // Get a units new position
 uvector2 CTTRTSGame::GetNewPosition( const OrderUnitPair& pair ) const
 {
+
+    // Grab the order
     switch ( pair.order.order )
     {
+    // For forward orders, grab in front
     case order_c::F:
         return pair.unit.getInFront();
         break;
+    // For all other orders, just grab the old position
     default:
-        break;
+        return pair.unit.getPos();
     }
-
-    return { ucoord_invalid,ucoord_invalid };
 }
 
 // Simulate and progress to the next turn
@@ -155,12 +169,14 @@ int CTTRTSGame::SimulateToNextTurn()
             break;
         case order_c::L:
             {
+                // Simply turn left
                 pair.unit.turnLeft();
                 pair.order = COrder();
             }
             break;
         case order_c::R:
             {
+                // Simply turn right
                 pair.unit.turnRight();
                 pair.order = COrder();
             }
@@ -217,11 +233,13 @@ int CTTRTSGame::AddUnit( CUnit&& unit )
     if( (pos.x >= dimentions.x) || (pos.y >= dimentions.y) )
 		return 1;
 
+    // If any unit's position matches, reject this
     for ( const OrderUnitPair& pair: m_OrderUnitPairs )
     {
         if( pair.unit.getPos() == unit.getPos() )
             return 2;
     }
+
     // Add the unit with a blank order
     m_OrderUnitPairs.push_back( OrderUnitPair(std::move(unit), COrder()) );
 
@@ -256,6 +274,7 @@ int CTTRTSGame::VerifyOrder( player_id_t player, const COrder& order ) const
     // Attempt to find the unit
     for ( const OrderUnitPair& pair : m_OrderUnitPairs )
 	{
+        // Accept if we have the unit
         if ( pair.unit.getID() == unitID )
 		{
             ret = 0;
@@ -270,8 +289,6 @@ int CTTRTSGame::VerifyOrder( player_id_t player, const COrder& order ) const
 // Get unit by unit ID
 const CUnit& CTTRTSGame::GetUnitByIDConst( unit_id_t id ) const
 {
-    CUnitVector::iterator it;
-
     for ( const OrderUnitPair& pair : m_OrderUnitPairs )
     {
         // Attempt the unit add
@@ -287,8 +304,6 @@ const CUnit& CTTRTSGame::GetUnitByIDConst( unit_id_t id ) const
 // Get unit by unit ID
 CUnit& CTTRTSGame::GetUnitByID( unit_id_t id )
 {
-    CUnitVector::iterator it;
-
     for ( OrderUnitPair& pair : m_OrderUnitPairs )
     {
         // Attempt the unit add
