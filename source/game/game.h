@@ -85,6 +85,7 @@ public:
 
     // Get a unit by it's ID
     const CUnit& GetUnitByIDConst( unit_id_t id ) const;
+    const COrder& GetOrderByIDConst( unit_id_t id ) const;
 
     // Get dimensions
     inline const uvector2 &GetDimensions() const { return dimensions; }
@@ -100,7 +101,7 @@ public:
 
     // Get a vector of the teams in the current game
     std::vector<Team> GetTeams() const;
-	
+
 private:
 
     // Verify any order or position - non-zero is error
@@ -109,6 +110,12 @@ private:
 
     // Get a units new position after an order
     uvector2 GetNewPosition( const OrderUnitPair& pair ) const;
+
+    // Check for a pass through
+    static bool CheckForPassThrough( const CUnit& one, const CUnit& two );
+
+    // Kill all units in list
+    void KillAll( std::vector< unit_id_t >& vec );
 
     // Get unit by unit ID
     CUnit& GetUnitByID( unit_id_t id );

@@ -11,10 +11,10 @@
 // Type for all orders ( as a char )
 enum class command_c : char
 {
-    F = 'F',
-    L = 'L',
-    R = 'R',
-    A = 'A',
+    F = 'F', // Move forward one square
+    L = 'L', // Turn left
+    R = 'R', // Turn right
+    A = 'A', // Attack forwards until a unit or edge of the arena is hit
     NUM_INVALID
 };
 

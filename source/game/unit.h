@@ -87,6 +87,7 @@ private:
 
 // Typedef for a vector of units
 typedef std::vector< CUnit > CUnitVector;
+typedef std::vector< unit_id_t > CUnitIDVector;
 
 // Simple validation
 inline bool CUnit::valid() const
