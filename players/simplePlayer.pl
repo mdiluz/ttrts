@@ -75,10 +75,30 @@ sub OutputCommandsFile
 	system ("echo $commands > $orderFile");
 }
 
+# Sort units into teams
+sub getUnitsOnTeam
+{
+	my $theTeam = shift;
+	my @allUnits = @_;;
+	my @myUnits;
+
+	for my $unit (@allUnits)
+	{
+		my ($unitTeam) = $unit =~ /tm:(\d+)/;
+		if ( $unitTeam == $theTeam )
+		{
+			push(@myUnits,$unit);
+		}
+	}
+
+	return @myUnits;
+}
+
 # Get commands for a turn
 sub GetCommandsForTurn
 {
 	my @units = @_;
+	my @myUnits = getUnitsOnTeam($team,@units);
 
 	# perform AI here
 
