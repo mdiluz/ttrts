@@ -14,4 +14,4 @@ A simple terminal based RTS game that uses txt files to communicate game state a
 5. If no winner is reached, skip back to step 2
 6. The game client outputs a final summary file with the winner
 
-*see [game](game) for full game rules*
+*see [game](source/game) for full game rules*
