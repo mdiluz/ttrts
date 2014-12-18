@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=640">
+
+    <link rel="stylesheet" href="stylesheets/core.css" media="screen">
+    <link rel="stylesheet" href="stylesheets/mobile.css" media="handheld, only screen and (max-device-width:640px)">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+
+    <script type="text/javascript" src="javascripts/modernizr.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="javascripts/headsmart.min.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function () {
+        $('#main_content').headsmart()
+      })
+    </script>
+    <title>TTRTS by mdiluz</title>
+  </head>
+
+  <body>
+    <a id="forkme_banner" href="https://github.com/mdiluz/ttrts">View on GitHub</a>
+    <div class="shell">
+
+      <header>
+        <span class="ribbon-outer">
+          <span class="ribbon-inner">
+            <h1>TTRTS</h1>
+            <h2>The Tiny Terminal RTS where the players write their AIs</h2>
+          </span>
+          <span class="left-tail"></span>
+          <span class="right-tail"></span>
+        </span>
+      </header>
+
+      <section id="downloads">
+        <span class="inner">
+          <a href="https://github.com/mdiluz/ttrts/zipball/master" class="zip"><em>download</em> .ZIP</a><a href="https://github.com/mdiluz/ttrts/tarball/master" class="tgz"><em>download</em> .TGZ</a>
+        </span>
+      </section>
+
+
+      <span class="banner-fix"></span>
+
+
+      <section id="main_content">
+        <h2>
+<a id="introduction" class="anchor" href="#introduction" aria-hidden="true"><span class="octicon octicon-link"></span></a>Introduction</h2>
+
+<p>We aim to create a simple terminal based rts where a user can program an AI to control their army</p>
+
+<hr>
+
+<h2>
+<a id="gameplay" class="anchor" href="#gameplay" aria-hidden="true"><span class="octicon octicon-link"></span></a>Gameplay</h2>
+
+<ol>
+<li>ttrts clients are run from the command line</li>
+<li>ttrts-server is launched from the command line </li>
+<li>clients will connect to server and confirm initial board state
+
+<ol>
+<li>clients output a text file with game data for this turn</li>
+<li>a player, or program, reads the game data file and outputs an instructions file</li>
+<li>clients read the instructions file, simulates the turn </li>
+<li>game state is verified between clients and server</li>
+<li>repeat until an end state is reached</li>
+</ol>
+</li>
+<li>once game is finished, host and clients disconnect and a winner is notified</li>
+</ol>
+
+<p><em>see <a href="game">game</a> for full game rules</em></p>
+
+<hr>
+
+<h2>
+<a id="source" class="anchor" href="#source" aria-hidden="true"><span class="octicon octicon-link"></span></a>Source</h2>
+
+<h3>
+<a id="targets" class="anchor" href="#targets" aria-hidden="true"><span class="octicon octicon-link"></span></a>Targets</h3>
+
+<h5>
+<a id="ttrts" class="anchor" href="#ttrts" aria-hidden="true"><span class="octicon octicon-link"></span></a>ttrts</h5>
+
+<p>Main TTRTS executable , runs from the command line and acts as client</p>
+
+<h5>
+<a id="ttrts-server" class="anchor" href="#ttrts-server" aria-hidden="true"><span class="octicon octicon-link"></span></a>ttrts-server</h5>
+
+<p>TTRTS server executable, runs from the command line acting as server</p>
+
+<h5>
+<a id="player" class="anchor" href="#player" aria-hidden="true"><span class="octicon octicon-link"></span></a>player</h5>
+
+<p>Custom player AI code, this should contain examples and test code to help newcomers begin their journey</p>
+
+<h5>
+<a id="ttrts-test" class="anchor" href="#ttrts-test" aria-hidden="true"><span class="octicon octicon-link"></span></a>ttrts-test</h5>
+
+<p>Test executable, to be compiled and run to test various functionality</p>
+
+<h3>
+<a id="libraries" class="anchor" href="#libraries" aria-hidden="true"><span class="octicon octicon-link"></span></a>Libraries</h3>
+
+<h5>
+<a id="game" class="anchor" href="#game" aria-hidden="true"><span class="octicon octicon-link"></span></a>game</h5>
+
+<p>Implementation of the RTS rules and simulation. <a href="game">game</a> has full information on it's implementation.</p>
+
+<h5>
+<a id="net" class="anchor" href="#net" aria-hidden="true"><span class="octicon octicon-link"></span></a>net</h5>
+
+<p>Net code for hosting the server and communicating with clients</p>
+
+<h5>
+<a id="ui" class="anchor" href="#ui" aria-hidden="true"><span class="octicon octicon-link"></span></a>ui</h5>
+
+<p>Wrapper for user interface for the terminal, this only really needs three stages</p>
+
+<ul>
+<li>Initialise the game with settings and connect the clients</li>
+<li>Run the game simulation to it's conclusion</li>
+<li>Display the game result</li>
+<li>ASCII Colour wrapper for separate teams </li>
+</ul>
+
+<h5>
+<a id="maths" class="anchor" href="#maths" aria-hidden="true"><span class="octicon octicon-link"></span></a>maths</h5>
+
+<p>simple maths library for 2D calculations and types</p>
+      </section>
+
+      <footer>
+        <span class="ribbon-outer">
+          <span class="ribbon-inner">
+            <p>this project by <a href="https://github.com/mdiluz">mdiluz</a> can be found on <a href="https://github.com/mdiluz/ttrts">GitHub</a></p>
+          </span>
+          <span class="left-tail"></span>
+          <span class="right-tail"></span>
+        </span>
+        <p>Generated with <a href="http://pages.github.com">GitHub Pages</a> using Merlot</p>
+        <span class="octocat"></span>
+      </footer>
+
+    </div>
+
+    
+  </body>
+</html>
