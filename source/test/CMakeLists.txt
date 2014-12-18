@@ -15,4 +15,4 @@ set( SOURCES
 # Add the executable
 add_executable( ttrts-test ${SOURCES} )
 
-target_link_libraries( ttrts-test game ui )
+target_link_libraries( ttrts-test game )
