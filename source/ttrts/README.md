@@ -54,4 +54,4 @@
 	L/R - Rotate unit left or right
 	A   - Attack row in front of unit
 	
-`$ cat usage.md | sed 's/^#* //g' | sed 's/\t/\\t/g' | sed ':a;N;$!ba;s/\n/\\n\n/g' | sed 's/^/"/' | sed 's/$/"/' | sed '$ d' > usage.h # To convert this file to c++`
+`$ cat README.md | sed 's/^#* //g' | sed 's/\t/\\t/g' | sed ':a;N;$!ba;s/\n/\\n\n/g' | sed 's/^/"/' | sed 's/$/"/' | sed '$ d' > usage.h # To convert this file to c++`
