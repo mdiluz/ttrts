@@ -29,18 +29,20 @@
 ## OPTIONS
 	MAPFILE - File to read in the initial game state from
 
--------------------------------------------------------------------------------
+--------------------------------------------------------------
 
 ## GAMESTATE FILE FORMAT
 ### Name
 	Turn_{TURN_NUMBER}.txt
 ### Contents
-	===== {GAME_NAME} =====
+	===== ttrts v{MAJOR}.{MINOR}.{PATCH} =====
+	NAME:{GAMENAME}
 	SIZE:[{X},{Y}]
 	TURN:{TURN_NUMBER}
+	... {any extra properties could go here}
 	~~~~
 	UNIT:{ID} tm:{TEAM} vs:{VIS} dr:{DIR(NESW)} ps:[{X},{Y}]
-	...
+	... {continue for all units}
 
 ## ORDER FILE FORMAT
 ### Name

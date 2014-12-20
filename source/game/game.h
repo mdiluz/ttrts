@@ -5,7 +5,7 @@
 #include "gametypes.h"
 #include "order.h"
 
-#define GAME_HEADER_FORMATTER "===== %s =====\nSIZE:[%u,%u]\nTURN:%u"
+#define GAME_HEADER_FORMATTER "NAME:%s\nSIZE:[%u,%u]\nTURN:%u"
 #define GAME_HEADER_DELIMITER "~~~~\n"
 
 // Type for order and unit pairs

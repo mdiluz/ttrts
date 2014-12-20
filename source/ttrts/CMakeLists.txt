@@ -8,8 +8,8 @@ include_directories(
 	../game
 )
 
-# Add the sources 
-set( SOURCES 
+# Add the sources
+set( SOURCES
 	main.cpp
 )
 
@@ -22,7 +22,7 @@ target_link_libraries( ${PROJECT_NAME} game )
 install( TARGETS ${PROJECT_NAME} DESTINATION bin )
 
 # Run the gen_usage script to generate our usage header
-add_custom_target( 
+add_custom_target(
 	gen_ttrts_usage
     cd ${CMAKE_CURRENT_SOURCE_DIR} && ${CMAKE_SOURCE_DIR}/scripts/gen_usage.sh "${CMAKE_CURRENT_BINARY_DIR}/usage.h"
 )

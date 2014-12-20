@@ -6,6 +6,7 @@
 #include <stdio.h>
 
 #include "game.h"
+#include "version.h"
 
 static const char* sk_usage =
 #include "usage.h"
@@ -40,6 +41,13 @@ bool OutputGameStateFile(CTTRTSGame &game, std::string &gameDir)
 
 	// Output the turn description
 	std::string turnDescriptor = game.GetStateAsString();
+
+	// Append the version number
+	turnDescriptor = std::string("==== ttrts v")
+			+ sk_ttrts_version_string
+			+ std::string(" ====")
+			+ turnDescriptor;
+
 	turnFile<<turnDescriptor;
 	turnFile.close();
 
