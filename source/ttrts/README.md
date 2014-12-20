@@ -2,7 +2,7 @@
 	ttrts - Tiny Terminal RTS
 
 ## SYNOPSYS
-	ttrts [OPTIONS...] MAPFILE
+	ttrts MAPFILE
 
 ## DESCRIPTION
 	ttrts is a tiny terminal based RTS where that uses text
@@ -50,8 +50,6 @@
 	...
 
 ### Orders
-	F   - Move unit forward one space
-	L/R - Rotate unit left or right
-	A   - Attack row in front of unit
-	
-`$ cat README.md | sed 's/^#* //g' | sed 's/\t/\\t/g' | sed ':a;N;$!ba;s/\n/\\n\n/g' | sed 's/^/"/' | sed 's/$/"/' | sed '$ d' > usage.h # To convert this file to c++`
+	F   - move unit [F]orward one space
+	L/R - rotate unit [L]eft or [R]ight
+	A   - [A]ttack in straight line in front of unit

@@ -3,6 +3,7 @@
 project( ttrts )
 
 include_directories(
+	${CMAKE_CURRENT_BINARY_DIR}
 	../maths
 	../game
 )
@@ -13,6 +14,16 @@ set( SOURCES
 )
 
 # Add the executable
-add_executable( ttrts ${SOURCES} )
+add_executable( ${PROJECT_NAME} ${SOURCES} )
 
-target_link_libraries( ttrts game )
+target_link_libraries( ${PROJECT_NAME} game )
+
+# Installation target
+install( TARGETS ${PROJECT_NAME} DESTINATION bin )
+
+# Run the gen_usage script to generate our usage header
+add_custom_target( 
+	gen_ttrts_usage
+    cd ${CMAKE_CURRENT_SOURCE_DIR} && ${CMAKE_SOURCE_DIR}/scripts/gen_usage.sh "${CMAKE_CURRENT_BINARY_DIR}/usage.h"
+)
+add_dependencies(${PROJECT_NAME} gen_ttrts_usage)

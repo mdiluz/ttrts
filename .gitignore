@@ -1,5 +1,12 @@
-build/
-maps/
+# Build directory
+/build/
+
+# Built binary and maps
+/maps/
+/ttrts
+
+# user files
 *.user
 *.sublime*
 *.idea
+
