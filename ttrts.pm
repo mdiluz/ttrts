@@ -2,6 +2,9 @@
 use strict;
 use warnings;
 
+our $ttrts_perlai_versioncompat_major = 0;
+our $ttrts_perlai_versioncompat_minor = 0;
+
 # Get information about a unit from it's descriptor
 sub getUnit
 {
@@ -17,21 +20,39 @@ sub GetUnitsForTurn
 	open (my $TURNHANDLE, '<', $turnFile) or die "Could not open '$turnFile' $!";
 	
 	# Skip the header information
-	my $headerLine = <$TURNHANDLE>;
-	my $sizeLine = <$TURNHANDLE>;
-	my $turnLine = <$TURNHANDLE>;
-	( <$TURNHANDLE> =~ /~~~~/ ) or die "Gamestate file did not match expected format";
+	my $num = 0;
+	while( !( <$TURNHANDLE> =~ /~~~~/ ) )
+	{
+		$num++;
+		$num > 20 and die "gamestate file did not reach ~~~~ line within 10 lines";
+	} 
 
 	my @units;
 	while( my $unitLine = <$TURNHANDLE> )
 	{
 		chomp $unitLine;
-		push(@units,$unitLine);
+		if( !($unitLine eq "END") )
+		{
+			push(@units,$unitLine);
+		}
 	}
 
 	close $TURNHANDLE;
 
 	return @units;
+}
+
+# Check version numbers against ttrts.pm version
+sub checkVersion
+{
+	my $version_major = shift;
+	my $version_minor = shift;
+	if( ($version_major != $ttrts_perlai_versioncompat_major) 
+	or  ($version_minor != $ttrts_perlai_versioncompat_minor) ) 
+	{
+		printf "ttrts.pm version does not match with this ttrts version\n";
+		die "ttrts.pm = v$ttrts_perlai_versioncompat_minor.$ttrts_perlai_versioncompat_major ttrts = v$version_major.$version_minor";
+	}
 }
 
 # Get information from the header for this turn
@@ -45,15 +66,18 @@ sub GetHeaderForTurn
 	# Pull in the header information
 	my $headerLine = <$TURNHANDLE>;
 	chomp $headerLine;
+	my $nameLine = <$TURNHANDLE>;
+	chomp $nameLine;
 	my $sizeLine = <$TURNHANDLE>;
 	chomp $sizeLine;
 	my $turnLine = <$TURNHANDLE>;
 	chomp $turnLine;
 
-	my ($gameName) = ( $headerLine =~ /===== ([^ ]+) =====/ );
-	my ($gameX,$gameY) = ( $sizeLine =~ /SIZE:\[(\d+),(\d+)\]/ );
+	my ($version_major,$version_minor) = ( $headerLine =~ /==== ttrts v(\d+)\.(\d+)\.\d+ ====/ );
+	checkVersion $version_major,$version_minor;
 
-	( <$TURNHANDLE> =~ /~~~~/ ) or die "Gamestate file did not match expected format";
+	my ($gameName) = ( $nameLine =~ /NAME:(.+)/ );
+	my ($gameX,$gameY) = ( $sizeLine =~ /SIZE:\[(\d+),(\d+)\]/ );
 
 	close $TURNHANDLE;
 
@@ -111,6 +135,7 @@ sub OutputCommandsFile
 	{
 		open(my $cmdFile, '>', $cmdFileName) or die "Couldn't open '$cmdFileName' $!";
 		print $cmdFile $commands;
+		print $cmdFile "END";
 		close $cmdFile;
 
 		printf "Outputted $cmdFileName\n";
