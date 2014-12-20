@@ -46,7 +46,7 @@ bool OutputGameStateFile(CTTRTSGame &game, std::string &gameDir)
 	// Append the version number
 	turnDescriptor = std::string("==== ttrts v")
 			+ sk_ttrts_version_string
-			+ std::string(" ====")
+			+ std::string(" ====\n")
 			+ turnDescriptor;
 
 	turnFile<<turnDescriptor;
