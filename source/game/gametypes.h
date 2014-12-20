@@ -7,9 +7,9 @@
 enum class Team : char
 {
     Red = 0,
-    Blue,
     Green,
     Yellow,
+    Blue,
     NUM_INVALID
 };
 
