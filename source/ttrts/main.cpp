@@ -46,6 +46,8 @@ int main(int argc, char* argv[])
 		return 1;
 	}
 
+	std::cout<<"Launching TTRTS!"<<std::endl;
+
 	std::string gameDescriptor;
 
 	// Reserve the string needed up front
@@ -129,12 +131,13 @@ int main(int argc, char* argv[])
 		}
 
 		// Simulate turn
-		std::cerr<<"Simulating next turn"<<std::endl;
+		std::cout<<"Simulating this turn!"<<std::endl;
 		if ( game.SimulateToNextTurn() )
 		{
-			std::cerr << "Error: Failed to simulate next Turn "<<game.GetTurn()<<std::endl;
+			std::cerr << "Error: Failed to simulate for turn "<<game.GetTurn()<<std::endl;
 			return 1;
 		}
+
 	}
 
 	// Print the winner!
