@@ -3,6 +3,7 @@
 #include <chrono>
 #include <thread>
 #include <sys/stat.h>
+#include <stdio.h>
 
 #include "game.h"
 
@@ -24,6 +25,25 @@ inline bool FileExists( const std::string& name )
 inline void WaitForFile( const std::string& name, const std::chrono::milliseconds& time )
 {
 	while( !FileExists(name) ) std::this_thread::sleep_for(time);
+}
+
+bool OutputGameStateFile(CTTRTSGame &game, std::string &gameDir)
+{
+	char turnFileName[128];
+	snprintf(turnFileName,128,"%s/Turn_%i.txt",gameDir.c_str(),game.GetTurn());
+	std::ofstream turnFile(turnFileName, std::ios_base::trunc); // truncate to overwrite if a file exists
+
+	if ( turnFile.bad() )
+	{
+		return false;
+	}
+
+	// Output the turn description
+	std::string turnDescriptor = game.GetStateAsString();
+	turnFile<<turnDescriptor;
+	turnFile.close();
+
+	return true;
 }
 
 // Main program entry point
@@ -73,42 +93,57 @@ int main(int argc, char* argv[])
 	// Current game directory
 	std::string gameDir = "ttrts_" + game.GetName();
 
-	// Remove the current game directory
-	char cmd[128];
-	snprintf(cmd,128, "test -e %s && rm -rf %s",gameDir.c_str(),gameDir.c_str());
-	system(cmd);
+	// Empty the current game directory
+	struct stat info;
+	int ret = stat( gameDir.c_str(), &info );
+	if( ret == 0 && info.st_mode & S_IFDIR )
+	{
+		std::cout<< gameDir << " already exists"<<std::endl;
+		std::cout<<"Confirm to delete contents [y/N] ";
+		std::string input;
+		std::cin>>input;
+		if( !input.size() || std::tolower(input[0]) != 'y' )
+		{
+			std::cerr<<"Aborting..."<<std::endl;
+			return 1;
+		}
+	}
+	else if ( ret  == 0 )
+	{
+		std::cerr<< gameDir << " exists but is not directory \nAborting..."<<std::endl;
+		return 1;
+	}
 
 	// Create the game directory
 	char cmd2[128];
-	snprintf(cmd2,128, "mkdir %s",gameDir.c_str());
+	snprintf(cmd2,128, "test -d %s || mkdir %s",gameDir.c_str(),gameDir.c_str());
 	system(cmd2);
 
-	// While the game hasn't been won
-	Team winningTeam = Team::NUM_INVALID;
-	while ( (winningTeam = game.CheckForWin()) == Team::NUM_INVALID )
-	{
-		// Create a turn file
-		char turnFileName[128];
-		snprintf(turnFileName,128,"ttrts_%s/Turn_%i.txt",game.GetName().c_str(),game.GetTurn());
-		std::ofstream turnFile(turnFileName,std::ios::trunc); // truncate to overwrite if a file exists
+	// Clean out the game directory
+	char cmd1[128];
+	snprintf(cmd1,128, "rm -rf %s/*",gameDir.c_str());
+	system(cmd1);
 
-		if ( turnFile.bad() )
+	// While the game hasn't been won
+	Team winningTeam;
+	while ( ((winningTeam = game.CheckForWin()) == Team::NUM_INVALID) // We have a winning team
+			&& game.GetNumUnits() > 0 ) // We have no units left
+	{
+		std::cout<<"Starting turn "<<game.GetTurn()<<std::endl;
+
+		// Create a turn file
+		if( !OutputGameStateFile(game, gameDir))
 		{
-			std::cerr<<"Error: Failed to open new turn file "<< turnFileName <<std::endl;
+			std::cerr<<"Error: Failed to output new turn file" << std::endl;
 			return 1;
 		}
-
-		// Output the turn description
-		std::string turnDescriptor = game.GetStateAsString();
-		turnFile<<turnDescriptor;
-		turnFile.close();
 
 		// Wait for order files
 		for( Team team : teams )
 		{
 			// Construct the team order filename
 			char teamOrderFileName[128];
-			snprintf(teamOrderFileName, 128, "ttrts_%s/Turn_%i_Team_%i.txt", game.GetName().c_str(), game.GetTurn(), (int) team);
+			snprintf(teamOrderFileName, 128, "%s/Turn_%i_Team_%i.txt", gameDir.c_str(), game.GetTurn(), (int) team);
 
 			// Wait for the team order file to be created
 			std::cout<<"Waiting for "<<teamOrderFileName<<std::endl;
@@ -140,8 +175,18 @@ int main(int argc, char* argv[])
 
 	}
 
+	// Output final gamestate
+	OutputGameStateFile(game, gameDir);
+
 	// Print the winner!
-	std::cout<<"TTRTS: Game over! Winner:"<<(int)winningTeam<<std::endl;
+	if ( winningTeam != Team::NUM_INVALID )
+	{
+		std::cout<<"Game over! Winner:"<<(int)winningTeam<<std::endl;
+	}
+	else
+	{
+		std::cout<<"Game over! It was a draw!"<<std::endl;
+	}
 
 	return 0;
 };

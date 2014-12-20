@@ -144,7 +144,10 @@ int CTTRTSGame::SimulateToNextTurn()
                     // If any unit is in this spot, or moving unit moving to said spot, reject this
                     for ( const OrderUnitPair& pair2 : m_OrderUnitPairs )
                     {
-                        if( GetNewPosition(pair2) != newpos )
+                        // Skip myself
+                        if( pair.unit.getID() == pair2.unit.getID() ) continue;
+
+                        if( GetNewPosition(pair2) == newpos )
                         {
                             possible = false;
                             break;
