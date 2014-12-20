@@ -510,6 +510,7 @@ std::string CTTRTSGame::GetStateAsString() const
     state += '\n';
     state += GAME_HEADER_DELIMITER;
     state += units;
+    state += "END";
 
     return state;
 }

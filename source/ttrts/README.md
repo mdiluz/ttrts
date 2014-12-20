@@ -43,13 +43,15 @@
 	~~~~
 	UNIT:{ID} tm:{TEAM} vs:{VIS} dr:{DIR(NESW)} ps:[{X},{Y}]
 	... {continue for all units}
+	END
 
 ## ORDER FILE FORMAT
 ### Name
 	Turn_{TURN_NUMBER}_Team_{TEAM_NUMBER}.txt
 ### Contents
 	ORDER:{ORDER_CHAR} id:{UNIT_ID}
-	...
+	... {continue for all orders}
+	END
 
 ### Orders
 	F   - move unit [F]orward one space

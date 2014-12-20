@@ -4,6 +4,7 @@
 #include <thread>
 #include <sys/stat.h>
 #include <stdio.h>
+#include <stdbool.h>
 
 #include "game.h"
 #include "version.h"
@@ -155,7 +156,40 @@ int main(int argc, char* argv[])
 
 			// Wait for the team order file to be created
 			std::cout<<"Waiting for "<<teamOrderFileName<<std::endl;
-			WaitForFile(teamOrderFileName,sk_waitTime); // Wait for the file
+			bool hasOrderFile = false;
+			while(!hasOrderFile)
+			{
+				WaitForFile(teamOrderFileName,sk_waitTime); // Wait for the file
+
+				// File must have END
+				// Method taken from http://stackoverflow.com/questions/11876290/c-fastest-way-to-read-only-last-line-of-text-file
+				std::ifstream turnFile(teamOrderFileName);
+				turnFile.seekg(-1,std::ios_base::end);
+
+				// Loop back from the end of file
+				bool keepLooping = true;
+				while(keepLooping) {
+					char ch;
+					turnFile.get(ch);                            // Get current byte's data
+
+					if((int)turnFile.tellg() <= 1) {             // If the data was at or before the 0th byte
+						turnFile.seekg(0);                       // The first line is the last line
+						keepLooping = false;                // So stop there
+					}
+					else if(ch == '\n') {                   // If the data was a newline
+						keepLooping = false;                // Stop at the current position.
+					}
+					else {                                  // If the data was neither a newline nor at the 0 byte
+						turnFile.seekg(-2,std::ios_base::cur);        // Move to the front of that data, then to the front of the data before it
+					}
+				}
+
+				// Grab this line
+				std::string lastLine;
+				std::getline(turnFile,lastLine);
+				if(lastLine == "END")
+					hasOrderFile = true;
+			}
 
 			std::ifstream turnFile(teamOrderFileName);
 
