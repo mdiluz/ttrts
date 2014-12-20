@@ -25,3 +25,5 @@ TTRTS was is from the ground up designed to be a fun way to practice programming
 ## Further Information
 
 See [the ttrts binary readme](source/ttrts/README.md) for full usage and game rules
+
+See [my ttrts-players repository](https://github.com/mdiluz/ttrts-players) for examples of players
