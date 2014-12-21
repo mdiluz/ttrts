@@ -30,7 +30,7 @@ CTTRTSGame& CTTRTSGame::operator=(CTTRTSGame&& game)
 }
 
 // Interpret a string of orders
-int CTTRTSGame::IssueOrders( Team team, const std::string& _orders )
+int CTTRTSGame::IssueOrders( Player player, const std::string& _orders )
 {
 	COrderVector orderVector;
 
@@ -53,17 +53,17 @@ int CTTRTSGame::IssueOrders( Team team, const std::string& _orders )
 	}
 
     // Call our add order by vector method
-	return IssueOrders(team,orderVector);
+	return IssueOrders(player,orderVector);
 }
 
 // Issue orders by vector to the game
-int CTTRTSGame::IssueOrders( Team team, const COrderVector& orders )
+int CTTRTSGame::IssueOrders( Player player, const COrderVector& orders )
 {
 	// verify all the orders
     for ( auto order : orders )
 	{
         // If any order returns non-zero, back out
-        if ( IssueOrder(team,order) )
+        if ( IssueOrder(player,order) )
 			return 1;
 	}
 
@@ -71,10 +71,10 @@ int CTTRTSGame::IssueOrders( Team team, const COrderVector& orders )
 }
 
 // Issue a single order
-int CTTRTSGame::IssueOrder( Team team, const SOrder & order )
+int CTTRTSGame::IssueOrder( Player player, const SOrder & order )
 {
     // Verify the order
-	if ( VerifyOrder(team,order) )
+	if ( VerifyOrder(player,order) )
 			return 1;
 
     // Get the right unit for the order
@@ -366,7 +366,7 @@ int CTTRTSGame::AddUnits( CUnitVector&& units )
 }
 
 // Verify any order
-int CTTRTSGame::VerifyOrder( Team team, const SOrder & order ) const
+int CTTRTSGame::VerifyOrder( Player player, const SOrder & order ) const
 {
     int ret = 1;
 
@@ -378,7 +378,7 @@ int CTTRTSGame::VerifyOrder( Team team, const SOrder & order ) const
 	{
         // Accept if we have the unit
         if (pair.unit.GetID() == unitID
-                && pair.unit.GetTeam() == team )
+                && pair.unit.GetPlayer() == player)
 		{
             ret = 0;
 			break;
@@ -434,60 +434,60 @@ CUnit& CTTRTSGame::GetUnitByID( unit_id_t id )
     return invalid_unit;
 }
 
-// Get a vector of the teams in the current game
-std::vector<Team> CTTRTSGame::GetTeams() const
+// Get a vector of the players in the current game
+std::vector<Player> CTTRTSGame::GetPlayers() const
 {
-    std::vector<Team> teams;
-    teams.reserve(GetNumUnits());
+    std::vector<Player> players;
+    players.reserve(GetNumUnits());
 
-    // Grab all teams
+    // Grab all players
     for ( const SOrderUnitPair & pair : m_OrderUnitPairs )
     {
-        teams.push_back(pair.unit.GetTeam());
+        players.push_back(pair.unit.GetPlayer());
     }
 
     // Remove dupes
-    std::sort( teams.begin(), teams.end() );
-    teams.erase( std::unique( teams.begin(), teams.end() ), teams.end() );
+    std::sort( players.begin(), players.end() );
+    players.erase( std::unique( players.begin(), players.end() ), players.end() );
 
-    return teams;
+    return players;
 }
 
 // Check if we have a win state
-Team CTTRTSGame::CheckForWin() const
+Player CTTRTSGame::CheckForWin() const
 {
-    // Array of units for each Team
-    unsigned int units[(int) Team::NUM_INVALID];
+    // Array of units for each Player
+    unsigned int units[(int) Player::NUM_INVALID];
     memset(units,0,sizeof(units));
 
-    // Count up all the units for each Team
+    // Count up all the units for each Player
     for ( const SOrderUnitPair & pair : m_OrderUnitPairs )
     {
-        const int team = (int) pair.unit.GetTeam();
-        units[team] += 1;
+        const int player = (int) pair.unit.GetPlayer();
+        units[player] += 1;
     }
 
-    // Default winning Team to invalid (no win)
-    Team winningTeam = Team::NUM_INVALID;
+    // Default winning Player to invalid (no win)
+    Player winningPlayer = Player::NUM_INVALID;
 
-    // For each of the teams
+    // For each of the players
     for ( unsigned int i = 0; i < _countof(units); i++ )
     {
-        // if there are still units in this Team, and the winning Team hasn't been set
-        if( units[i] > 0 && winningTeam == Team::NUM_INVALID )
+        // if there are still units in this Player, and the winning Player hasn't been set
+        if( units[i] > 0 && winningPlayer == Player::NUM_INVALID )
         {
-            winningTeam = (Team)i;
+            winningPlayer = (Player)i;
         }
-        // Otherwise, if there are units in this Team and the winning Team HAS been set
+        // Otherwise, if there are units in this Player and the winning Player HAS been set
         else if ( units[i] > 0 )
         {
             // Set back to invalid and break out of the loop
-            winningTeam = Team::NUM_INVALID;
+            winningPlayer = Player::NUM_INVALID;
             break;
         }
     }
 
-    return winningTeam;
+    return winningPlayer;
 }
 
 // Get the game information as a string

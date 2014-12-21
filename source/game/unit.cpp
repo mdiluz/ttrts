@@ -51,7 +51,6 @@ CUnit CUnit::GetUnitFromVis( unitvis_c vis )
 }
 
 // Get a string descriptor of a unit
-// "U id:[unit_id] team:[team_id] player:[player_id] vis:[unit_vis] dir:[dir] pos:[pos.x],[pos.y]"
 std::string CUnit::GetStringFromUnit(const CUnit& unit )
 {
     static char buff[128];
@@ -59,7 +58,7 @@ std::string CUnit::GetStringFromUnit(const CUnit& unit )
 
     snprintf(buff,128, UNIT_FORMATTER,
             unit.unit_id,
-            (int)unit.team_id,
+            (int)unit.player_id,
             unit.unit_vis,
             unit.dir,
             unit.pos.x,
@@ -69,13 +68,12 @@ std::string CUnit::GetStringFromUnit(const CUnit& unit )
 }
 
 // Get a unit from a string descriptor
-// "U id:[unit_id] team:[team_id] player:[player_id] vis:[unit_vis] dir:[dir] pos:[pos.x],[pos.y]"
 CUnit CUnit::GetUnitFromString(const std::string& unit )
 {
     CUnit ret;
 
     unsigned int id;
-    int team;
+    int player;
     char vis;
     char dir;
     unsigned int posx;
@@ -83,14 +81,14 @@ CUnit CUnit::GetUnitFromString(const std::string& unit )
 
     sscanf(unit.c_str(), UNIT_FORMATTER,
             &id,
-            &team,
+            &player,
             &vis,
             &dir,
             &posx,
             &posy );
 
     ret.unit_id = (unit_id_t)id;
-    ret.team_id = (Team)team;
+    ret.player_id = (Player) player;
     ret.unit_vis = (unitvis_c)vis;
     ret.dir = (dir_t)dir;
     ret.pos = uvector2(posx,posy);
@@ -101,7 +99,7 @@ CUnit CUnit::GetUnitFromString(const std::string& unit )
 // Plain constructor
 CUnit::CUnit()
 : unit_id 	( get_unique_unit_id() )
-, team_id 	( Team::NUM_INVALID )
+, player_id ( Player::NUM_INVALID )
 , unit_vis 	(unitvis_invalid)
 , dir 		( dir_t::S )
 , pos 		( { ucoord_invalid, ucoord_invalid } )
@@ -112,7 +110,7 @@ CUnit::CUnit()
 // Move constructor
 CUnit::CUnit(CUnit&& unit)
 : unit_id 	( std::move(unit.unit_id) )
-, team_id 	( std::move(unit.team_id) )
+, player_id ( std::move(unit.player_id) )
 , unit_vis 	( std::move(unit.unit_vis) )
 , dir 		( std::move(unit.dir) )
 , pos 		( std::move(unit.pos) )
@@ -125,7 +123,7 @@ CUnit::CUnit(CUnit&& unit)
 CUnit& CUnit::operator=(CUnit&& unit)
 {
     unit_id 	= std::move(unit.unit_id) ;
-    team_id 	= std::move(unit.team_id) ;
+    player_id 	= std::move(unit.player_id) ;
     unit_vis    = std::move(unit.unit_vis) ;
     dir 		= std::move(unit.dir) ;
     pos 		= std::move(unit.pos) ;
@@ -136,7 +134,7 @@ CUnit& CUnit::operator=(CUnit&& unit)
 bool CUnit::operator==(const CUnit& rhs)
 {
     return (unit_id == rhs.unit_id)
-        && (team_id == rhs.team_id)
+        && (player_id == rhs.player_id)
         && (unit_vis == rhs.unit_vis)
         && (dir == rhs.dir)
         && (pos == rhs.pos);

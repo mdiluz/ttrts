@@ -3,8 +3,8 @@
 
 #include <limits>       // std::numeric_limits
 
-// Type for a team IDs
-enum class Team : char
+// Type for a Player IDs
+enum class Player : char
 {
     Red = 0,
     Green,

@@ -36,7 +36,7 @@ const char* tests()
     {
         CUnit unit1;
         unit1.SetFromVisual('v');
-        unit1.SetTeam(Team::Green);
+        unit1.SetPlayer(Player::Green);
         unit1.SetPos(uvector2(5, 10));
 
         std::string unit1Desc = CUnit::GetStringFromUnit(unit1);
@@ -82,7 +82,7 @@ const char* tests()
         {
             CUnit unit = CUnit::GetUnitFromVis('^');
             unit.SetPos({2, 2});
-            unit.SetTeam(Team::Red);
+            unit.SetPlayer(Player::Red);
 
             game.AddUnit(std::move(unit));
         }
@@ -90,7 +90,7 @@ const char* tests()
         {
             CUnit unit = CUnit::GetUnitFromVis('^');
             unit.SetPos({2, 2});
-            unit.SetTeam(Team::Red);
+            unit.SetPlayer(Player::Red);
 
             if( !game.AddUnit(std::move(unit)) )
                 return "Game should have rejected unit placed on the same spot";
@@ -109,7 +109,7 @@ const char* tests()
         SOrder order;
 
         unit.SetPos({2, 2});
-        unit.SetTeam(Team::Red);
+        unit.SetPlayer(Player::Red);
 
         if ( game.AddUnit(std::move(unit)) )
             return "Game failed to add valid unit";
@@ -117,7 +117,7 @@ const char* tests()
         order.unit = id;
         order.command = command_c::F;
 
-        if( game.IssueOrder(Team::Red,order) )
+        if( game.IssueOrder(Player::Red,order) )
             return "Game failed to issue valid order";
 
         if (game.SimulateToNextTurn() )
@@ -140,7 +140,7 @@ const char* tests()
             SOrder order;
 
             unit.SetPos({0, 0});
-            unit.SetTeam(Team::Blue);
+            unit.SetPlayer(Player::Blue);
 
             if ( game.AddUnit(std::move(unit)) )
                 return "Game failed to add valid unit";
@@ -148,14 +148,14 @@ const char* tests()
             order.unit = id;
             order.command = command_c::A;
 
-            if( game.IssueOrder(Team::Blue,order) )
+            if( game.IssueOrder(Player::Blue,order) )
                 return "Game failed to issue valid order";
         }
         {
             CUnit unit = CUnit::GetUnitFromVis('<');
 
             unit.SetPos({1, 0});
-            unit.SetTeam(Team::Red);
+            unit.SetPlayer(Player::Red);
 
             if ( game.AddUnit(std::move(unit)) )
                 return "Game failed to add valid unit";
@@ -172,8 +172,8 @@ const char* tests()
         if (game.GetUnitByIndex(0).GetID() != id )
             return "Game killed the wrong unit";
 
-        if ( game.CheckForWin() != Team::Blue )
-            return "Game failed to recognise a win for the right Team";
+        if ( game.CheckForWin() != Player::Blue )
+            return "Game failed to recognise a win for the right Player";
 
         std::string game_string = game.GetStateAsString();
         CTTRTSGame game2 = CTTRTSGame::CreateFromString(game_string);

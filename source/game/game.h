@@ -33,15 +33,15 @@ public:
     // Check for a win, returns invalid for no win state reached
     // Note: this function will return invalid a draw was reached
     //       best practice would be to call with GetNumUnits() == 0
-    Team                    CheckForWin() const;
+    Player CheckForWin() const;
 
     // Get the game information as a string
     std::string             GetStateAsString() const;
 
 	// Issue orders to the game, returns non-zero if orders are incorrect
-	int                     IssueOrders( Team team, const std::string& orders );
-	int                     IssueOrders( Team team, const COrderVector& orders );
-	int                     IssueOrder( Team team, const SOrder & order );
+	int                     IssueOrders( Player player, const std::string& orders );
+	int                     IssueOrders( Player player, const COrderVector& orders );
+	int                     IssueOrder( Player player, const SOrder & order );
 
 	// Add a units to the game, nonzero return value indicates error
 	int                     AddUnit( CUnit&& unit );
@@ -70,8 +70,8 @@ public:
     inline int              SetTurn( int in ) { return (turn = in); }
     inline int              GetTurn() const   { return turn; }
 
-    // Get a vector of the teams in the current game
-    std::vector<Team>       GetTeams() const;
+    // Get a vector of the players in the current game
+    std::vector<Player>       GetPlayers() const;
 
 private:
 
@@ -79,7 +79,7 @@ private:
     static bool             CheckForPassThrough( const CUnit& one, const CUnit& two );
 
     // Verify any order or position - non-zero is error
-    int                     VerifyOrder( Team team, const SOrder & order ) const;
+    int                     VerifyOrder( Player player, const SOrder & order ) const;
     int                     VerifyPos( uvector2 vec ) const;
 
     // Get a units new position after an order

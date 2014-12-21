@@ -7,7 +7,7 @@
 #include "gametypes.h"
 #include "vector2.h"
 
-#define UNIT_FORMATTER "UNIT:%u tm:%u vs:%c dr:%c ps:[%u,%u]"
+#define UNIT_FORMATTER "UNIT:%u pl:%u vs:%c dr:%c ps:[%u,%u]"
 
 // force a reset of the unit ID value
 void __forceResetCUnitID();
@@ -36,14 +36,14 @@ public:
 
     // Getters for all the members
 	inline const unit_id_t&		GetID() const 		{ return unit_id; }
-	inline const Team &			GetTeam() const 	{ return team_id; }
-	inline const unitvis_c &		GetVisual() const 	{ return unit_vis; }
+	inline const Player &		GetPlayer() const 	{ return player_id; }
+	inline const unitvis_c &	GetVisual() const 	{ return unit_vis; }
     inline const dir_t&			GetDir() const      { return dir; }
 	inline const uvector2&		GetPos() const 						{ return pos; }
 
 	// Set
-    inline Team 				SetTeam(const Team &v)  		{ return (team_id = v); }
-    inline unitvis_c SetVisual(const unitvis_c &v)  	{ return ( unit_vis = v ); }
+    inline Player 				SetPlayer(const Player &v)  	{ return (player_id = v); }
+    inline unitvis_c 			SetVisual(const unitvis_c &v)  	{ return (unit_vis = v); }
     inline dir_t 				SetDir(const dir_t &v)          { return (dir = v); }
 	inline void 				SetPos(const uvector2 &v)  		{ pos = v; }
 
@@ -70,10 +70,10 @@ private:
     unit_id_t 					unit_id;
 
 	// Visual 
-	unitvis_c unit_vis;
+	unitvis_c 					unit_vis;
 
-	// Team ID
-	Team 						team_id;
+	// Player ID
+	Player 						player_id;
 
 	// Direction
 	dir_t 						dir;
@@ -90,7 +90,7 @@ typedef std::vector< unit_id_t > 	CUnitIDVector;
 inline bool CUnit::Valid() const
 {
 	return (unit_id 	!= unit_id_invalid )
-		&& (team_id 	!= Team::NUM_INVALID )
+		&& (player_id 	!= Player::NUM_INVALID )
 		&& (unit_vis 	!= unitvis_invalid);
 }
 

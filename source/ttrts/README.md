@@ -47,7 +47,7 @@
 
 ## ORDER FILE FORMAT
 ### Name
-	Turn_{TURN_NUMBER}_Team_{TEAM_NUMBER}.txt
+	Player_{TEAM_NUMBER}_Turn_{TURN_NUMBER}.txt
 ### Contents
 	ORDER:{ORDER_CHAR} id:{UNIT_ID}
 	... {continue for all orders}

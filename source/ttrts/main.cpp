@@ -96,8 +96,8 @@ int main(int argc, char* argv[])
 	// Create the game
 	CTTRTSGame game = CTTRTSGame::CreateFromString(gameDescriptor);
 
-	// Grab the teams involved
-	auto teams = game.GetTeams();
+	// Grab the players involved
+	auto players = game.GetPlayers();
 
 	// Current game directory
 	std::string gameDir = "ttrts_" + game.GetName();
@@ -134,8 +134,8 @@ int main(int argc, char* argv[])
 	system(cmd1);
 
 	// While the game hasn't been won
-	Team winningTeam;
-	while ( ((winningTeam = game.CheckForWin()) == Team::NUM_INVALID) // We have a winning team
+	Player winningPlayer;
+	while ( ((winningPlayer = game.CheckForWin()) == Player::NUM_INVALID) // We have a winning player
 			&& game.GetNumUnits() > 0 ) // We have no units left
 	{
 		std::cout<<"Starting turn "<<game.GetTurn()<<std::endl;
@@ -148,22 +148,22 @@ int main(int argc, char* argv[])
 		}
 
 		// Wait for order files
-		for( Team team : teams )
+		for( Player player : players)
 		{
-			// Construct the team order filename
-			char teamOrderFileName[128];
-			snprintf(teamOrderFileName, 128, "%s/Turn_%i_Team_%i.txt", gameDir.c_str(), game.GetTurn(), (int) team);
+			// Construct the player order filename
+			char playerOrderFileName[128];
+			snprintf(playerOrderFileName, 128, "%s/Player_%i_Turn_%i.txt", gameDir.c_str(), game.GetTurn(), (int) player);
 
-			// Wait for the team order file to be created
-			std::cout<<"Waiting for "<<teamOrderFileName<<std::endl;
+			// Wait for the player order file to be created
+			std::cout<<"Waiting for "<< playerOrderFileName <<std::endl;
 			bool hasOrderFile = false;
 			while(!hasOrderFile)
 			{
-				WaitForFile(teamOrderFileName,sk_waitTime); // Wait for the file
+				WaitForFile(playerOrderFileName,sk_waitTime); // Wait for the file
 
 				// File must have END
 				// Method taken from http://stackoverflow.com/questions/11876290/c-fastest-way-to-read-only-last-line-of-text-file
-				std::ifstream turnFile(teamOrderFileName);
+				std::ifstream turnFile(playerOrderFileName);
 				turnFile.seekg(-1,std::ios_base::end);
 
 				// Loop back from the end of file
@@ -191,7 +191,7 @@ int main(int argc, char* argv[])
 					hasOrderFile = true;
 			}
 
-			std::ifstream turnFile(teamOrderFileName);
+			std::ifstream turnFile(playerOrderFileName);
 
 			// Reserve the full order string
 			std::string orders;
@@ -203,8 +203,8 @@ int main(int argc, char* argv[])
 			orders.assign((std::istreambuf_iterator<char>(turnFile)),std::istreambuf_iterator<char>());
 
 			// Issue the orders to the game
-			if( game.IssueOrders(team, orders) )
-				std::cerr<<"Warning: Orders for team "<<(int)team<<" failed to correctly parse"<<std::endl;
+			if( game.IssueOrders(player, orders) )
+				std::cerr<<"Warning: Orders for player "<<(int) player <<" failed to correctly parse"<<std::endl;
 		}
 
 		// Simulate turn
@@ -221,9 +221,9 @@ int main(int argc, char* argv[])
 	OutputGameStateFile(game, gameDir);
 
 	// Print the winner!
-	if ( winningTeam != Team::NUM_INVALID )
+	if ( winningPlayer != Player::NUM_INVALID )
 	{
-		std::cout<<"Game over! Winner:"<<(int)winningTeam<<std::endl;
+		std::cout<<"Game over! Winner:"<<(int) winningPlayer <<std::endl;
 	}
 	else
 	{
