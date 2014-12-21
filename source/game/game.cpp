@@ -30,7 +30,7 @@ CTTRTSGame& CTTRTSGame::operator=(CTTRTSGame&& game)
 }
 
 // Interpret a string of orders
-int CTTRTSGame::IssueOrders( Player player, const std::string& _orders )
+int CTTRTSGame::IssueOrders( player_t player, const std::string& _orders )
 {
 	COrderVector orderVector;
 
@@ -57,7 +57,7 @@ int CTTRTSGame::IssueOrders( Player player, const std::string& _orders )
 }
 
 // Issue orders by vector to the game
-int CTTRTSGame::IssueOrders( Player player, const COrderVector& orders )
+int CTTRTSGame::IssueOrders( player_t player, const COrderVector& orders )
 {
 	// verify all the orders
     for ( auto order : orders )
@@ -71,7 +71,7 @@ int CTTRTSGame::IssueOrders( Player player, const COrderVector& orders )
 }
 
 // Issue a single order
-int CTTRTSGame::IssueOrder( Player player, const SOrder & order )
+int CTTRTSGame::IssueOrder( player_t player, const SOrder & order )
 {
     // Verify the order
 	if ( VerifyOrder(player,order) )
@@ -366,7 +366,7 @@ int CTTRTSGame::AddUnits( CUnitVector&& units )
 }
 
 // Verify any order
-int CTTRTSGame::VerifyOrder( Player player, const SOrder & order ) const
+int CTTRTSGame::VerifyOrder( player_t player, const SOrder & order ) const
 {
     int ret = 1;
 
@@ -435,9 +435,9 @@ CUnit& CTTRTSGame::GetUnitByID( unit_id_t id )
 }
 
 // Get a vector of the players in the current game
-std::vector<Player> CTTRTSGame::GetPlayers() const
+std::vector<player_t> CTTRTSGame::GetPlayers() const
 {
-    std::vector<Player> players;
+    std::vector<player_t> players;
     players.reserve(GetNumUnits());
 
     // Grab all players
@@ -454,10 +454,10 @@ std::vector<Player> CTTRTSGame::GetPlayers() const
 }
 
 // Check if we have a win state
-Player CTTRTSGame::CheckForWin() const
+player_t CTTRTSGame::CheckForWin() const
 {
     // Array of units for each Player
-    unsigned int units[(int) Player::NUM_INVALID];
+    unsigned int units[(int) player_t::NUM_INVALID];
     memset(units,0,sizeof(units));
 
     // Count up all the units for each Player
@@ -468,21 +468,21 @@ Player CTTRTSGame::CheckForWin() const
     }
 
     // Default winning Player to invalid (no win)
-    Player winningPlayer = Player::NUM_INVALID;
+    player_t winningPlayer = player_t::NUM_INVALID;
 
     // For each of the players
     for ( unsigned int i = 0; i < _countof(units); i++ )
     {
         // if there are still units in this Player, and the winning Player hasn't been set
-        if( units[i] > 0 && winningPlayer == Player::NUM_INVALID )
+        if( units[i] > 0 && winningPlayer == player_t::NUM_INVALID )
         {
-            winningPlayer = (Player)i;
+            winningPlayer = (player_t)i;
         }
         // Otherwise, if there are units in this Player and the winning Player HAS been set
         else if ( units[i] > 0 )
         {
             // Set back to invalid and break out of the loop
-            winningPlayer = Player::NUM_INVALID;
+            winningPlayer = player_t::NUM_INVALID;
             break;
         }
     }

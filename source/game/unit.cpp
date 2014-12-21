@@ -88,7 +88,7 @@ CUnit CUnit::GetUnitFromString(const std::string& unit )
             &posy );
 
     ret.unit_id = (unit_id_t)id;
-    ret.player_id = (Player) player;
+    ret.player_id = (player_t) player;
     ret.unit_vis = (unitvis_c)vis;
     ret.dir = (dir_t)dir;
     ret.pos = uvector2(posx,posy);
@@ -99,7 +99,7 @@ CUnit CUnit::GetUnitFromString(const std::string& unit )
 // Plain constructor
 CUnit::CUnit()
 : unit_id 	( get_unique_unit_id() )
-, player_id ( Player::NUM_INVALID )
+, player_id ( player_t::NUM_INVALID )
 , unit_vis 	(unitvis_invalid)
 , dir 		( dir_t::S )
 , pos 		( { ucoord_invalid, ucoord_invalid } )

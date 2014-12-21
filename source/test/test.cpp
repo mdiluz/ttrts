@@ -36,7 +36,7 @@ const char* tests()
     {
         CUnit unit1;
         unit1.SetFromVisual('v');
-        unit1.SetPlayer(Player::Green);
+        unit1.SetPlayer(player_t::Green);
         unit1.SetPos(uvector2(5, 10));
 
         std::string unit1Desc = CUnit::GetStringFromUnit(unit1);
@@ -82,7 +82,7 @@ const char* tests()
         {
             CUnit unit = CUnit::GetUnitFromVis('^');
             unit.SetPos({2, 2});
-            unit.SetPlayer(Player::Red);
+            unit.SetPlayer(player_t::Red);
 
             game.AddUnit(std::move(unit));
         }
@@ -90,7 +90,7 @@ const char* tests()
         {
             CUnit unit = CUnit::GetUnitFromVis('^');
             unit.SetPos({2, 2});
-            unit.SetPlayer(Player::Red);
+            unit.SetPlayer(player_t::Red);
 
             if( !game.AddUnit(std::move(unit)) )
                 return "Game should have rejected unit placed on the same spot";
@@ -109,7 +109,7 @@ const char* tests()
         SOrder order;
 
         unit.SetPos({2, 2});
-        unit.SetPlayer(Player::Red);
+        unit.SetPlayer(player_t::Red);
 
         if ( game.AddUnit(std::move(unit)) )
             return "Game failed to add valid unit";
@@ -117,7 +117,7 @@ const char* tests()
         order.unit = id;
         order.command = command_c::F;
 
-        if( game.IssueOrder(Player::Red,order) )
+        if( game.IssueOrder(player_t::Red,order) )
             return "Game failed to issue valid order";
 
         if (game.SimulateToNextTurn() )
@@ -140,7 +140,7 @@ const char* tests()
             SOrder order;
 
             unit.SetPos({0, 0});
-            unit.SetPlayer(Player::Blue);
+            unit.SetPlayer(player_t::Blue);
 
             if ( game.AddUnit(std::move(unit)) )
                 return "Game failed to add valid unit";
@@ -148,14 +148,14 @@ const char* tests()
             order.unit = id;
             order.command = command_c::A;
 
-            if( game.IssueOrder(Player::Blue,order) )
+            if( game.IssueOrder(player_t::Blue,order) )
                 return "Game failed to issue valid order";
         }
         {
             CUnit unit = CUnit::GetUnitFromVis('<');
 
             unit.SetPos({1, 0});
-            unit.SetPlayer(Player::Red);
+            unit.SetPlayer(player_t::Red);
 
             if ( game.AddUnit(std::move(unit)) )
                 return "Game failed to add valid unit";
@@ -172,7 +172,7 @@ const char* tests()
         if (game.GetUnitByIndex(0).GetID() != id )
             return "Game killed the wrong unit";
 
-        if ( game.CheckForWin() != Player::Blue )
+        if ( game.CheckForWin() != player_t::Blue )
             return "Game failed to recognise a win for the right Player";
 
         std::string game_string = game.GetStateAsString();

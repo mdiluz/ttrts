@@ -134,8 +134,8 @@ int main(int argc, char* argv[])
 	system(cmd1);
 
 	// While the game hasn't been won
-	Player winningPlayer;
-	while ( ((winningPlayer = game.CheckForWin()) == Player::NUM_INVALID) // We have a winning player
+	player_t winningPlayer;
+	while ( ((winningPlayer = game.CheckForWin()) == player_t::NUM_INVALID) // We have a winning player
 			&& game.GetNumUnits() > 0 ) // We have no units left
 	{
 		std::cout<<"Starting turn "<<game.GetTurn()<<std::endl;
@@ -148,7 +148,7 @@ int main(int argc, char* argv[])
 		}
 
 		// Wait for order files
-		for( Player player : players)
+		for( player_t player : players)
 		{
 			// Construct the player order filename
 			char playerOrderFileName[128];
@@ -221,7 +221,7 @@ int main(int argc, char* argv[])
 	OutputGameStateFile(game, gameDir);
 
 	// Print the winner!
-	if ( winningPlayer != Player::NUM_INVALID )
+	if ( winningPlayer != player_t::NUM_INVALID )
 	{
 		std::cout<<"Game over! Winner:"<<(int) winningPlayer <<std::endl;
 	}

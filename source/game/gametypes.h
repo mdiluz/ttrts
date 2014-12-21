@@ -4,7 +4,7 @@
 #include <limits>       // std::numeric_limits
 
 // Type for a Player IDs
-enum class Player : char
+enum class player_t : char
 {
     Red = 0,
     Green,
