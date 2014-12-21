@@ -48,7 +48,7 @@ int CTTRTSGame::IssueOrders( Team team, const std::string& _orders )
 		orders.erase(0,pos+1);
 
         // Create an order from the string and push it back
-		COrder order = GetOrderFromString( sorder );
+		SOrder order = GetOrderFromString( sorder );
 		orderVector.push_back(order);
 	}
 
@@ -71,7 +71,7 @@ int CTTRTSGame::IssueOrders( Team team, const COrderVector& orders )
 }
 
 // Issue a single order
-int CTTRTSGame::IssueOrder( Team team, const COrder& order )
+int CTTRTSGame::IssueOrder( Team team, const SOrder & order )
 {
     // Verify the order
 	if ( VerifyOrder(team,order) )
@@ -259,7 +259,7 @@ int CTTRTSGame::SimulateToNextTurn()
 
     // Clear all orders
     for ( SOrderUnitPair & pair : m_OrderUnitPairs )
-        pair.order = COrder();
+        pair.order = SOrder();
 
     // Increment the current turn
     turn++;
@@ -343,7 +343,7 @@ int CTTRTSGame::AddUnit( CUnit&& unit )
     }
 
     // Add the unit with a blank order
-    m_OrderUnitPairs.push_back( SOrderUnitPair(std::move(unit), COrder()) );
+    m_OrderUnitPairs.push_back( SOrderUnitPair(std::move(unit), SOrder()) );
 
 
 	return 0;
@@ -366,7 +366,7 @@ int CTTRTSGame::AddUnits( CUnitVector&& units )
 }
 
 // Verify any order
-int CTTRTSGame::VerifyOrder( Team team, const COrder& order ) const
+int CTTRTSGame::VerifyOrder( Team team, const SOrder & order ) const
 {
     int ret = 1;
 
@@ -405,7 +405,7 @@ const CUnit& CTTRTSGame::GetUnitByIDConst( unit_id_t id ) const
 }
 
 // Get an order by unit ID
-const COrder& CTTRTSGame::GetOrderByIDConst( unit_id_t id ) const
+const SOrder & CTTRTSGame::GetOrderByIDConst( unit_id_t id ) const
 {
     for ( const SOrderUnitPair & pair : m_OrderUnitPairs )
     {
@@ -415,7 +415,7 @@ const COrder& CTTRTSGame::GetOrderByIDConst( unit_id_t id ) const
     }
 
     // Return an invalid unit
-    static COrder invalid_order;
+    static SOrder invalid_order;
     return invalid_order;
 }
 

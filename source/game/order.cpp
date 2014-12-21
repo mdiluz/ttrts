@@ -2,7 +2,7 @@
 #include "order.h"
 
 // Convert an order to a string
-std::string GetStringFromOrder(const COrder& order )
+std::string GetStringFromOrder(const SOrder & order )
 {
 	static char buff[128];
 	memset(buff,0,sizeof(buff));
@@ -15,9 +15,9 @@ std::string GetStringFromOrder(const COrder& order )
 }
 
 // Convert a string to an order
-COrder GetOrderFromString( const std::string& order )
+SOrder GetOrderFromString( const std::string& order )
 {
-	COrder ret;
+	SOrder ret;
 
 	char corder;
 	unsigned int unit;

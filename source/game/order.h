@@ -19,10 +19,10 @@ enum class command_c : char
 };
 
 // Container for an order
-struct COrder
+struct SOrder
 {
     // Base constructor makes invalid order
-    COrder()
+    SOrder()
         : unit ( unit_id_invalid )
         , command( command_c::NUM_INVALID )
     {}
@@ -34,21 +34,21 @@ struct COrder
     command_c command;
 
 	// Basic operators
-	inline bool operator==( const COrder& rhs ) const;
-	inline bool operator!=( const COrder& rhs ) const { return !(*this==rhs); }
+	inline bool operator==( const SOrder & rhs ) const;
+	inline bool operator!=( const SOrder & rhs ) const { return !(*this==rhs); }
 };
 
 // Simple == operator
-inline bool COrder::operator== ( const COrder& rhs ) const
+inline bool SOrder::operator== ( const SOrder & rhs ) const
 {
 	return ( unit == rhs.unit ) && ( command == rhs.command);
 }
 
 // Typedef a vector of orders
-typedef std::vector<COrder> COrderVector;
+typedef std::vector<SOrder> COrderVector;
 
 // string <--> order conversion functions
-std::string GetStringFromOrder(const COrder& order );
-COrder GetOrderFromString( const std::string& order );
+std::string GetStringFromOrder(const SOrder & order );
+SOrder GetOrderFromString( const std::string& order );
 
 #endif //_ORDERS_H_

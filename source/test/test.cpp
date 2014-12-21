@@ -55,11 +55,11 @@ const char* tests()
 
     // Test if we can successfully convert orders back and forth
 	{
-		COrder order;
+		SOrder order;
         order.command = command_c::F;
 		order.unit = 10;
 		std::string order_string = GetStringFromOrder(order);
-		COrder order2 = GetOrderFromString(order_string);
+		SOrder order2 = GetOrderFromString(order_string);
 
 		if ( order2 != order )
 			return "failed order string conversion test";
@@ -106,7 +106,7 @@ const char* tests()
 
         CUnit unit = CUnit::GetUnitFromVis('>');
         const unit_id_t id = unit.getID();
-        COrder order;
+        SOrder order;
 
         unit.setPos( {2,2} );
         unit.setTeam(Team::Red);
@@ -137,7 +137,7 @@ const char* tests()
         {
             CUnit unit = CUnit::GetUnitFromVis('>');
             id = unit.getID();
-            COrder order;
+            SOrder order;
 
             unit.setPos( {0,0} );
             unit.setTeam(Team::Blue);

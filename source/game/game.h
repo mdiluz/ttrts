@@ -41,7 +41,7 @@ public:
 	// Issue orders to the game, returns non-zero if orders are incorrect
 	int                     IssueOrders( Team team, const std::string& orders );
 	int                     IssueOrders( Team team, const COrderVector& orders );
-	int                     IssueOrder( Team team, const COrder& order );
+	int                     IssueOrder( Team team, const SOrder & order );
 
 	// Add a units to the game, nonzero return value indicates error
 	int                     AddUnit( CUnit&& unit );
@@ -52,11 +52,11 @@ public:
 
 	// Get unit and orderby index as above (not unit ID)
     inline const CUnit&     GetUnitByIndex( unsigned int i ) const      { return m_OrderUnitPairs[i].unit; }
-    inline const COrder&    GetOrdersByIndex( unsigned int i ) const   { return m_OrderUnitPairs[i].order; }
+    inline const SOrder &    GetOrdersByIndex( unsigned int i ) const   { return m_OrderUnitPairs[i].order; }
 
     // Get a unit by it's ID
     const CUnit&            GetUnitByIDConst( unit_id_t id ) const;
-    const COrder&           GetOrderByIDConst( unit_id_t id ) const;
+    const SOrder &           GetOrderByIDConst( unit_id_t id ) const;
 
     // Get dimensions
     inline const uvector2&  GetDimensions() const { return dimensions; }
@@ -79,7 +79,7 @@ private:
     static bool             CheckForPassThrough( const CUnit& one, const CUnit& two );
 
     // Verify any order or position - non-zero is error
-    int                     VerifyOrder( Team team, const COrder& order ) const;
+    int                     VerifyOrder( Team team, const SOrder & order ) const;
     int                     VerifyPos( uvector2 vec ) const;
 
     // Get a units new position after an order
