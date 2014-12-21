@@ -33,7 +33,7 @@ public:
     // Check for a win, returns invalid for no win state reached
     // Note: this function will return invalid a draw was reached
     //       best practice would be to call with GetNumUnits() == 0
-    player_t CheckForWin() const;
+    player_t                CheckForWin() const;
 
     // Get the game information as a string
     std::string             GetStateAsString() const;
@@ -52,11 +52,11 @@ public:
 
 	// Get unit and orderby index as above (not unit ID)
     inline const CUnit&     GetUnitByIndex( unsigned int i ) const      { return m_OrderUnitPairs[i].unit; }
-    inline const SOrder &    GetOrdersByIndex( unsigned int i ) const   { return m_OrderUnitPairs[i].order; }
+    inline const SOrder &   GetOrdersByIndex( unsigned int i ) const   { return m_OrderUnitPairs[i].order; }
 
     // Get a unit by it's ID
     const CUnit&            GetUnitByIDConst( unit_id_t id ) const;
-    const SOrder &           GetOrderByIDConst( unit_id_t id ) const;
+    const SOrder &          GetOrderByIDConst( unit_id_t id ) const;
 
     // Get dimensions
     inline const uvector2&  GetDimensions() const { return dimensions; }
@@ -71,7 +71,7 @@ public:
     inline int              GetTurn() const   { return turn; }
 
     // Get a vector of the players in the current game
-    std::vector<player_t>       GetPlayers() const;
+    std::vector<player_t>   GetPlayers() const;
 
 private:
 
