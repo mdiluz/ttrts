@@ -10,7 +10,7 @@
 #define UNIT_FORMATTER "UNIT:%u tm:%u vs:%c dr:%c ps:[%u,%u]"
 
 // force a reset of the unit ID value
-void forceResetUnitId();
+void __forceResetCUnitID();
 
 // Base unit type
 class CUnit
@@ -35,36 +35,36 @@ public:
 	bool 				operator!=(const CUnit& rhs) { return !(*this == rhs); }
 
     // Getters for all the members
-	inline const unit_id_t& 	getID() const 		{ return unit_id; }
-	inline const Team & 		getTeam() const 	{ return team_id; }
-	inline const unitVis_c&		getVisual() const 	{ return unit_vis; }
-    inline const dir_t&         getDir() const      { return dir; }
-	inline const uvector2& 		getPos() const 						{ return pos; }
+	inline const unit_id_t&		GetID() const 		{ return unit_id; }
+	inline const Team &			GetTeam() const 	{ return team_id; }
+	inline const unitVis_c&		GetVisual() const 	{ return unit_vis; }
+    inline const dir_t&			GetDir() const      { return dir; }
+	inline const uvector2&		GetPos() const 						{ return pos; }
 
 	// Set
-    inline Team 				setTeam(const Team & v)  		{ return (team_id = v); }
-    inline unitVis_c	 		setVisual(const unitVis_c& v)  	{ return ( unit_vis = v ); }
-    inline dir_t 				setDir(const dir_t& v)          { return (dir = v); }
-	inline void 				setPos(const uvector2& v)  		{ pos = v; }
+    inline Team 				SetTeam(const Team &v)  		{ return (team_id = v); }
+    inline unitVis_c	 		SetVisual(const unitVis_c &v)  	{ return ( unit_vis = v ); }
+    inline dir_t 				SetDir(const dir_t &v)          { return (dir = v); }
+	inline void 				SetPos(const uvector2 &v)  		{ pos = v; }
 
     // Get the co-ordinate in front of the unit
-    uvector2 					getInFront() const;
+    uvector2 					GetInFront() const;
 
 	// Check unit is valid
-	inline bool 				valid() const;
+	inline bool 				Valid() const;
 
 	// Set a unit based solely on it's visual
-	bool 						setFromVisual( const unitVis_c& vis);
+	bool 						SetFromVisual(const unitVis_c &vis);
 
     // Orientation methods
-    dir_t 						turnLeft();
-    dir_t 						turnRight();
-    dir_t 						turnAround();
+    dir_t 						TurnLeft();
+    dir_t 						TurnRight();
+    dir_t 						TurnAround();
 
 private:
 
     // Update my visual must be called when setting direction
-    unitVis_c 					updateMyVisual();
+    unitVis_c 					UpdateMyVisual();
 
 	// Unit ID
     unit_id_t 					unit_id;
@@ -83,11 +83,11 @@ private:
 };
 
 // Typedef for a vector of units
-typedef std::vector< CUnit > CUnitVector;
-typedef std::vector< unit_id_t > CUnitIDVector;
+typedef std::vector< CUnit > 		CUnitVector;
+typedef std::vector< unit_id_t > 	CUnitIDVector;
 
 // Simple validation
-inline bool CUnit::valid() const
+inline bool CUnit::Valid() const
 {
 	return (unit_id 	!= unit_id_invalid )
 		&& (team_id 	!= Team::NUM_INVALID )

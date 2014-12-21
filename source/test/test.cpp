@@ -8,8 +8,8 @@ const char* tests()
     // Test if we can properly set a unit's visual
 	{
 		CUnit unit;
-		unit.setFromVisual('v');
-        if( unit.getVisual() != 'v' )
+        unit.SetFromVisual('v');
+        if(unit.GetVisual() != 'v' )
 			 return "failed to properly create V unit";
 	}
 
@@ -17,7 +17,7 @@ const char* tests()
 	{
 		CUnit unit;
 		CUnit unit2;
-		if( unit.getID() == unit2.getID() )
+		if(unit.GetID() == unit2.GetID() )
 			 return "Unit IDs the same";
 	}
 
@@ -35,9 +35,9 @@ const char* tests()
     // Test custom unit conversion
     {
         CUnit unit1;
-        unit1.setFromVisual('v');
-        unit1.setTeam(Team::Green);
-        unit1.setPos( uvector2(5,10) );
+        unit1.SetFromVisual('v');
+        unit1.SetTeam(Team::Green);
+        unit1.SetPos(uvector2(5, 10));
 
         std::string unit1Desc = CUnit::GetStringFromUnit(unit1);
         CUnit unit2 = CUnit::GetUnitFromString(unit1Desc);
@@ -49,7 +49,7 @@ const char* tests()
     // Test if we can successfully create a unit from a visual
 	{
 		CUnit unit = CUnit::GetUnitFromVis('v');
-		if( unit.getVisual() != 'v' )
+		if(unit.GetVisual() != 'v' )
 			return "failed to properly create V unit with factory";
 	}
 
@@ -81,16 +81,16 @@ const char* tests()
 
         {
             CUnit unit = CUnit::GetUnitFromVis('^');
-            unit.setPos( {2,2} );
-            unit.setTeam(Team::Red);
+            unit.SetPos({2, 2});
+            unit.SetTeam(Team::Red);
 
             game.AddUnit(std::move(unit));
         }
 
         {
             CUnit unit = CUnit::GetUnitFromVis('^');
-            unit.setPos( {2,2} );
-            unit.setTeam(Team::Red);
+            unit.SetPos({2, 2});
+            unit.SetTeam(Team::Red);
 
             if( !game.AddUnit(std::move(unit)) )
                 return "Game should have rejected unit placed on the same spot";
@@ -105,11 +105,11 @@ const char* tests()
         CTTRTSGame game( 5, 5 );
 
         CUnit unit = CUnit::GetUnitFromVis('>');
-        const unit_id_t id = unit.getID();
+        const unit_id_t id = unit.GetID();
         SOrder order;
 
-        unit.setPos( {2,2} );
-        unit.setTeam(Team::Red);
+        unit.SetPos({2, 2});
+        unit.SetTeam(Team::Red);
 
         if ( game.AddUnit(std::move(unit)) )
             return "Game failed to add valid unit";
@@ -123,7 +123,7 @@ const char* tests()
         if (game.SimulateToNextTurn() )
             return "Game failed to simulate valid turn";
 
-        if( game.GetUnitByIDConst(id).getPos() != uvector2{3,2} )
+        if(game.GetUnitByIDConst(id).GetPos() != uvector2{3,2} )
             return "Simple movement order failed";
 
     }
@@ -136,11 +136,11 @@ const char* tests()
         unit_id_t id;
         {
             CUnit unit = CUnit::GetUnitFromVis('>');
-            id = unit.getID();
+            id = unit.GetID();
             SOrder order;
 
-            unit.setPos( {0,0} );
-            unit.setTeam(Team::Blue);
+            unit.SetPos({0, 0});
+            unit.SetTeam(Team::Blue);
 
             if ( game.AddUnit(std::move(unit)) )
                 return "Game failed to add valid unit";
@@ -154,8 +154,8 @@ const char* tests()
         {
             CUnit unit = CUnit::GetUnitFromVis('<');
 
-            unit.setPos( {1,0} );
-            unit.setTeam(Team::Red);
+            unit.SetPos({1, 0});
+            unit.SetTeam(Team::Red);
 
             if ( game.AddUnit(std::move(unit)) )
                 return "Game failed to add valid unit";
@@ -166,10 +166,10 @@ const char* tests()
         if ( game.GetNumUnits() != 1 )
             return "Game failed to kill a unit when it logically should have";
 
-        if ( game.GetUnitByIndex(0).getDir() != dir_t::E )
+        if (game.GetUnitByIndex(0).GetDir() != dir_t::E )
             return "Game killed the wrong unit";
 
-        if ( game.GetUnitByIndex(0).getID() != id )
+        if (game.GetUnitByIndex(0).GetID() != id )
             return "Game killed the wrong unit";
 
         if ( game.CheckForWin() != Team::Blue )

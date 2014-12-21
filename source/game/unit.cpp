@@ -36,7 +36,7 @@ namespace
 }
 
 // force a reset of the unit ID value
-void forceResetUnitId()
+void __forceResetCUnitID()
 {
     unit_id_t i = 0;
     get_unique_unit_id(&i);
@@ -46,7 +46,7 @@ void forceResetUnitId()
 CUnit CUnit::GetUnitFromVis( unitVis_c vis )
 {
     CUnit unit;
-    unit.setFromVisual(vis);
+    unit.SetFromVisual(vis);
     return unit;
 }
 
@@ -106,7 +106,7 @@ CUnit::CUnit()
 , dir 		( dir_t::S )
 , pos 		( { ucoord_invalid, ucoord_invalid } )
 {
-	updateMyVisual();
+    UpdateMyVisual();
 }
 
 // Move constructor
@@ -117,7 +117,7 @@ CUnit::CUnit(CUnit&& unit)
 , dir 		( std::move(unit.dir) )
 , pos 		( std::move(unit.pos) )
 {
-	updateMyVisual();
+    UpdateMyVisual();
 }
 
 
@@ -143,22 +143,22 @@ bool CUnit::operator==(const CUnit& rhs)
 }
 
 // Update the visual representation of the unit
-unitVis_c CUnit::updateMyVisual()
+unitVis_c CUnit::UpdateMyVisual()
 {
 	// Start at invalid
-	setVisual(unitVis_invalid);
+    SetVisual(unitVis_invalid);
 
 	dir_to_vis_map::const_iterator it = get_vis_map_V().find(dir);
 
 	// If found set to new vis
 	if( it != get_vis_map_V().end() )
-		setVisual(it->second);
+        SetVisual(it->second);
 
-	return getVisual();
+	return GetVisual();
 }
 
 // Set the unit from visual
-bool CUnit::setFromVisual( const unitVis_c& vis )
+bool CUnit::SetFromVisual(const unitVis_c &vis)
 {
 	dir_to_vis_map::const_iterator it;
 
@@ -167,7 +167,7 @@ bool CUnit::setFromVisual( const unitVis_c& vis )
 		if( it->second == vis )
 		{
             dir = it->first;
-			updateMyVisual();
+            UpdateMyVisual();
 			return true;
 		}
 	}
@@ -177,7 +177,7 @@ bool CUnit::setFromVisual( const unitVis_c& vis )
 }
 
 // Turn unit left
-dir_t CUnit::turnLeft()
+dir_t CUnit::TurnLeft()
 {
     switch( dir )
     {
@@ -198,13 +198,13 @@ dir_t CUnit::turnLeft()
         break;
     }
 
-    updateMyVisual();
+    UpdateMyVisual();
 
-    return getDir();
+    return GetDir();
 }
 
 // Turn unit right
-dir_t CUnit::turnRight()
+dir_t CUnit::TurnRight()
 {
     switch( dir )
     {
@@ -225,13 +225,13 @@ dir_t CUnit::turnRight()
         break;
     }
 
-    updateMyVisual();
+    UpdateMyVisual();
 
-    return getDir();
+    return GetDir();
 }
 
 // Turn unit around
-dir_t CUnit::turnAround()
+dir_t CUnit::TurnAround()
 {
     switch( dir )
     {
@@ -252,13 +252,13 @@ dir_t CUnit::turnAround()
         break;
     }
 
-    updateMyVisual();
+    UpdateMyVisual();
 
-    return getDir();
+    return GetDir();
 }
 
 // Get the co-ordinate infront of the unit
-uvector2 CUnit::getInFront() const
+uvector2 CUnit::GetInFront() const
 {
     vector2 delta = vecFromDir(dir);
     return pos + delta;

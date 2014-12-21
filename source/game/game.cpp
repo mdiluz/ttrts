@@ -80,7 +80,7 @@ int CTTRTSGame::IssueOrder( Team team, const SOrder & order )
     // Get the right unit for the order
     for ( SOrderUnitPair & pair : m_OrderUnitPairs )
     {
-        if ( pair.unit.getID() == order.unit )
+        if (pair.unit.GetID() == order.unit )
         {
             pair.order = order;
             return 0;
@@ -113,10 +113,10 @@ uvector2 CTTRTSGame::GetNewPosition( const SOrderUnitPair & pair ) const
     {
     // For forward orders, grab in front
     case command_c::F:
-        return pair.unit.getInFront();
+        return pair.unit.GetInFront();
     // For all other orders, just grab the old position
     default:
-        return pair.unit.getPos();
+        return pair.unit.GetPos();
     }
 }
 
@@ -145,7 +145,7 @@ int CTTRTSGame::SimulateToNextTurn()
                     for ( const SOrderUnitPair & pair2 : m_OrderUnitPairs )
                     {
                         // Skip myself
-                        if( pair.unit.getID() == pair2.unit.getID() ) continue;
+                        if(pair.unit.GetID() == pair2.unit.GetID() ) continue;
 
                         if( GetNewPosition(pair2) == newpos )
                         {
@@ -158,7 +158,7 @@ int CTTRTSGame::SimulateToNextTurn()
                 // If the movement is still possible
                 if ( possible )
                 {
-                    pair.unit.setPos(newpos);
+                    pair.unit.SetPos(newpos);
                 }
             }
             break;
@@ -175,13 +175,13 @@ int CTTRTSGame::SimulateToNextTurn()
             case command_c::L:
             {
                 // Simply turn left
-                pair.unit.turnLeft();
+                pair.unit.TurnLeft();
             }
                 break;
             case command_c::R:
             {
                 // Simply turn right
-                pair.unit.turnRight();
+                pair.unit.TurnRight();
             }
                 break;
             default:
@@ -200,11 +200,11 @@ int CTTRTSGame::SimulateToNextTurn()
         {
             if ( pair.order.command == command_c::A )
             {
-                uvector2 newpos = pair.unit.getInFront();
+                uvector2 newpos = pair.unit.GetInFront();
                 // If move would be within the arena
                 if ( ( newpos.x <= dimensions.x-1 ) && ( newpos.y <= dimensions.y-1 ) )
                 {
-                    pair.unit.setPos(newpos);
+                    pair.unit.SetPos(newpos);
 
                     // Unit moved, so more charging needs to be done
                     charging = true;
@@ -218,13 +218,13 @@ int CTTRTSGame::SimulateToNextTurn()
         for ( SOrderUnitPair & pair1 : m_OrderUnitPairs )
         if ( pair1.order.command == command_c::A )
         for ( SOrderUnitPair & pair2 : m_OrderUnitPairs )
-        if ( pair1.unit.getID() != pair2.unit.getID() // Don't check the same units
+        if (pair1.unit.GetID() != pair2.unit.GetID() // Don't check the same units
                 && pair2.order.command == command_c::A )
         {
             if( CheckForPassThrough(pair1.unit,pair2.unit) )
             {
-                toKill.push_back(pair1.unit.getID());
-                toKill.push_back(pair2.unit.getID());
+                toKill.push_back(pair1.unit.GetID());
+                toKill.push_back(pair2.unit.GetID());
             }
         }
 
@@ -236,18 +236,18 @@ int CTTRTSGame::SimulateToNextTurn()
         for ( SOrderUnitPair & pair1 : m_OrderUnitPairs )
         for ( SOrderUnitPair & pair2 : m_OrderUnitPairs )
         {
-            if( pair1.unit.getID() == pair2.unit.getID() ) continue; // Don't check the same units
+            if(pair1.unit.GetID() == pair2.unit.GetID() ) continue; // Don't check the same units
 
-            if( pair1.unit.getPos() ==  pair2.unit.getPos() )
+            if(pair1.unit.GetPos() == pair2.unit.GetPos() )
             {
                 if( pair1.order.command == command_c::A )
                 {
-                    toKill.push_back(pair2.unit.getID());
+                    toKill.push_back(pair2.unit.GetID());
                 }
 
                 if( pair2.order.command == command_c::A )
                 {
-                    toKill.push_back(pair1.unit.getID());
+                    toKill.push_back(pair1.unit.GetID());
                 }
             }
         }
@@ -280,7 +280,7 @@ void CTTRTSGame::KillAll( std::vector< unit_id_t >& vec )
               it != m_OrderUnitPairs.end();
               it++ )
         {
-            if( (*it).unit.getID() == id )
+            if((*it).unit.GetID() == id )
             {
                 // Remove the unit from our alive unit pairs
                 m_OrderUnitPairs.erase(it);
@@ -294,10 +294,10 @@ void CTTRTSGame::KillAll( std::vector< unit_id_t >& vec )
 // Check if two units passed through each other
 bool CTTRTSGame::CheckForPassThrough( const CUnit& one, const CUnit& two )
 {
-    uvector2 pos1 = one.getPos();
-    uvector2 pos2 = two.getPos();
-    dir_t dir1 = one.getDir();
-    dir_t dir2 = two.getDir();
+    uvector2 pos1 = one.GetPos();
+    uvector2 pos2 = two.GetPos();
+    dir_t dir1 = one.GetDir();
+    dir_t dir2 = two.GetDir();
 
     if( pos1.x == pos2.x ) { // Same col
         if (pos1.y == (pos2.y + 1)) {
@@ -327,18 +327,18 @@ bool CTTRTSGame::CheckForPassThrough( const CUnit& one, const CUnit& two )
 int CTTRTSGame::AddUnit( CUnit&& unit )
 {	
 	// Verify the unit
-	if( !unit.valid() )
+	if( !unit.Valid() )
 		return 1;
 
 	// Verify if the unit can be placed on the current board
-	const uvector2 pos = unit.getPos();
+	const uvector2 pos = unit.GetPos();
     if( (pos.x >= dimensions.x) || (pos.y >= dimensions.y) )
 		return 2;
 
     // If any unit's position matches, reject this
     for ( const SOrderUnitPair & pair: m_OrderUnitPairs )
     {
-        if( pair.unit.getPos() == unit.getPos() )
+        if(pair.unit.GetPos() == unit.GetPos() )
             return 3;
     }
 
@@ -377,8 +377,8 @@ int CTTRTSGame::VerifyOrder( Team team, const SOrder & order ) const
     for ( const SOrderUnitPair & pair : m_OrderUnitPairs )
 	{
         // Accept if we have the unit
-        if ( pair.unit.getID() == unitID
-                && pair.unit.getTeam() == team )
+        if (pair.unit.GetID() == unitID
+                && pair.unit.GetTeam() == team )
 		{
             ret = 0;
 			break;
@@ -395,7 +395,7 @@ const CUnit& CTTRTSGame::GetUnitByIDConst( unit_id_t id ) const
     for ( const SOrderUnitPair & pair : m_OrderUnitPairs )
     {
         // Attempt the unit add
-        if ( pair.unit.getID() == id  )
+        if (pair.unit.GetID() == id  )
             return pair.unit;
     }
 
@@ -410,7 +410,7 @@ const SOrder & CTTRTSGame::GetOrderByIDConst( unit_id_t id ) const
     for ( const SOrderUnitPair & pair : m_OrderUnitPairs )
     {
         // Attempt the unit add
-        if ( pair.unit.getID() == id  )
+        if (pair.unit.GetID() == id  )
             return pair.order;
     }
 
@@ -425,7 +425,7 @@ CUnit& CTTRTSGame::GetUnitByID( unit_id_t id )
     for ( SOrderUnitPair & pair : m_OrderUnitPairs )
     {
         // Attempt the unit add
-        if ( pair.unit.getID() == id )
+        if (pair.unit.GetID() == id )
             return pair.unit;
     }
 
@@ -443,7 +443,7 @@ std::vector<Team> CTTRTSGame::GetTeams() const
     // Grab all teams
     for ( const SOrderUnitPair & pair : m_OrderUnitPairs )
     {
-        teams.push_back(pair.unit.getTeam());
+        teams.push_back(pair.unit.GetTeam());
     }
 
     // Remove dupes
@@ -463,7 +463,7 @@ Team CTTRTSGame::CheckForWin() const
     // Count up all the units for each Team
     for ( const SOrderUnitPair & pair : m_OrderUnitPairs )
     {
-        const int team = (int)pair.unit.getTeam();
+        const int team = (int) pair.unit.GetTeam();
         units[team] += 1;
     }
 

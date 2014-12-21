@@ -6,8 +6,8 @@
 void AddUnitToGame( Team team, char vis, uvector2 vec, CTTRTSGame& game )
 {
     CUnit unit = CUnit::GetUnitFromVis(vis);
-    unit.setPos( vec );
-    unit.setTeam(team);
+    unit.SetPos(vec);
+    unit.SetTeam(team);
     game.AddUnit(std::move(unit));
 }
 
@@ -18,7 +18,7 @@ void OutputGame( CTTRTSGame&& game )
     output << game.GetStateAsString();
     output.close();
 
-    forceResetUnitId();
+    __forceResetCUnitID();
 }
 
 int main()
