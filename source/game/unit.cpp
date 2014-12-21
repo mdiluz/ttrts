@@ -18,7 +18,7 @@ namespace
 	}
 
 	// Map of visual representation of unit V
-	typedef std::map< dir_t, unitVis_c > dir_to_vis_map;
+	typedef std::map< dir_t, unitvis_c> dir_to_vis_map;
 	
 	// Helper function to get the vis map during static init
 	const dir_to_vis_map& get_vis_map_V()
@@ -43,7 +43,7 @@ void __forceResetCUnitID()
 }
 
 // Get a unit from a visual
-CUnit CUnit::GetUnitFromVis( unitVis_c vis )
+CUnit CUnit::GetUnitFromVis( unitvis_c vis )
 {
     CUnit unit;
     unit.SetFromVisual(vis);
@@ -91,7 +91,7 @@ CUnit CUnit::GetUnitFromString(const std::string& unit )
 
     ret.unit_id = (unit_id_t)id;
     ret.team_id = (Team)team;
-    ret.unit_vis = (unitVis_c)vis;
+    ret.unit_vis = (unitvis_c)vis;
     ret.dir = (dir_t)dir;
     ret.pos = uvector2(posx,posy);
 
@@ -102,7 +102,7 @@ CUnit CUnit::GetUnitFromString(const std::string& unit )
 CUnit::CUnit()
 : unit_id 	( get_unique_unit_id() )
 , team_id 	( Team::NUM_INVALID )
-, unit_vis 	( unitVis_invalid )
+, unit_vis 	(unitvis_invalid)
 , dir 		( dir_t::S )
 , pos 		( { ucoord_invalid, ucoord_invalid } )
 {
@@ -143,10 +143,10 @@ bool CUnit::operator==(const CUnit& rhs)
 }
 
 // Update the visual representation of the unit
-unitVis_c CUnit::UpdateMyVisual()
+unitvis_c CUnit::UpdateMyVisual()
 {
 	// Start at invalid
-    SetVisual(unitVis_invalid);
+    SetVisual(unitvis_invalid);
 
 	dir_to_vis_map::const_iterator it = get_vis_map_V().find(dir);
 
@@ -158,7 +158,7 @@ unitVis_c CUnit::UpdateMyVisual()
 }
 
 // Set the unit from visual
-bool CUnit::SetFromVisual(const unitVis_c &vis)
+bool CUnit::SetFromVisual(const unitvis_c &vis)
 {
 	dir_to_vis_map::const_iterator it;
 
