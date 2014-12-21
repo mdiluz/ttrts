@@ -16,7 +16,7 @@ struct SOrderUnitPair
     {}
 
     // Multi parameter constructor
-    SOrderUnitPair( CUnit&& u, COrder o )
+    SOrderUnitPair( CUnit&& u, SOrder o )
             : unit ( std::move(u) )
             , order ( o )
     {}
@@ -30,7 +30,7 @@ struct SOrderUnitPair
     }
 
     CUnit   unit;       // The unit
-    COrder  order;      // Order for this unit from this turn
+    SOrder  order;      // Order for this unit from this turn
 };
 
 // Typedef for a vector of these unit pairs
