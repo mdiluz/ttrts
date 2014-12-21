@@ -17,7 +17,7 @@ static const coord_t 		coord_invalid 	= std::numeric_limits<coord_t>::max();
 static const ucoord_t 		ucoord_invalid 	= std::numeric_limits<ucoord_t>::max();
 
 // Direction representation
-enum class dir_t : char
+enum class dir_c : char
 {
 	N = 'N',
 	S = 'S',

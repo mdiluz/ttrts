@@ -296,26 +296,26 @@ bool CTTRTSGame::CheckForPassThrough( const CUnit& one, const CUnit& two )
 {
     uvector2 pos1 = one.GetPos();
     uvector2 pos2 = two.GetPos();
-    dir_t dir1 = one.GetDir();
-    dir_t dir2 = two.GetDir();
+    dir_c dir1 = one.GetDir();
+    dir_c dir2 = two.GetDir();
 
     if( pos1.x == pos2.x ) { // Same col
         if (pos1.y == (pos2.y + 1)) {
-            if (dir1 == dir_t::N && dir2 == dir_t::S)
+            if (dir1 == dir_c::N && dir2 == dir_c::S)
                 return true;
         }
         else if (pos1.y == (pos2.y - 1)) {
-            if (dir1 == dir_t::S && dir2 == dir_t::N)
+            if (dir1 == dir_c::S && dir2 == dir_c::N)
                 return true;
         }
     }
     else if( pos1.y == pos2.y ) { // Same row
         if( pos1.x == (pos2.x+1) ) {
-            if( dir1 == dir_t::E && dir2 == dir_t::W )
+            if( dir1 == dir_c::E && dir2 == dir_c::W )
                 return true;
         }
         else if( pos1.x == (pos2.x-1) ) {
-            if( dir1 == dir_t::E && dir2 == dir_t::W )
+            if( dir1 == dir_c::E && dir2 == dir_c::W )
                 return true;
         }
     }

@@ -18,17 +18,17 @@ namespace
 	}
 
 	// Map of visual representation of unit V
-	typedef std::map< dir_t, unitvis_c> dir_to_vis_map;
+	typedef std::map<dir_c, unitvis_c> dir_to_vis_map;
 	
 	// Helper function to get the vis map during static init
 	const dir_to_vis_map& get_vis_map_V()
 	{
 		static const dir_to_vis_map sk_visMap =
 		{
-			{dir_t::N,'^'},
-			{dir_t::E,'>'},
-			{dir_t::S,'v'},
-			{dir_t::W,'<'},
+			{dir_c::N,'^'},
+			{dir_c::E,'>'},
+			{dir_c::S,'v'},
+			{dir_c::W,'<'},
 		};
 
 		return sk_visMap;
@@ -90,7 +90,7 @@ CUnit CUnit::GetUnitFromString(const std::string& unit )
     ret.unit_id = (unit_id_t)id;
     ret.player_id = (player_t) player;
     ret.unit_vis = (unitvis_c)vis;
-    ret.dir = (dir_t)dir;
+    ret.dir = (dir_c)dir;
     ret.pos = uvector2(posx,posy);
 
     return ret;
@@ -101,7 +101,7 @@ CUnit::CUnit()
 : unit_id 	( get_unique_unit_id() )
 , player_id ( player_t::NUM_INVALID )
 , unit_vis 	(unitvis_invalid)
-, dir 		( dir_t::S )
+, dir 		( dir_c::S )
 , pos 		( { ucoord_invalid, ucoord_invalid } )
 {
     UpdateMyVisual();
@@ -175,24 +175,24 @@ bool CUnit::SetFromVisual(const unitvis_c &vis)
 }
 
 // Turn unit left
-dir_t CUnit::TurnLeft()
+dir_c CUnit::TurnLeft()
 {
     switch( dir )
     {
-    case dir_t::N:
-        dir = dir_t::W;
+    case dir_c::N:
+        dir = dir_c::W;
         break;
 
-    case dir_t::E:
-        dir = dir_t::N;
+    case dir_c::E:
+        dir = dir_c::N;
         break;
 
-    case dir_t::S:
-        dir = dir_t::E;
+    case dir_c::S:
+        dir = dir_c::E;
         break;
 
-    case dir_t::W:
-        dir = dir_t::S;
+    case dir_c::W:
+        dir = dir_c::S;
         break;
     }
 
@@ -202,24 +202,24 @@ dir_t CUnit::TurnLeft()
 }
 
 // Turn unit right
-dir_t CUnit::TurnRight()
+dir_c CUnit::TurnRight()
 {
     switch( dir )
     {
-    case dir_t::N:
-        dir = dir_t::E;
+    case dir_c::N:
+        dir = dir_c::E;
         break;
 
-    case dir_t::E:
-        dir = dir_t::S;
+    case dir_c::E:
+        dir = dir_c::S;
         break;
 
-    case dir_t::S:
-        dir = dir_t::W;
+    case dir_c::S:
+        dir = dir_c::W;
         break;
 
-    case dir_t::W:
-        dir = dir_t::N;
+    case dir_c::W:
+        dir = dir_c::N;
         break;
     }
 
@@ -229,24 +229,24 @@ dir_t CUnit::TurnRight()
 }
 
 // Turn unit around
-dir_t CUnit::TurnAround()
+dir_c CUnit::TurnAround()
 {
     switch( dir )
     {
-    case dir_t::N:
-        dir = dir_t::S;
+    case dir_c::N:
+        dir = dir_c::S;
         break;
 
-    case dir_t::E:
-        dir = dir_t::W;
+    case dir_c::E:
+        dir = dir_c::W;
         break;
 
-    case dir_t::S:
-        dir = dir_t::N;
+    case dir_c::S:
+        dir = dir_c::N;
         break;
 
-    case dir_t::W:
-        dir = dir_t::E;
+    case dir_c::W:
+        dir = dir_c::E;
         break;
     }
 

@@ -38,13 +38,13 @@ public:
 	inline const unit_id_t&		GetID() const 		{ return unit_id; }
 	inline const player_t &		GetPlayer() const 	{ return player_id; }
 	inline const unitvis_c &	GetVisual() const 	{ return unit_vis; }
-    inline const dir_t&			GetDir() const      { return dir; }
+    inline const dir_c &			GetDir() const      { return dir; }
 	inline const uvector2&		GetPos() const 						{ return pos; }
 
 	// Set
     inline player_t SetPlayer(const player_t &v)  	{ return (player_id = v); }
     inline unitvis_c 			SetVisual(const unitvis_c &v)  	{ return (unit_vis = v); }
-    inline dir_t 				SetDir(const dir_t &v)          { return (dir = v); }
+    inline dir_c SetDir(const dir_c &v)          { return (dir = v); }
 	inline void 				SetPos(const uvector2 &v)  		{ pos = v; }
 
     // Get the co-ordinate in front of the unit
@@ -57,9 +57,9 @@ public:
 	bool 						SetFromVisual(const unitvis_c &vis);
 
     // Orientation methods
-    dir_t 						TurnLeft();
-    dir_t 						TurnRight();
-    dir_t 						TurnAround();
+	dir_c TurnLeft();
+    dir_c TurnRight();
+    dir_c TurnAround();
 
 private:
 
@@ -76,7 +76,7 @@ private:
 	player_t player_id;
 
 	// Direction
-	dir_t 						dir;
+	dir_c dir;
 	
 	// Position
 	uvector2 					pos;

@@ -166,7 +166,7 @@ const char* tests()
         if ( game.GetNumUnits() != 1 )
             return "Game failed to kill a unit when it logically should have";
 
-        if (game.GetUnitByIndex(0).GetDir() != dir_t::E )
+        if (game.GetUnitByIndex(0).GetDir() != dir_c::E )
             return "Game killed the wrong unit";
 
         if (game.GetUnitByIndex(0).GetID() != id )

@@ -60,20 +60,20 @@ struct uvector2
 
 inline vector2::operator uvector2() const { return { (ucoord_t)x, (ucoord_t)y }; }
 
-inline vector2 vecFromDir( dir_t dir )
+inline vector2 vecFromDir( dir_c dir )
 {
     switch( dir )
     {
-    case dir_t::N:
+    case dir_c::N:
         return { 0,1 };
 
-    case dir_t::E:
+    case dir_c::E:
         return { 1,0 };
 
-    case dir_t::S:
+    case dir_c::S:
         return { 0,-1 };
 
-    case dir_t::W:
+    case dir_c::W:
         return { -1,0 };
 
     default:
