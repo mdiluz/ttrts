@@ -78,7 +78,7 @@ int CTTRTSGame::IssueOrder( Team team, const COrder& order )
 			return 1;
 
     // Get the right unit for the order
-    for ( OrderUnitPair& pair : m_OrderUnitPairs )
+    for ( SOrderUnitPair & pair : m_OrderUnitPairs )
     {
         if ( pair.unit.getID() == order.unit )
         {
@@ -106,7 +106,7 @@ int CTTRTSGame::VerifyPos(uvector2 vec) const
 
 
 // Get a units new position
-uvector2 CTTRTSGame::GetNewPosition( const OrderUnitPair& pair ) const
+uvector2 CTTRTSGame::GetNewPosition( const SOrderUnitPair & pair ) const
 {
     // Grab the order
     switch ( pair.order.command)
@@ -127,7 +127,7 @@ int CTTRTSGame::SimulateToNextTurn()
     int error = 0;
 
     // Attempt all movement orders
-    for ( OrderUnitPair& pair : m_OrderUnitPairs )
+    for ( SOrderUnitPair & pair : m_OrderUnitPairs )
     {
         switch (  pair.order.command)
         {
@@ -142,7 +142,7 @@ int CTTRTSGame::SimulateToNextTurn()
                 if ( possible )
                 {
                     // If any unit is in this spot, or moving unit moving to said spot, reject this
-                    for ( const OrderUnitPair& pair2 : m_OrderUnitPairs )
+                    for ( const SOrderUnitPair & pair2 : m_OrderUnitPairs )
                     {
                         // Skip myself
                         if( pair.unit.getID() == pair2.unit.getID() ) continue;
@@ -168,7 +168,7 @@ int CTTRTSGame::SimulateToNextTurn()
     }
 
     // Turn all units that need turning
-    for ( OrderUnitPair& pair : m_OrderUnitPairs )
+    for ( SOrderUnitPair & pair : m_OrderUnitPairs )
     {
         switch (  pair.order.command)
         {
@@ -196,7 +196,7 @@ int CTTRTSGame::SimulateToNextTurn()
         // Assume no more charging
         charging = false;
         // Initially move all units
-        for ( OrderUnitPair& pair : m_OrderUnitPairs )
+        for ( SOrderUnitPair & pair : m_OrderUnitPairs )
         {
             if ( pair.order.command == command_c::A )
             {
@@ -215,9 +215,9 @@ int CTTRTSGame::SimulateToNextTurn()
         std::vector< unit_id_t > toKill; // Vector to store which units to kill
 
         // Initially move all units to check for pass through
-        for ( OrderUnitPair& pair1 : m_OrderUnitPairs )
+        for ( SOrderUnitPair & pair1 : m_OrderUnitPairs )
         if ( pair1.order.command == command_c::A )
-        for ( OrderUnitPair& pair2 : m_OrderUnitPairs )
+        for ( SOrderUnitPair & pair2 : m_OrderUnitPairs )
         if ( pair1.unit.getID() != pair2.unit.getID() // Don't check the same units
                 && pair2.order.command == command_c::A )
         {
@@ -233,8 +233,8 @@ int CTTRTSGame::SimulateToNextTurn()
         toKill.clear();
 
         // Check for all matching spots
-        for ( OrderUnitPair& pair1 : m_OrderUnitPairs )
-        for ( OrderUnitPair& pair2 : m_OrderUnitPairs )
+        for ( SOrderUnitPair & pair1 : m_OrderUnitPairs )
+        for ( SOrderUnitPair & pair2 : m_OrderUnitPairs )
         {
             if( pair1.unit.getID() == pair2.unit.getID() ) continue; // Don't check the same units
 
@@ -258,7 +258,7 @@ int CTTRTSGame::SimulateToNextTurn()
     }
 
     // Clear all orders
-    for ( OrderUnitPair& pair : m_OrderUnitPairs )
+    for ( SOrderUnitPair & pair : m_OrderUnitPairs )
         pair.order = COrder();
 
     // Increment the current turn
@@ -336,14 +336,14 @@ int CTTRTSGame::AddUnit( CUnit&& unit )
 		return 2;
 
     // If any unit's position matches, reject this
-    for ( const OrderUnitPair& pair: m_OrderUnitPairs )
+    for ( const SOrderUnitPair & pair: m_OrderUnitPairs )
     {
         if( pair.unit.getPos() == unit.getPos() )
             return 3;
     }
 
     // Add the unit with a blank order
-    m_OrderUnitPairs.push_back( OrderUnitPair(std::move(unit), COrder()) );
+    m_OrderUnitPairs.push_back( SOrderUnitPair(std::move(unit), COrder()) );
 
 
 	return 0;
@@ -374,7 +374,7 @@ int CTTRTSGame::VerifyOrder( Team team, const COrder& order ) const
 	const unit_id_t unitID = order.unit;
 
     // Attempt to find the unit
-    for ( const OrderUnitPair& pair : m_OrderUnitPairs )
+    for ( const SOrderUnitPair & pair : m_OrderUnitPairs )
 	{
         // Accept if we have the unit
         if ( pair.unit.getID() == unitID
@@ -392,7 +392,7 @@ int CTTRTSGame::VerifyOrder( Team team, const COrder& order ) const
 // Get unit by unit ID
 const CUnit& CTTRTSGame::GetUnitByIDConst( unit_id_t id ) const
 {
-    for ( const OrderUnitPair& pair : m_OrderUnitPairs )
+    for ( const SOrderUnitPair & pair : m_OrderUnitPairs )
     {
         // Attempt the unit add
         if ( pair.unit.getID() == id  )
@@ -407,7 +407,7 @@ const CUnit& CTTRTSGame::GetUnitByIDConst( unit_id_t id ) const
 // Get an order by unit ID
 const COrder& CTTRTSGame::GetOrderByIDConst( unit_id_t id ) const
 {
-    for ( const OrderUnitPair& pair : m_OrderUnitPairs )
+    for ( const SOrderUnitPair & pair : m_OrderUnitPairs )
     {
         // Attempt the unit add
         if ( pair.unit.getID() == id  )
@@ -422,7 +422,7 @@ const COrder& CTTRTSGame::GetOrderByIDConst( unit_id_t id ) const
 // Get unit by unit ID
 CUnit& CTTRTSGame::GetUnitByID( unit_id_t id )
 {
-    for ( OrderUnitPair& pair : m_OrderUnitPairs )
+    for ( SOrderUnitPair & pair : m_OrderUnitPairs )
     {
         // Attempt the unit add
         if ( pair.unit.getID() == id )
@@ -441,7 +441,7 @@ std::vector<Team> CTTRTSGame::GetTeams() const
     teams.reserve(GetNumUnits());
 
     // Grab all teams
-    for ( const OrderUnitPair& pair : m_OrderUnitPairs )
+    for ( const SOrderUnitPair & pair : m_OrderUnitPairs )
     {
         teams.push_back(pair.unit.getTeam());
     }
@@ -461,7 +461,7 @@ Team CTTRTSGame::CheckForWin() const
     memset(units,0,sizeof(units));
 
     // Count up all the units for each Team
-    for ( const OrderUnitPair& pair : m_OrderUnitPairs )
+    for ( const SOrderUnitPair & pair : m_OrderUnitPairs )
     {
         const int team = (int)pair.unit.getTeam();
         units[team] += 1;
@@ -499,7 +499,7 @@ std::string CTTRTSGame::GetStateAsString() const
 
     // Gather unit information
     std::string units;
-    for ( const OrderUnitPair& pair : m_OrderUnitPairs )
+    for ( const SOrderUnitPair & pair : m_OrderUnitPairs )
     {
         units += CUnit::GetStringFromUnit(pair.unit);
         units += '\n';

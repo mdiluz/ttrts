@@ -9,22 +9,22 @@
 #define GAME_HEADER_DELIMITER "~~~~\n"
 
 // Type for order and unit pairs
-struct OrderUnitPair
+struct SOrderUnitPair
 {
     // Straight up move constructor
-    OrderUnitPair( OrderUnitPair&& other )
+    SOrderUnitPair( SOrderUnitPair && other )
         : unit ( std::move(other.unit) )
         , order ( other.order )
     {}
 
     // Multi parameter constructor
-    OrderUnitPair( CUnit&& u, COrder o )
+    SOrderUnitPair( CUnit&& u, COrder o )
         : unit ( std::move(u) )
         , order ( o )
     {}
 
     // Move assignment operator
-    inline OrderUnitPair& operator=( OrderUnitPair&& rhs )
+    inline SOrderUnitPair & operator=( SOrderUnitPair && rhs )
     {
         this->unit = std::move(rhs.unit);
         this->order = std::move(rhs.order);
@@ -36,7 +36,7 @@ struct OrderUnitPair
 };
 
 // Typedef for a vector of these unit pairs
-typedef std::vector< OrderUnitPair > OrderUnitPairVector;
+typedef std::vector<SOrderUnitPair> OrderUnitPairVector;
 
 // Full TTRTS Game class
 // Stores information about the game
@@ -109,7 +109,7 @@ private:
     int VerifyPos( uvector2 vec ) const;
 
     // Get a units new position after an order
-    uvector2 GetNewPosition( const OrderUnitPair& pair ) const;
+    uvector2 GetNewPosition( const SOrderUnitPair & pair ) const;
 
     // Check for a pass through
     static bool CheckForPassThrough( const CUnit& one, const CUnit& two );
