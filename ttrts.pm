@@ -3,7 +3,7 @@ use strict;
 use warnings;
 
 our $ttrts_perlai_versioncompat_major = 0;
-our $ttrts_perlai_versioncompat_minor = 1;
+our $ttrts_perlai_versioncompat_minor = 2;
 
 # Get information about a unit from it's descriptor
 sub getUnit
