@@ -152,7 +152,7 @@ int main(int argc, char* argv[])
 		{
 			// Construct the player order filename
 			char playerOrderFileName[128];
-			snprintf(playerOrderFileName, 128, "%s/Player_%i_Turn_%i.txt", gameDir.c_str(), game.GetTurn(), (int) player);
+			snprintf(playerOrderFileName, 128, "%s/Player_%i_Turn_%i.txt", gameDir.c_str(), (int) player, game.GetTurn());
 
 			// Wait for the player order file to be created
 			std::cout<<"Waiting for "<< playerOrderFileName <<std::endl;
