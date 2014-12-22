@@ -8,7 +8,7 @@ our $ttrts_perlai_versioncompat_minor = 1;
 # Get information about a unit from it's descriptor
 sub getUnit
 {
-	return ($_[0] =~ /UNIT:(\d+) tm:(\d+) vs:([^ ]+) dr:([^ ]+) ps:\[(\d+),(\d+)\]/);
+	return ($_[0] =~ /UNIT:(\d+) pl:(\d+) vs:([^ ]+) dr:([^ ]+) ps:\[(\d+),(\d+)\]/);
 }
 
 # Get the units from a turn file
@@ -84,17 +84,17 @@ sub GetHeaderForTurn
 	return ($gameName,$gameX,$gameY);
 }
 
-# Get units from a specific team
-sub getUnitsOnTeam
+# Get units from a specific player
+sub getUnitsOnPlayer
 {
-	my $theTeam = shift;
+	my $thePlayer = shift;
 	my @allUnits = @_;
 	my @myUnits;
 
 	for my $unit (@allUnits)
 	{
-		my ($unitTeam) = $unit =~ /tm:(\d+)/;
-		if ( $unitTeam == $theTeam )
+		my ($unitplayer) = $unit =~ /pl:(\d+)/;
+		if ( $unitplayer == $thePlayer )
 		{
 			push(@myUnits,$unit);
 		}
@@ -114,10 +114,10 @@ sub GetTurnFile
 sub GetCommandFile
 {
 	my $turn = shift;
-	my $team = shift;
-	my $cmdFileName = "Turn_TURN_Team_TEAM.txt";
+	my $player = shift;
+	my $cmdFileName = "Player_PLAYER_Turn_TURN.txt";
 	$cmdFileName =~ s/TURN/$turn/;
-	$cmdFileName =~ s/TEAM/$team/;
+	$cmdFileName =~ s/PLAYER/$player/;
 	return $cmdFileName;
 }
 
@@ -125,11 +125,11 @@ sub GetCommandFile
 sub OutputCommandsFile
 {
 	my $turn = shift;
-	my $team = shift;
+	my $player = shift;
 	my $commands = shift;
 
 	# Get output file
-	our $cmdFileName = GetCommandFile($turn,$team);
+	our $cmdFileName = GetCommandFile($turn,$player);
 
 	if (! -e $cmdFileName)
 	{
@@ -172,10 +172,10 @@ sub PrintGameMap
 	# Fill with units
 	for my $unit (@units)
 	{
-		my ($id,$tm,$vs,$dr,$psx,$psy) = getUnit($unit);
+		my ($id,$pl,$vs,$dr,$psx,$psy) = getUnit($unit);
 
-		$tm += 31;
-		$vs = "\e[".$tm."m".$vs."\e[0m";
+		$pl += 31;
+		$vs = "\e[".$pl."m".$vs."\e[0m";
 
 		$map[$psx][$psy] = $vs;
 	}
