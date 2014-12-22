@@ -1,5 +1,5 @@
 ## NAME
-	ttrts - Tiny Terminal RTS v0.1.0
+	ttrts - Tiny Terminal RTS v0.2.0
 
 ## SYNOPSYS
 	ttrts MAPFILE
@@ -57,4 +57,3 @@
 	F   - move unit [F]orward one space
 	L/R - rotate unit [L]eft or [R]ight
 	A   - [A]ttack in straight line in front of unit
-	
