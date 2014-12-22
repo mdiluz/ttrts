@@ -41,13 +41,13 @@
 	TURN:{TURN_NUMBER}
 	... {any extra properties could go here}
 	~~~~
-	UNIT:{ID} tm:{TEAM} vs:{VIS} dr:{DIR(NESW)} ps:[{X},{Y}]
+	UNIT:{ID} pl:{PLAYER} vs:{VIS} dr:{DIR(NESW)} ps:[{X},{Y}]
 	... {continue for all units}
 	END
 
 ## ORDER FILE FORMAT
 ### Name
-	Player_{TEAM_NUMBER}_Turn_{TURN_NUMBER}.txt
+	Player_{PLAYER_ID}_Turn_{TURN_NUMBER}.txt
 ### Contents
 	ORDER:{ORDER_CHAR} id:{UNIT_ID}
 	... {continue for all orders}
@@ -57,3 +57,4 @@
 	F   - move unit [F]orward one space
 	L/R - rotate unit [L]eft or [R]ight
 	A   - [A]ttack in straight line in front of unit
+	
