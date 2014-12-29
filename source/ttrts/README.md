@@ -1,5 +1,4 @@
-## NAME
-	ttrts - Tiny Terminal RTS v0.2.0
+# ttrts - Tiny Terminal RTS v0.3.0
 
 ## SYNOPSYS
 	ttrts MAPFILE

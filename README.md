@@ -1,5 +1,4 @@
-# TTRTS v0.2.0
-
+# TTRTS v0.3.0
 *The Tiny Terminal RTS where the players write their AIs*
 
 -----------------------------------------------------------
