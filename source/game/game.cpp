@@ -101,6 +101,15 @@ int CTTRTSGame::VerifyPosIsValidMovement(uvector2 vec) const
         return 1;
     }
 
+    // Check within our invalid positions
+    for ( const uvector2& invalid : m_InvalidPositions )
+    {
+        if( vec == invalid )
+        {
+            return 2;
+        }
+    }
+
     return 0;
 }
 
@@ -158,6 +167,8 @@ int CTTRTSGame::SimulateToNextTurn()
                 // If the movement is still possible
                 if ( possible )
                 {
+                    // Push back the old position to our invalid positions list
+                    AddInvalidPosition(pair.unit.GetPos());
                     pair.unit.SetPos(newpos);
                 }
             }
@@ -493,9 +504,30 @@ player_t CTTRTSGame::GetWinningPlayer() const
 // Get the game information as a string
 std::string CTTRTSGame::GetStateAsString() const
 {
+    // Grab the invalid positions
+    std::string invalid_positions;
+    if( m_InvalidPositions.size() == 0 )
+    {
+        invalid_positions = "NONE";
+    }
+
+    for ( auto invalid_pos : m_InvalidPositions )
+    {
+        char pos[16];
+        if( snprintf(pos, 16, GAME_POS_FORMATTER , invalid_pos.x, invalid_pos.y  ) < 0 )
+        {
+            return "BUFFER OVERFLOW";
+        }
+        invalid_positions += pos;
+    }
+
+
     // Print out the header
-    char header[64];
-    snprintf(header, 512, GAME_HEADER_FORMATTER , name.c_str(), dimensions.x, dimensions.y, turn );
+    char header[512];
+    if ( snprintf(header, 512, GAME_HEADER_FORMATTER , name.c_str(), dimensions.x, dimensions.y, turn, invalid_positions.c_str() ) < 0 )
+    {
+        return "BUFFER OVERFLOW";
+    }
 
     // Gather unit information
     std::string units;
@@ -514,7 +546,6 @@ std::string CTTRTSGame::GetStateAsString() const
 
     return state;
 }
-
 // Get the game information as a string
 CTTRTSGame CTTRTSGame::CreateFromString( const std::string& input )
 {
@@ -524,24 +555,90 @@ CTTRTSGame CTTRTSGame::CreateFromString( const std::string& input )
     std::string units = input.substr(headerEnd + strlen(GAME_HEADER_DELIMITER));
 
     // Grab information from the header
-    char buf[64];
+    char name[64];
     unsigned int turn;
     unsigned int sizex;
     unsigned int sizey;
-    sscanf(header.c_str(), GAME_HEADER_FORMATTER, buf, &sizex, &sizey, &turn );
+    char invalid_positions[512];
+    if( sscanf(header.c_str(), GAME_HEADER_FORMATTER, name, &sizex, &sizey, &turn, invalid_positions ) != 5 )
+    {
+        return CTTRTSGame(0,0);
+    }
+
+    std::vector<uvector2> invalid_pos_vector;
+    {
+        std::string invalid_positions_str = invalid_positions;
+        size_t pos;
+        while ( ( pos = invalid_positions_str.find(']') ) != std::string::npos )
+        {
+            std::string pos_string = invalid_positions_str.substr(1,pos);
+
+            // Use scanf to extract positions
+
+            unsigned int x;
+            unsigned int y;
+            if( sscanf(pos_string.c_str(), GAME_POS_FORMATTER, &x, &y ) != 2 )
+            {
+                return CTTRTSGame(0,0);
+            }
+
+            uvector2 inv_pos(x,y);
+
+            // Erase this coordinate
+            invalid_positions_str.erase(0,pos+1);
+
+            // Append our list
+            invalid_pos_vector.push_back(inv_pos);
+        }
+    }
 
     CTTRTSGame game(sizex,sizey);
-    game.SetName(buf);
+    game.SetName(name);
     game.SetTurn(turn);
 
     // For each line, construct a unit
-    size_t pos;
-    while ( ( pos = units.find('\n') ) != std::string::npos )
     {
-        std::string unit_string = units.substr(0,pos);
-        units.erase(0,pos+1);
-        game.AddUnit(CUnit::GetUnitFromString(unit_string));
+        size_t pos;
+        while ((pos = units.find('\n')) != std::string::npos) {
+            std::string unit_string = units.substr(0, pos);
+            units.erase(0, pos + 1);
+            game.AddUnit(CUnit::GetUnitFromString(unit_string));
+        }
+    }
+
+    // Add all invalid positions
+    for ( auto inv : invalid_pos_vector )
+    {
+        game.AddInvalidPosition(inv);
     }
 
     return game;
+}
+
+// Check if any of the units can move
+bool CTTRTSGame::UnitsCanMove() const
+{
+    for( const SOrderUnitPair& pair: m_OrderUnitPairs )
+    {
+        uvector2 pos = pair.unit.GetPos();
+
+        // Assume if unit is adjacent to any valid tile, then it can move there
+        if(        VerifyPosIsValidMovement(pos + vector2(1, 0) ) == 0
+                || VerifyPosIsValidMovement(pos + vector2(0, 1)) == 0
+                || VerifyPosIsValidMovement(pos + vector2(-1, 0)) == 0
+                || VerifyPosIsValidMovement(pos + vector2(0, -1)) == 0 )
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+// Check if the game is over
+bool CTTRTSGame::GameOver() const
+{
+    return ( (GetWinningPlayer() != player_t::NUM_INVALID )     // We have a winning player
+            || GetNumUnits() == 0
+            || !UnitsCanMove() );                       // OR we have no units
 }

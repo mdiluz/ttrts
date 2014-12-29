@@ -7,8 +7,6 @@
 #include "gametypes.h"
 #include "vector2.h"
 
-#define UNIT_FORMATTER "UNIT:%u pl:%u vs:%c dr:%c ps:[%u,%u]"
-
 // force a reset of the unit ID value
 void __forceResetCUnitID();
 

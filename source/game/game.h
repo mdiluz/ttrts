@@ -6,9 +6,6 @@
 #include "order.h"
 #include "orderunitpair.h"
 
-#define GAME_HEADER_FORMATTER "NAME:%s\nSIZE:[%u,%u]\nTURN:%u"
-#define GAME_HEADER_DELIMITER "~~~~\n"
-
 // Full TTRTS Game class
 // Stores information about the game
 // Can convert from a string or to a string
@@ -79,6 +76,12 @@ public:
     // Get a vector of the players in the current game
     std::vector<player_t>   GetPlayers() const;
 
+    // Get the vector of current invalid positions
+    inline std::vector<uvector2>    GetInvalidPositions() const { return m_InvalidPositions; }
+
+    // Add an invalid position
+    inline void                     AddInvalidPosition( uvector2 vec ) { m_InvalidPositions.push_back(vec); }
+
 private:
 
     // Check for a pass through
@@ -101,6 +104,7 @@ private:
     unsigned int            turn;               // Int to store the current turn
     uvector2                dimensions;         // Dimensions of the game
     OrderUnitPairVector     m_OrderUnitPairs;   // Vector to store all units and orders
+    std::vector<uvector2>   m_InvalidPositions; // Vector of invalidated positions
 };
 
 
