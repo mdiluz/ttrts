@@ -47,7 +47,7 @@
 
       <section id="main_content">
         <h1>
-<a id="ttrts-v010" class="anchor" href="#ttrts-v010" aria-hidden="true"><span class="octicon octicon-link"></span></a>TTRTS v0.1.0</h1>
+<a id="ttrts-v030" class="anchor" href="#ttrts-v030" aria-hidden="true"><span class="octicon octicon-link"></span></a>TTRTS v0.3.0</h1>
 
 <p><em>The Tiny Terminal RTS where the players write their AIs</em></p>
 
@@ -86,11 +86,67 @@ $ ./ttrts # To launch binary and display usage
 <hr>
 
 <h2>
+<a id="development" class="anchor" href="#development" aria-hidden="true"><span class="octicon octicon-link"></span></a>Development</h2>
+
+<ul>
+<li>master branch always stores latest stable release</li>
+<li>master/{hotfix} branches store in progress hotfixes for the stable branch</li>
+<li>dev branch stores in progress development</li>
+<li>dev/{feature} branches store features</li>
+</ul>
+
+<hr>
+
+<h2>
+<a id="changelog" class="anchor" href="#changelog" aria-hidden="true"><span class="octicon octicon-link"></span></a>Changelog</h2>
+
+<h4>
+<a id="v030" class="anchor" href="#v030" aria-hidden="true"><span class="octicon octicon-link"></span></a>v0.3.0</h4>
+
+<ul>
+<li>Additional functionality of walls
+
+<ul>
+<li>Walls are noted in gamestate file on new "WALL:[X,Y]..." line</li>
+<li>Walls are impassable by all movement</li>
+</ul>
+</li>
+<li>Units leave an impassable wall behind after movement</li>
+<li>Game can now end if no units are able to move</li>
+<li>Various C++ api simplifications</li>
+<li>Integration of perl api from <a href="https://github.com/mdiluz/ttrts-players">ttrts-players</a>
+</li>
+</ul>
+
+<h4>
+<a id="v020" class="anchor" href="#v020" aria-hidden="true"><span class="octicon octicon-link"></span></a>v0.2.0</h4>
+
+<ul>
+<li>All team references changed to player
+
+<ul>
+<li>Order file format changed to Player_#<em>Turn</em>#.txt</li>
+<li>Unit descriptors now use pl: instead of tm:</li>
+</ul>
+</li>
+<li>Various other C++ api corrections and refactors</li>
+</ul>
+
+<h4>
+<a id="v010" class="anchor" href="#v010" aria-hidden="true"><span class="octicon octicon-link"></span></a>v0.1.0</h4>
+
+<ul>
+<li>First playable version of ttrts</li>
+</ul>
+
+<hr>
+
+<h2>
 <a id="further-information" class="anchor" href="#further-information" aria-hidden="true"><span class="octicon octicon-link"></span></a>Further Information</h2>
 
-<p>See <a href="https://github.com/mdiluz/ttrts/source/ttrts/README.md">the ttrts binary readme</a> for full usage and game rules</p>
+<p>See the ttrts binary <a href="source/ttrts/README.md">readme</a> for full usage and game rules</p>
 
-<p>See <a href="https://github.com/mdiluz/ttrts-players">my ttrts-players repository</a> for examples of players</p>
+<p>See <a href="https://github.com/mdiluz/ttrts-players">ttrts-players</a> for examples of AIs</p>
       </section>
 
       <footer>
