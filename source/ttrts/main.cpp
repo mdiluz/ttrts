@@ -61,7 +61,7 @@ int main(int argc, char* argv[])
 	// If no args, print usage
 	if ( argc == 1 )
 	{
-		std::cerr<<sk_usage<<std::endl;
+		std::cout<<sk_usage<<std::endl;
 		return 1;
 	}
 
