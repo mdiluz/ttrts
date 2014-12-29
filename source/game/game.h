@@ -76,11 +76,11 @@ public:
     // Get a vector of the players in the current game
     std::vector<player_t>   GetPlayers() const;
 
-    // Get the vector of current invalid positions
-    inline std::vector<uvector2>    GetInvalidPositions() const { return m_InvalidPositions; }
+    // Get the vector of wall positions
+    inline std::vector<uvector2>    GetWalls() const { return m_walls; }
 
     // Add an invalid position
-    inline void                     AddInvalidPosition( uvector2 vec ) { m_InvalidPositions.push_back(vec); }
+    inline void                     AddWall(uvector2 vec) { m_walls.push_back(vec); }
 
 private:
 
@@ -104,7 +104,7 @@ private:
     unsigned int            turn;               // Int to store the current turn
     uvector2                dimensions;         // Dimensions of the game
     OrderUnitPairVector     m_OrderUnitPairs;   // Vector to store all units and orders
-    std::vector<uvector2>   m_InvalidPositions; // Vector of invalidated positions
+    std::vector<uvector2>   m_walls;            // Vector of wall positions
 };
 
 

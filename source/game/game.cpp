@@ -102,7 +102,7 @@ int CTTRTSGame::VerifyPosIsValidMovement(uvector2 vec) const
     }
 
     // Check within our invalid positions
-    for ( const uvector2& invalid : m_InvalidPositions )
+    for ( const uvector2& invalid : m_walls)
     {
         if( vec == invalid )
         {
@@ -167,8 +167,8 @@ int CTTRTSGame::SimulateToNextTurn()
                 // If the movement is still possible
                 if ( possible )
                 {
-                    // Push back the old position to our invalid positions list
-                    AddInvalidPosition(pair.unit.GetPos());
+                    // Create a wall at our old position
+                    AddWall(pair.unit.GetPos());
                     pair.unit.SetPos(newpos);
                 }
             }
@@ -504,27 +504,27 @@ player_t CTTRTSGame::GetWinningPlayer() const
 // Get the game information as a string
 std::string CTTRTSGame::GetStateAsString() const
 {
-    // Grab the invalid positions
-    std::string invalid_positions;
-    if( m_InvalidPositions.size() == 0 )
+    // Grab the walls
+    std::string walls;
+    if( m_walls.size() == 0 )
     {
-        invalid_positions = "NONE";
+        walls = "NONE";
     }
 
-    for ( auto invalid_pos : m_InvalidPositions )
+    for ( auto wall : m_walls)
     {
         char pos[16];
-        if( snprintf(pos, 16, GAME_POS_FORMATTER , invalid_pos.x, invalid_pos.y  ) < 0 )
+        if( snprintf(pos, 16, GAME_POS_FORMATTER , wall.x, wall.y  ) < 0 )
         {
             return "BUFFER OVERFLOW";
         }
-        invalid_positions += pos;
+        walls += pos;
     }
 
 
     // Print out the header
     char header[512];
-    if ( snprintf(header, 512, GAME_HEADER_FORMATTER , name.c_str(), dimensions.x, dimensions.y, turn, invalid_positions.c_str() ) < 0 )
+    if ( snprintf(header, 512, GAME_HEADER_FORMATTER , name.c_str(), dimensions.x, dimensions.y, turn, walls.c_str() ) < 0 )
     {
         return "BUFFER OVERFLOW";
     }
@@ -559,19 +559,19 @@ CTTRTSGame CTTRTSGame::CreateFromString( const std::string& input )
     unsigned int turn;
     unsigned int sizex;
     unsigned int sizey;
-    char invalid_positions[512];
-    if( sscanf(header.c_str(), GAME_HEADER_FORMATTER, name, &sizex, &sizey, &turn, invalid_positions ) != 5 )
+    char walls[512];
+    if( sscanf(header.c_str(), GAME_HEADER_FORMATTER, name, &sizex, &sizey, &turn, walls) != 5 )
     {
         return CTTRTSGame(0,0);
     }
 
-    std::vector<uvector2> invalid_pos_vector;
+    std::vector<uvector2> walls_vector;
     {
-        std::string invalid_positions_str = invalid_positions;
+        std::string walls_str = walls;
         size_t pos;
-        while ( ( pos = invalid_positions_str.find(']') ) != std::string::npos )
+        while ( ( pos = walls_str.find(']') ) != std::string::npos )
         {
-            std::string pos_string = invalid_positions_str.substr(1,pos);
+            std::string pos_string = walls_str.substr(1,pos);
 
             // Use scanf to extract positions
 
@@ -582,13 +582,11 @@ CTTRTSGame CTTRTSGame::CreateFromString( const std::string& input )
                 return CTTRTSGame(0,0);
             }
 
-            uvector2 inv_pos(x,y);
-
             // Erase this coordinate
-            invalid_positions_str.erase(0,pos+1);
+            walls_str.erase(0,pos+1);
 
             // Append our list
-            invalid_pos_vector.push_back(inv_pos);
+            walls_vector.push_back({(ucoord_t)x,(ucoord_t)y});
         }
     }
 
@@ -606,10 +604,10 @@ CTTRTSGame CTTRTSGame::CreateFromString( const std::string& input )
         }
     }
 
-    // Add all invalid positions
-    for ( auto inv : invalid_pos_vector )
+    // Add all walls
+    for ( auto wall : walls_vector)
     {
-        game.AddInvalidPosition(inv);
+        game.AddWall(wall);
     }
 
     return game;
