@@ -19,10 +19,40 @@ TTRTS is from the ground up designed to be a fun way to practice programming. An
     $ cd ttrts
     $ ./bootstrap.sh
     $ ./ttrts # To launch binary and display usage
-    
+
+-----------------------------------------------------------
+## Development
+
+* [master](master) branch always stores latest stable release
+* master/{hotfix} branches store in progress hotfixes for the stable branch
+* [dev](dev) branch stores in progress development
+* dev/{feature} branches store features
+
+-----------------------------------------------------------
+## Changelog
+
+## v0.3.0
+* Additional functionality of walls
+  * Walls are noted in gamestate file on new "WALL:[X,Y]..." line
+  * Walls are impassable by all movement
+* Units leave an impassable wall behind after movement a la
+* Game can now end if no units are able to move
+* Various C++ api simplifications
+* ttrts now integrates
+* Integration of perl api from [ttrts-players](https://github.com/mdiluz/ttrts-players)
+
+## v0.2.0 
+* All team references changed to player
+    * Order file format changed to Player_#_Turn_#.txt
+    * Unit descriptors now use pl: instead of tm:
+* Various other C++ api corrections and refactors
+
+## v0.1.0 
+* First playable version of ttrts
+
 -----------------------------------------------------------
 ## Further Information
 
-See [the ttrts binary readme](source/ttrts/README.md) for full usage and game rules
+See the ttrts binary [readme](source/ttrts/README.md) for full usage and game rules
 
-See [my ttrts-players repository](https://github.com/mdiluz/ttrts-players) for examples of players
+See [ttrts-players](https://github.com/mdiluz/ttrts-players) for examples of AIs
