@@ -92,7 +92,7 @@ int CTTRTSGame::IssueOrder( player_t player, const SOrder & order )
 }
 
 // Verify a position
-int CTTRTSGame::VerifyPos(uvector2 vec) const
+int CTTRTSGame::VerifyPosIsValidMovement(uvector2 vec) const
 {
     // Simply check if within the bounds of our dimensions for now
     if ( ( vec.x >= dimensions.x )
@@ -137,7 +137,7 @@ int CTTRTSGame::SimulateToNextTurn()
                 uvector2 newpos = GetNewPosition(pair);
 
                 // Verify the position is even available
-                bool possible = ( VerifyPos(newpos) == 0 );
+                bool possible = (VerifyPosIsValidMovement(newpos) == 0 );
 
                 if ( possible )
                 {
@@ -202,7 +202,7 @@ int CTTRTSGame::SimulateToNextTurn()
             {
                 uvector2 newpos = pair.unit.GetInFront();
                 // If move would be within the arena
-                if ( ( newpos.x <= dimensions.x-1 ) && ( newpos.y <= dimensions.y-1 ) )
+                if (VerifyPosIsValidMovement(newpos) == 0 )
                 {
                     pair.unit.SetPos(newpos);
 
@@ -454,7 +454,7 @@ std::vector<player_t> CTTRTSGame::GetPlayers() const
 }
 
 // Check if we have a win state
-player_t CTTRTSGame::CheckForWin() const
+player_t CTTRTSGame::GetWinningPlayer() const
 {
     // Array of units for each Player
     unsigned int units[(int) player_t::NUM_INVALID];

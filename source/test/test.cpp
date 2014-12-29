@@ -172,7 +172,7 @@ const char* tests()
         if (game.GetUnitByIndex(0).GetID() != id )
             return "Game killed the wrong unit";
 
-        if ( game.CheckForWin() != player_t::Blue )
+        if ( game.GetWinningPlayer() != player_t::Blue )
             return "Game failed to recognise a win for the right Player";
 
         std::string game_string = game.GetStateAsString();

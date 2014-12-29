@@ -133,10 +133,8 @@ int main(int argc, char* argv[])
 	snprintf(cmd1,128, "rm -rf %s/*",gameDir.c_str());
 	system(cmd1);
 
-	// While the game hasn't been won
-	player_t winningPlayer;
-	while ( ((winningPlayer = game.CheckForWin()) == player_t::NUM_INVALID) // We have a winning player
-			&& game.GetNumUnits() > 0 ) // We have no units left
+	// While the game isn't finished
+	while ( ! game.GameOver() )
 	{
 		std::cout<<"Starting turn "<<game.GetTurn()<<std::endl;
 
@@ -219,6 +217,9 @@ int main(int argc, char* argv[])
 
 	// Output final gamestate
 	OutputGameStateFile(game, gameDir);
+
+	// Get the winning player
+	player_t winningPlayer = game.GetWinningPlayer();
 
 	// Print the winner!
 	if ( winningPlayer != player_t::NUM_INVALID )

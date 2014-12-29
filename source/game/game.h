@@ -30,10 +30,16 @@ public:
     // Returns non-zero if simulation failed
     int                     SimulateToNextTurn();
 
-    // Check for a win, returns invalid for no win state reached
-    // Note: this function will return invalid a draw was reached
-    //       best practice would be to call with GetNumUnits() == 0
-    player_t                CheckForWin() const;
+    // Check for winning player, returns invalid for no win state reached
+    // Note: this function will return invalid if a draw was reached
+    //       do not rely on this to test for end state
+    player_t                GetWinningPlayer() const;
+
+    // Check if the game is over
+    bool                    GameOver() const;
+
+    // Check if any of the units can move
+    bool                    UnitsCanMove() const;
 
     // Get the game information as a string
     std::string             GetStateAsString() const;
@@ -80,7 +86,7 @@ private:
 
     // Verify any order or position - non-zero is error
     int                     VerifyOrder( player_t player, const SOrder & order ) const;
-    int                     VerifyPos( uvector2 vec ) const;
+    int                     VerifyPosIsValidMovement(uvector2 vec) const;
 
     // Get a units new position after an order
     uvector2                GetNewPosition( const SOrderUnitPair & pair ) const;
