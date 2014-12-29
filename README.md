@@ -35,10 +35,9 @@ TTRTS is from the ground up designed to be a fun way to practice programming. An
 * Additional functionality of walls
   * Walls are noted in gamestate file on new "WALL:[X,Y]..." line
   * Walls are impassable by all movement
-* Units leave an impassable wall behind after movement a la
+* Units leave an impassable wall behind after movement
 * Game can now end if no units are able to move
 * Various C++ api simplifications
-* ttrts now integrates
 * Integration of perl api from [ttrts-players](https://github.com/mdiluz/ttrts-players)
 
 ## v0.2.0 
