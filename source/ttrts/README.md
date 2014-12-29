@@ -1,4 +1,4 @@
-# ttrts - Tiny Terminal RTS v0.3.0
+# ttrts - Tiny Terminal RTS
 
 ## SYNOPSIS
 	ttrts MAPFILE
