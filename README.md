@@ -11,7 +11,7 @@ TTRTS is from the ground up designed to be a fun way to practice programming. An
 ## Building TTRTS
 
 #### Requirements
-* cmake - our build system uses cmake
+* CMake - our build system uses cmake
 * Linux/OSX - currently no support for Windows, tracked with [Issue #9](https://github.com/mdiluz/ttrts/issues/9)
 
 #### To Build
