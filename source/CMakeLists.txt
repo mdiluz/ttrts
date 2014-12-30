@@ -30,7 +30,7 @@ add_definitions(
 
 # Subprojects
 add_subdirectory( ttrts )
-add_subdirectory( game )
+add_subdirectory( client )
 
 # Auxhilary binaries
 add_subdirectory( test )

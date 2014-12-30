@@ -3,7 +3,7 @@
 project( ttrts-gen )
 
 include_directories(
-	../game
+	../ttrts
 	../maths
 )
 
@@ -14,7 +14,7 @@ set( SOURCES
 # Add the executable
 add_executable( ttrts-gen ${SOURCES} )
 
-target_link_libraries( ttrts-gen game )
+target_link_libraries( ttrts-gen ttrts )
 
 # Run the gen_usage script to generate our usage header
 add_custom_target(

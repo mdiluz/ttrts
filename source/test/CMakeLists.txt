@@ -4,7 +4,7 @@
 project( ttrts-test )
 
 include_directories( 
-	../game 
+	../ttrts 
 	../maths
 )
 
@@ -15,4 +15,4 @@ set( SOURCES
 # Add the executable
 add_executable( ttrts-test ${SOURCES} )
 
-target_link_libraries( ttrts-test game )
+target_link_libraries( ttrts-test ttrts )
