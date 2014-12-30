@@ -1,19 +1,13 @@
 # Targets
-### ttrts
+### client 
 Main TTRTS binary, runs from the command line and acts as host for games
 
-### test (ttrts-test)
+### test 
 Test binary, to be compiled and run to test various functionality
 
-### gen (ttrts-gen)
+### gen 
 Binary to generate example map files
 
 # Libraries
-### game
+### ttrts
 Implementation of the RTS rules and simulation
-
-### maths
-Simple maths library for 2D calculations and types
-
-### scripts
-Directory of scripts used in build process
