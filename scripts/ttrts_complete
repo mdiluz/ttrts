@@ -1,0 +1,23 @@
+# ttrts completion
+
+test ! -z TTRTS_MAPS && TTRTS_MAPS=/usr/share/ttrts/maps/
+
+have ttrts &&
+function _ttrts
+{
+	commandnames=""
+	for filename in ${TTRTS_MAPS}/* 
+	do
+		map="${filename##*/}"
+		commandnames+="$map "
+	done
+
+    local cur prev
+    COMPREPLY=()
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    prev="${COMP_WORDS[COMP_CWORD-1]}"
+
+    COMPREPLY=( $(compgen -W "${commandnames}" -- ${cur}) )
+}
+
+complete -F _ttrts ttrts

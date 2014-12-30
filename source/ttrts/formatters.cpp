@@ -1,4 +1,7 @@
 #include "formatters.h"
+#include <iostream>
+
+#include "version.h"
 
 // Get the game information as a string
 std::string      GetStringFromGame( const CTTRTSGame& game )
@@ -24,6 +27,9 @@ std::string      GetStringFromGame( const CTTRTSGame& game )
     // Print out the header
     char header[512];
     if ( snprintf(header, 512, GAME_HEADER_FORMATTER ,
+            TTRTS_VERSION_MAJOR,
+            TTRTS_VERSION_MINOR,
+            TTRTS_VERSION_PATCH,
             game.GetName().c_str(),
             game.GetDimensions().x,
             game.GetDimensions().y,
@@ -60,14 +66,24 @@ CTTRTSGame       GetGameFromString( const std::string& input )
     std::string units = input.substr(headerEnd + strlen(GAME_HEADER_DELIMITER));
 
     // Grab information from the header
+    unsigned int major;
+    unsigned int minor;
+    unsigned int patch;
     char name[64];
     unsigned int turn;
     unsigned int sizex;
     unsigned int sizey;
     char walls[512];
-    if( sscanf(header.c_str(), GAME_HEADER_FORMATTER, name, &sizex, &sizey, &turn, walls) != 5 )
+    if( sscanf(header.c_str(), GAME_HEADER_FORMATTER, &major, &minor, &patch, name, &sizex, &sizey, &turn, walls) != 8 )
     {
+        std::cerr<<"Error: Failed to properly read game state from text"<<std::endl;
         return CTTRTSGame(0,0);
+    }
+
+    if( major != TTRTS_VERSION_MAJOR
+        ||  minor != TTRTS_VERSION_MINOR )
+    {
+        std::cerr<<"Error: ttrts map/binary version missmatch BINARY:v"<<major<<"."<<minor<<"."<<patch<<" FILE:"<<TTRTS_VERSION_STRING<<std::endl;
     }
 
     std::vector<uvector2> walls_vector;
