@@ -47,8 +47,4 @@ inline bool SOrder::operator== ( const SOrder & rhs ) const
 // Typedef a vector of orders
 typedef std::vector<SOrder> COrderVector;
 
-// string <--> order conversion functions
-std::string GetStringFromOrder(const SOrder & order );
-SOrder GetOrderFromString( const std::string& order );
-
 #endif //_ORDERS_H_

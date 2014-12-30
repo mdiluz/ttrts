@@ -5,6 +5,7 @@
 #include <sys/stat.h>
 #include <stdio.h>
 #include <stdbool.h>
+#include <formatters.h>
 
 #include "game.h"
 #include "version.h"
@@ -41,7 +42,7 @@ bool OutputGameStateFile(CTTRTSGame &game, std::string &gameDir)
 	}
 
 	// Output the turn description
-	std::string turnDescriptor = game.GetStateAsString();
+	std::string turnDescriptor = GetStringFromGame(game);
 
 	// Append the version number
 	turnDescriptor = std::string("==== ttrts v")
@@ -94,7 +95,7 @@ int main(int argc, char* argv[])
 	}
 
 	// Create the game
-	CTTRTSGame game = CTTRTSGame::CreateFromString(gameDescriptor);
+	CTTRTSGame game = GetGameFromString(gameDescriptor);
 
 	// Grab the players involved
 	auto players = game.GetPlayers();

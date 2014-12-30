@@ -50,52 +50,6 @@ CUnit CUnit::GetUnitFromVis( unitvis_c vis )
     return unit;
 }
 
-// Get a string descriptor of a unit
-std::string CUnit::GetStringFromUnit(const CUnit& unit )
-{
-    static char buff[128];
-    memset(buff,0,sizeof(buff));
-
-    snprintf(buff,128, UNIT_FORMATTER,
-            unit.unit_id,
-            (int)unit.player_id,
-            unit.unit_vis,
-            unit.dir,
-            unit.pos.x,
-            unit.pos.y );
-
-    return buff;
-}
-
-// Get a unit from a string descriptor
-CUnit CUnit::GetUnitFromString(const std::string& unit )
-{
-    CUnit ret;
-
-    unsigned int id;
-    int player;
-    char vis;
-    char dir;
-    unsigned int posx;
-    unsigned int posy;
-
-    sscanf(unit.c_str(), UNIT_FORMATTER,
-            &id,
-            &player,
-            &vis,
-            &dir,
-            &posx,
-            &posy );
-
-    ret.unit_id = (unit_id_t)id;
-    ret.player_id = (player_t) player;
-    ret.unit_vis = (unitvis_c)vis;
-    ret.dir = (dir_c)dir;
-    ret.pos = uvector2(posx,posy);
-
-    return ret;
-}
-
 // Plain constructor
 CUnit::CUnit()
 : unit_id 	( get_unique_unit_id() )

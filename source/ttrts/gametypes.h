@@ -4,13 +4,6 @@
 #include <limits>       // std::numeric_limits
 #include "stdlib.h" // for size_t
 
-#define GAME_POS_FORMATTER "[%u,%u]"
-
-#define GAME_HEADER_FORMATTER "NAME:%s\nSIZE:" GAME_POS_FORMATTER "\nTURN:%u\nWALL:%s"
-#define GAME_HEADER_DELIMITER "~~~~\n"
-
-#define UNIT_FORMATTER "UNIT:%u pl:%u vs:%c dr:%c ps:" GAME_POS_FORMATTER
-
 // Type for a Player IDs
 enum class player_t : char
 {

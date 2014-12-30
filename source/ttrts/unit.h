@@ -18,10 +18,6 @@ public:
 	// Factory function for creating units from a visual
 	static CUnit 		GetUnitFromVis( unitvis_c vis );
 
-	// Unit <--> string conversion functions
-	static std::string 	GetStringFromUnit(const CUnit& unit );
-	static CUnit 		GetUnitFromString(const std::string& unit );
-
     // Constructor
 	CUnit();
 
@@ -58,6 +54,9 @@ public:
 	dir_c 						TurnLeft();
     dir_c 						TurnRight();
     dir_c 						TurnAround();
+
+	// Force set an ID
+	inline void					ForceSetID( unit_id_t id ) 		{ unit_id = id; }
 
 private:
 

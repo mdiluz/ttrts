@@ -1,3 +1,4 @@
+#include <formatters.h>
 #include <iostream>     // std::cout
 
 #include "order.h"
@@ -25,8 +26,8 @@ const char* tests()
     {
         CUnit unit1;
 
-        std::string unit1Desc = CUnit::GetStringFromUnit(unit1);
-        CUnit unit2 = CUnit::GetUnitFromString(unit1Desc);
+        std::string unit1Desc = GetStringFromUnit(unit1);
+        CUnit unit2 = GetUnitFromString(unit1Desc);
 
         if ( unit1 != unit2 )
             return "Failed to convert an empty unit to string and back";
@@ -39,8 +40,8 @@ const char* tests()
         unit1.SetPlayer(player_t::Green);
         unit1.SetPos(uvector2(5, 10));
 
-        std::string unit1Desc = CUnit::GetStringFromUnit(unit1);
-        CUnit unit2 = CUnit::GetUnitFromString(unit1Desc);
+        std::string unit1Desc = GetStringFromUnit(unit1);
+        CUnit unit2 = GetUnitFromString(unit1Desc);
 
         if ( unit1 != unit2 )
             return "Failed to convert custom unit to string and back";
@@ -175,10 +176,10 @@ const char* tests()
         if ( game.GetWinningPlayer() != player_t::Blue )
             return "Game failed to recognise a win for the right Player";
 
-        std::string game_string = game.GetStateAsString();
-        CTTRTSGame game2 = CTTRTSGame::CreateFromString(game_string);
+        std::string game_string = GetStringFromGame(game);
+        CTTRTSGame game2 = GetGameFromString(game_string);
 
-        std::string game2_string = game2.GetStateAsString();
+        std::string game2_string = GetStringFromGame(game2);
 
         // Try matching up the game descriptors
         if( game_string != game2_string )

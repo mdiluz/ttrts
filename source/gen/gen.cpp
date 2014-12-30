@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <fstream>
+#include "formatters.h"
 
 void AddUnitToGame( player_t player, char vis, uvector2 vec, CTTRTSGame& game )
 {
@@ -15,7 +16,7 @@ void OutputGame( CTTRTSGame&& game )
 {
     std::ofstream output;
     output.open (game.GetName() + ".txt");
-    output << game.GetStateAsString();
+    output << GetStringFromGame(game);
     output.close();
 
     __forceResetCUnitID();

@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <string.h>
+#include "formatters.h"
 
 CTTRTSGame::CTTRTSGame( ucoord_t c, ucoord_t r )
 : dimensions( c,r )
@@ -499,118 +500,6 @@ player_t CTTRTSGame::GetWinningPlayer() const
     }
 
     return winningPlayer;
-}
-
-// Get the game information as a string
-std::string CTTRTSGame::GetStateAsString() const
-{
-    // Grab the walls
-    std::string walls;
-    if( m_walls.size() == 0 )
-    {
-        walls = "NONE";
-    }
-
-    for ( auto wall : m_walls)
-    {
-        char pos[16];
-        if( snprintf(pos, 16, GAME_POS_FORMATTER , wall.x, wall.y  ) < 0 )
-        {
-            return "BUFFER OVERFLOW";
-        }
-        walls += pos;
-    }
-
-
-    // Print out the header
-    char header[512];
-    if ( snprintf(header, 512, GAME_HEADER_FORMATTER , name.c_str(), dimensions.x, dimensions.y, turn, walls.c_str() ) < 0 )
-    {
-        return "BUFFER OVERFLOW";
-    }
-
-    // Gather unit information
-    std::string units;
-    for ( const SOrderUnitPair & pair : m_OrderUnitPairs )
-    {
-        units += CUnit::GetStringFromUnit(pair.unit);
-        units += '\n';
-    }
-
-    // Append the header and units
-    std::string state(header);
-    state += '\n';
-    state += GAME_HEADER_DELIMITER;
-    state += units;
-    state += "END";
-
-    return state;
-}
-// Get the game information as a string
-CTTRTSGame CTTRTSGame::CreateFromString( const std::string& input )
-{
-    size_t headerEnd = input.find(GAME_HEADER_DELIMITER);
-
-    std::string header = input.substr(0, headerEnd);
-    std::string units = input.substr(headerEnd + strlen(GAME_HEADER_DELIMITER));
-
-    // Grab information from the header
-    char name[64];
-    unsigned int turn;
-    unsigned int sizex;
-    unsigned int sizey;
-    char walls[512];
-    if( sscanf(header.c_str(), GAME_HEADER_FORMATTER, name, &sizex, &sizey, &turn, walls) != 5 )
-    {
-        return CTTRTSGame(0,0);
-    }
-
-    std::vector<uvector2> walls_vector;
-    {
-        std::string walls_str = walls;
-        size_t pos;
-        while ( ( pos = walls_str.find(']') ) != std::string::npos )
-        {
-            std::string pos_string = walls_str.substr(1,pos);
-
-            // Use scanf to extract positions
-
-            unsigned int x;
-            unsigned int y;
-            if( sscanf(pos_string.c_str(), GAME_POS_FORMATTER, &x, &y ) != 2 )
-            {
-                return CTTRTSGame(0,0);
-            }
-
-            // Erase this coordinate
-            walls_str.erase(0,pos+1);
-
-            // Append our list
-            walls_vector.push_back({(ucoord_t)x,(ucoord_t)y});
-        }
-    }
-
-    CTTRTSGame game(sizex,sizey);
-    game.SetName(name);
-    game.SetTurn(turn);
-
-    // For each line, construct a unit
-    {
-        size_t pos;
-        while ((pos = units.find('\n')) != std::string::npos) {
-            std::string unit_string = units.substr(0, pos);
-            units.erase(0, pos + 1);
-            game.AddUnit(CUnit::GetUnitFromString(unit_string));
-        }
-    }
-
-    // Add all walls
-    for ( auto wall : walls_vector)
-    {
-        game.AddWall(wall);
-    }
-
-    return game;
 }
 
 // Check if any of the units can move

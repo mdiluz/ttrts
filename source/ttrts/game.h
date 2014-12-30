@@ -13,9 +13,6 @@ class CTTRTSGame
 {
 public:
 
-    // Get the game information as a string
-    static CTTRTSGame       CreateFromString( const std::string& input );
-
     // Constructors
 	CTTRTSGame( ucoord_t c, ucoord_t r );
     CTTRTSGame(CTTRTSGame&& game);
@@ -38,9 +35,6 @@ public:
     // Check if any of the units can move
     bool                    UnitsCanMove() const;
 
-    // Get the game information as a string
-    std::string             GetStateAsString() const;
-
 	// Issue orders to the game, returns non-zero if orders are incorrect
 	int                     IssueOrders( player_t player, const std::string& orders );
 	int                     IssueOrders( player_t player, const COrderVector& orders );
@@ -60,6 +54,8 @@ public:
     // Get a unit by it's ID
     const CUnit&            GetUnitByIDConst( unit_id_t id ) const;
     const SOrder &          GetOrderByIDConst( unit_id_t id ) const;
+
+    inline const OrderUnitPairVector& GetOrderUnitPairs() const        { return m_OrderUnitPairs; }
 
     // Get dimensions
     inline const uvector2&  GetDimensions() const { return dimensions; }

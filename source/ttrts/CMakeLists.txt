@@ -12,7 +12,7 @@ include_directories(
 set( SOURCES 
 	game.cpp
 	unit.cpp
-	order.cpp
+	formatters.cpp
 )
 
 # Add this library
