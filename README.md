@@ -31,6 +31,19 @@ TTRTS is from the ground up designed to be a fun way to practice programming. An
 -----------------------------------------------------------
 ## Changelog
 
+#### v0.3.1
+* Upgraded install target to repository
+  * libttrts static library binary in /usr/local/lib
+  * ttrts headers in /usr/local/include/ttrts
+  * bash completion into /etc/bash_completion.d/
+  * man page into /usr/local/man/man6
+  * maps into /usr/share/ttrts/maps
+* client now supports env variable configuration
+  * TTRTS_MAPS for location of map files, defaults to /usr/share/ttrts/maps
+  * TTRTS_GAMES for gameplay directories, defaults to /tmp/
+* Map files now have proper header
+* NOTE: This version is compatible with v0.3.0, but old generated mapfiles will need the additional header line added
+
 #### v0.3.0
 * Additional functionality of walls
   * Walls are noted in gamestate file on new "WALL:[X,Y]..." line

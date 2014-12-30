@@ -3,7 +3,7 @@ cmake_minimum_required( VERSION 2.8.7 )
 # Set version information
 set( TTRTS_VERSION_MAJOR 0 )
 set( TTRTS_VERSION_MINOR 3 )
-set( TTRTS_VERSION_PATCH 0 )
+set( TTRTS_VERSION_PATCH 1 )
 
 # Use c++1y (14)
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --std=c++1y" )
