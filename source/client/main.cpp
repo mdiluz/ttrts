@@ -2,17 +2,22 @@
 #include <fstream>
 #include <chrono>
 #include <thread>
+
 #include <sys/stat.h>
 #include <stdio.h>
 #include <stdbool.h>
 #include <formatters.h>
+#include <unistd.h>
+#include <stdlib.h>
 
 #include "game.h"
-#include "version.h"
 
 static const char* sk_usage =
 #include "usage.h"
 ;
+ 
+// Verbose mode
+static const bool env_verbose = getenv("VERBOSE");
 
 // time for waiting between file stats
 static const std::chrono::milliseconds sk_waitTime = std::chrono::milliseconds(100);
@@ -44,12 +49,6 @@ bool OutputGameStateFile(CTTRTSGame &game, std::string &gameDir)
 	// Output the turn description
 	std::string turnDescriptor = GetStringFromGame(game);
 
-	// Append the version number
-	turnDescriptor = std::string("==== ttrts v")
-			+ sk_ttrts_version_string
-			+ std::string(" ====\n")
-			+ turnDescriptor;
-
 	turnFile<<turnDescriptor;
 	turnFile.close();
 
@@ -63,20 +62,51 @@ int main(int argc, char* argv[])
 	if ( argc == 1 )
 	{
 		std::cout<<sk_usage<<std::endl;
-		return 1;
+		return -1;
 	}
 
 	// Attempt to open the game file
 	std::string gameFile = argv[1];
-	std::ifstream file(gameFile);
 
-	if( file.bad() )
+	// Default for maps
+	std::string ttrts_maps_dir = "/usr/share/ttrts/maps/";
+	if( getenv("TTRTS_MAPS") )
 	{
-		std::cerr<<"Error: "<<gameFile<<" file not found"<<std::endl;
-		return 1;
+		ttrts_maps_dir = getenv("TTRTS_MAPS");
+
+		// Additional trailing slash
+		if( ttrts_maps_dir.back() != '/' )
+			ttrts_maps_dir += "/";
 	}
 
-	std::cout<<"Launching TTRTS!"<<std::endl;
+	// Default for games
+	std::string ttrts_games_dir = "/tmp/";
+	if( getenv("TTRTS_GAMES") )
+	{
+		ttrts_games_dir = getenv("TTRTS_GAMES");
+
+		// Additional trailing slash
+		if( ttrts_games_dir.back() != '/' )
+			ttrts_games_dir += "/";
+	}
+	
+	// If file path is not local path and file doesn't exist
+	if( gameFile.find("/") == std::string::npos
+		&& access( gameFile.c_str(), F_OK ) == -1 )
+	{
+		gameFile = ttrts_maps_dir + gameFile;
+	}
+
+	// If still not good
+	if( access( gameFile.c_str(), F_OK ) == -1 )
+	{
+		std::cerr<<"Error: "<<gameFile<<" file not found"<<std::endl;
+		return -1;
+	}
+
+	std::ifstream file(gameFile);
+
+	std::cout<<"Launching TTRTS with "<<gameFile<<std::endl;
 
 	std::string gameDescriptor;
 
@@ -91,7 +121,7 @@ int main(int argc, char* argv[])
 	if( gameDescriptor.size() == 0 )
 	{
 		std::cerr<<"Error: failed to read in any information from "<<gameFile<<std::endl;
-		return 1;
+		return -1;
 	}
 
 	// Create the game
@@ -101,38 +131,46 @@ int main(int argc, char* argv[])
 	auto players = game.GetPlayers();
 
 	// Current game directory
-	std::string gameDir = "ttrts_" + game.GetName();
+	std::string gameDir = ttrts_games_dir + game.GetName();
 
 	// Empty the current game directory
 	struct stat info;
 	int ret = stat( gameDir.c_str(), &info );
 	if( ret == 0 && info.st_mode & S_IFDIR )
 	{
-		std::cout<< gameDir << " already exists"<<std::endl;
+		std::cout<< gameDir << " game directory already exists"<<std::endl;
 		std::cout<<"Confirm to delete contents [y/N] ";
 		std::string input;
 		std::cin>>input;
 		if( !input.size() || std::tolower(input[0]) != 'y' )
 		{
 			std::cerr<<"Aborting..."<<std::endl;
-			return 1;
+			return -1;
 		}
 	}
 	else if ( ret  == 0 )
 	{
 		std::cerr<< gameDir << " exists but is not directory \nAborting..."<<std::endl;
-		return 1;
+		return -1;
 	}
 
 	// Create the game directory
 	char cmd2[128];
 	snprintf(cmd2,128, "test -d %s || mkdir %s",gameDir.c_str(),gameDir.c_str());
-	system(cmd2);
+	if( system(cmd2) == -1) 
+	{
+		std::cerr<<"Error: Failed to create the game directory"<<std::endl;
+		return -1;
+	}
 
 	// Clean out the game directory
 	char cmd1[128];
 	snprintf(cmd1,128, "rm -rf %s/*",gameDir.c_str());
-	system(cmd1);
+	if ( system(cmd1) == -1 )
+	{
+		std::cerr<<"Error: Failed to clean the game directory"<<std::endl;
+		return -1;
+	}
 
 	// While the game isn't finished
 	while ( ! game.GameOver() )
@@ -211,7 +249,7 @@ int main(int argc, char* argv[])
 		if ( game.SimulateToNextTurn() )
 		{
 			std::cerr << "Error: Failed to simulate for turn "<<game.GetTurn()<<std::endl;
-			return 1;
+			return -1;
 		}
 
 	}
@@ -232,5 +270,5 @@ int main(int argc, char* argv[])
 		std::cout<<"Game over! It was a draw!"<<std::endl;
 	}
 
-	return 0;
+	return (int)winningPlayer;
 };
