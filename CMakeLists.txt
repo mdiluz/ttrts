@@ -26,7 +26,7 @@ install( FILES scripts/ttrts_complete DESTINATION /etc/bash_completion.d/ )
 # Run the gen_usage script to generate our usage header
 add_custom_target(
 	ttrts-gen-manpage ALL
-    ${CMAKE_SOURCE_DIR}/scripts/gen_manpage.sh "ttrts.6" "${CMAKE_SOURCE_DIR}/source/client/README.md"
+    ${CMAKE_SOURCE_DIR}/scripts/gen_manpage.sh "${TTRTS_VERSION_MAJOR}" "${TTRTS_VERSION_MINOR}" "${TTRTS_VERSION_PATCH}" "ttrts.6" "${CMAKE_SOURCE_DIR}/source/client/README.md"
 )
 
 # Install the ttrts man page
