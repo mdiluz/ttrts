@@ -19,19 +19,23 @@ if( CMAKE_BUILD_TYPE MATCHES "Debug" )
 	set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g" )
 endif()
 
-# Add definitions for the version number
-add_definitions(
-	-DTTRTS_VERSION_MAJOR=${TTRTS_VERSION_MAJOR}
-	-DTTRTS_VERSION_MINOR=${TTRTS_VERSION_MINOR}
-	-DTTRTS_VERSION_PATCH=${TTRTS_VERSION_PATCH}
-	-DTTRTS_VERSION_STRING=\"${TTRTS_VERSION_MAJOR}.${TTRTS_VERSION_MINOR}.${TTRTS_VERSION_PATCH}\"
+# Add bash completion to install
+install( FILES scripts/ttrts_complete DESTINATION /etc/bash_completion.d/ )
+
+# Add target to generate man page
+# Run the gen_usage script to generate our usage header
+add_custom_target(
+	ttrts-gen-manpage ALL
+    ${CMAKE_SOURCE_DIR}/scripts/gen_manpage.sh "ttrts.6" "${CMAKE_SOURCE_DIR}/source/client/README.md"
 )
 
+# Install the ttrts man page
+install( FILES "${CMAKE_BINARY_DIR}/ttrts.6" DESTINATION man/man6/ )
 
 # Subprojects
-add_subdirectory( ttrts )
-add_subdirectory( client )
+add_subdirectory( source/ttrts )
+add_subdirectory( source/client )
 
 # Auxhilary binaries
-add_subdirectory( test )
-add_subdirectory( gen )
+add_subdirectory( source/test )
+add_subdirectory( source/gen )

@@ -19,7 +19,7 @@ target_link_libraries( ttrts-gen ttrts )
 # Run the gen_usage script to generate our usage header
 add_custom_target(
 	ttrts-gen-maps ALL
-    ${CMAKE_SOURCE_DIR}/../scripts/gen_maps.sh "${CMAKE_CURRENT_BINARY_DIR}/ttrts-gen"
+    ${CMAKE_SOURCE_DIR}/scripts/gen_maps.sh "${CMAKE_CURRENT_BINARY_DIR}/ttrts-gen"
 )
 
 add_dependencies(ttrts-gen-maps ${PROJECT_NAME})

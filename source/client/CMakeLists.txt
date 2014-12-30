@@ -28,7 +28,7 @@ install( TARGETS ${PROJECT_NAME} DESTINATION bin )
 # Run the gen_usage script to generate our usage header
 add_custom_target(
 	ttrts-client-usage
-    cd ${CMAKE_CURRENT_SOURCE_DIR} && ${CMAKE_SOURCE_DIR}/../scripts/gen_usage.sh "${CMAKE_CURRENT_BINARY_DIR}/usage.h"
+    cd ${CMAKE_CURRENT_SOURCE_DIR} && ${CMAKE_SOURCE_DIR}/scripts/gen_usage.sh "${CMAKE_CURRENT_BINARY_DIR}/usage.h"
 )
 
 add_dependencies(${PROJECT_NAME} ttrts-client-usage)
