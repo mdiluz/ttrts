@@ -31,6 +31,13 @@ TTRTS is from the ground up designed to be a fun way to practice programming. An
 -----------------------------------------------------------
 ## Changelog
 
+#### v0.3.2
+* Fix bug when loading map files with walls
+* Fix ttrts on OSX
+  * Install man files to correct location
+  * Update usage of sed to be compatible with BSD as well as GNU versions
+* New maps and renames of old ones
+
 #### v0.3.1
 * Upgraded install target to repository
   * libttrts static library binary in /usr/local/lib
