@@ -13,6 +13,14 @@ set( SOURCES
 	main.cpp
 )
 
+# Set defaults for ttrts maps and games
+set( TTRTS_MAPS "/usr/local/share/ttrts/maps/" )
+set( TTRTS_GAMES "/tmp/" )
+
+# define these defaults in code
+set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DTTRTS_MAPS=${TTRTS_MAPS}" )
+set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DTTRTS_GAMES=${TTRTS_GAMES}" )
+
 # Add the executable
 add_executable( ${PROJECT_NAME} ${SOURCES} )
 

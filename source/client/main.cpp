@@ -12,6 +12,9 @@
 
 #include "game.h"
 
+#define STRINGIFY(x) _STRINGIFY(x)
+#define _STRINGIFY(x) #x
+
 static const char* sk_usage =
 #include "usage.h"
 ;
@@ -69,7 +72,7 @@ int main(int argc, char* argv[])
 	std::string gameFile = argv[1];
 
 	// Default for maps
-	std::string ttrts_maps_dir = "/usr/share/ttrts/maps/";
+	std::string ttrts_maps_dir = STRINGIFY(TTRTS_MAPS);
 	if( getenv("TTRTS_MAPS") )
 	{
 		ttrts_maps_dir = getenv("TTRTS_MAPS");
@@ -80,7 +83,7 @@ int main(int argc, char* argv[])
 	}
 
 	// Default for games
-	std::string ttrts_games_dir = "/tmp/";
+	std::string ttrts_games_dir = STRINGIFY(TTRTS_GAMES);
 	if( getenv("TTRTS_GAMES") )
 	{
 		ttrts_games_dir = getenv("TTRTS_GAMES");
