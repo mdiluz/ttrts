@@ -30,7 +30,15 @@ add_custom_target(
 )
 
 # Install the ttrts man page
-install( FILES "${CMAKE_BINARY_DIR}/ttrts.6" DESTINATION man/man6/ )
+if( ${CMAKE_SYSTEM_NAME} MATCHES "Darwin" )
+    set ( MANPAGE_LOC share/man/man6 )
+elseif( ${CMAKE_SYSTEM_NAME} MATCHES "Linux" )
+    set ( MANPAGE_LOC man/man6 )
+else()
+    message(ERROR "Unsupported system detected")
+endif()
+
+install( FILES "${CMAKE_BINARY_DIR}/ttrts.6" DESTINATION ${MANPAGE_LOC} )
 
 # Subprojects
 add_subdirectory( source/ttrts )

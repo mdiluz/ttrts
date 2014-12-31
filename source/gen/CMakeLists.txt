@@ -25,4 +25,4 @@ add_custom_target(
 add_dependencies(ttrts-gen-maps ${PROJECT_NAME})
 
 # Installation target
-install( DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/maps DESTINATION /usr/share/ttrts )
+install( DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/maps DESTINATION /usr/local/share/ttrts )

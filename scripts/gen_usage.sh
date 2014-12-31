@@ -1,10 +1,10 @@
 #! /bin/bash
 # Used to generate usage text from markdown
+
 cat README.md                        \
-    | sed 's/^#\+ //g'               \
-    | sed 's/^\t/\\t/g'              \
-    | sed 's/^    /\\t/g'            \
-    | sed ':a;N;$!ba;s/\n/\\n\n/g'   \
-    | sed 's/^/\"/'                  \
-    | sed 's/$/\"/'                  \
+    | sed -E 's/^#+ //g'               \
+    | sed -E 's/^	/\\t/g'              \
+    | sed -E 's/^    /\\t/g'            \
+    | sed -E 's/^/\"/'                  \
+    | sed -E 's/$/\\n\"/'               \
     > $1
