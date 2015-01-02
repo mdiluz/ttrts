@@ -1,5 +1,7 @@
 #include "client.h"
 
+#include <iostream>
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -48,6 +50,8 @@ int runClient(int argc, char* argv[])
     server = gethostbyname(argv[1]);
     if (server == NULL)
         error("ERROR, no such host");
+
+    std::cout<<"Connecting to "<<argv[1]<<std::endl;
 
     // Empty the server address struct
     memset(&serv_addr,0, sizeof(serv_addr));

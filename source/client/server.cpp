@@ -1,5 +1,7 @@
 #include "server.h"
 
+#include <iostream>
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -9,21 +11,21 @@
 #include <sys/socket.h>
 
 #include <netinet/in.h>
+#include <arpa/inet.h>
 
 #include "net.h"
 
 int runServer(int argc, char* argv[])
 {
-    // Server side information
-    int sockfd; 	        // socket File descriptor
-    sockaddr_in serv_addr;  // Server address
-    int portno;		        // Port number
+    sockaddr_in serv_addr; // Server address
+    int sockfd; 	// socket File descriptor
+    int portno = TTRTS_PORT;		// Port number
 
-    // information for each client
-    sockaddr_in cli_addr;   // Client address
+    struct sockaddr_in cli_addr;  // Client address
+    int newsockfd; 	// new socket File descriptor
     socklen_t clilen;		// length of client address
-    int clientsockfd; 	    // new socket File descriptor
 
+    clilen = sizeof(sockaddr_in);
 
     int n = 0;			// return value for read and write calls
 
@@ -32,7 +34,7 @@ int runServer(int argc, char* argv[])
 
 
     // Create a new socket
-    // AF_INET is general internet socket domain
+    // AF_INET is general internetsocked domain
     // SOCK_STREAM as messages will be read in on this socket, SOCK_DGRAM would be for packets
     // 0 is for default protocol
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
@@ -41,10 +43,7 @@ int runServer(int argc, char* argv[])
 
     // empty the server address
     memset(&serv_addr,0, sizeof(serv_addr));
-
-    // Grab the port number
-    portno = TTRTS_PORT;
-
+    
     // Set the server address family to AF_INET
     serv_addr.sin_family = AF_INET;
 
@@ -69,8 +68,8 @@ int runServer(int argc, char* argv[])
     // accept waits for a connection from a client
     // it returns a new socket file descriptor for this connection
     // client information will be stored in cli_addr
-    clientsockfd = accept(sockfd, (struct sockaddr *) &cli_addr, &clilen);
-    if (clientsockfd < 0)
+    newsockfd = accept(sockfd, (struct sockaddr *) &cli_addr, &clilen);
+    if (newsockfd < 0)
         error("ERROR on accept");
 
     // loop
@@ -82,7 +81,7 @@ int runServer(int argc, char* argv[])
         // Read in the new socket
         // read will block until the client has called write
         // up to the full size of the buffer
-        n = read(clientsockfd,buffer,sizeof(buffer)-1);
+        n = read(newsockfd,buffer,sizeof(buffer)-1);
         if (n < 0)
             error("ERROR reading from socket");
 

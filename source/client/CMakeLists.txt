@@ -17,9 +17,9 @@ set( SOURCES
 )
 
 # Set defaults for ttrts variables
-set( TTRTS_MAPS "/usr/local/share/ttrts/maps/" )
-set( TTRTS_GAMES "/tmp/" )
-set( TTRTS_PORT 11715 )
+set( TTRTS_MAPS 	"/usr/local/share/ttrts/maps/" )
+set( TTRTS_GAMES 	"/tmp/" )
+set( TTRTS_PORT 	11715 )
 
 # define these defaults in code
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DTTRTS_MAPS=${TTRTS_MAPS}" )
