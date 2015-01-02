@@ -13,18 +13,19 @@
 #include <unistd.h>
 #include <stdlib.h>
 
+// =====================================================================================================================
 // time for waiting between file stats
 static const std::chrono::milliseconds sk_waitTime = std::chrono::milliseconds(100);
 
 // Check if a file exists
-inline bool FileExists( const std::string& name )
+bool FileExists( const std::string& name )
 {
     struct stat buffer;
     return (stat (name.c_str(), &buffer) == 0);
 }
 
 // Wait for a file to exist
-inline void WaitForFile( const std::string& name, const std::chrono::milliseconds& time )
+void WaitForFile( const std::string& name, const std::chrono::milliseconds& time )
 {
     while( !FileExists(name) ) std::this_thread::sleep_for(time);
 }
@@ -49,8 +50,59 @@ bool OutputGameStateFile(CTTRTSGame &game, const std::string &gameDir)
     return true;
 }
 
-int runFromFilesystem( const std::string& directory, const std::string gamefile )
+std::string getMapsDir()
 {
+    std::string maps = STRINGIFY(TTRTS_MAPS);
+    if( getenv("TTRTS_MAPS") )
+    {
+        maps = getenv("TTRTS_MAPS");
+
+        // Additional trailing slash
+        if( maps.back() != '/' )
+            maps += "/";
+    }
+
+    return maps;
+}
+
+std::string getGamesDir()
+{
+    std::string dir = STRINGIFY(TTRTS_GAMES);
+    if( getenv("TTRTS_GAMES") )
+    {
+        dir = getenv("TTRTS_GAMES");
+
+        // Additional trailing slash
+        if( dir.back() != '/' )
+            dir += "/";
+    }
+    return dir;
+}
+
+// =====================================================================================================================
+int runFromFilesystem( const std::string& gamestring )
+{
+    std::string gamefile = gamestring;
+
+    // Default for maps
+    std::string ttrts_maps_dir = getMapsDir();
+
+    // Default for games
+    std::string ttrts_games_dir = getGamesDir();
+
+    // If file path is not local path and file doesn't exist
+    if( gamefile.find("/") == std::string::npos
+            && access( gamefile.c_str(), F_OK ) == -1 )
+    {
+        gamefile = ttrts_maps_dir + gamefile;
+    }
+
+    // If still not good
+    if( access( gamefile.c_str(), F_OK ) == -1 )
+    {
+        std::cerr<<"Error: "<< gamefile <<" file not found"<<std::endl;
+        return -1;
+    }
 
     std::ifstream file(gamefile);
 
@@ -79,7 +131,7 @@ int runFromFilesystem( const std::string& directory, const std::string gamefile 
     auto players = game.GetPlayers();
 
     // Current game directory
-    std::string gameDir = directory + game.GetName();
+    std::string gameDir = ttrts_games_dir + game.GetName();
 
     // Empty the current game directory
     struct stat info;

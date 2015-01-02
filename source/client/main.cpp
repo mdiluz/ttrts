@@ -1,11 +1,9 @@
 #include "game.h"
 #include "filesystem.h"
+#include "server.h"
+#include "client.h"
 
 #include <iostream>
-#include <unistd.h>
-
-#define STRINGIFY(x) _STRINGIFY(x)
-#define _STRINGIFY(x) #x
 
 static const char* sk_usage =
 #include "usage.h"
@@ -22,44 +20,18 @@ int main(int argc, char* argv[])
 	}
 
 	// Attempt to open the game file
-	std::string gameFile = argv[1];
+	std::string arg1 = argv[1];
 
-	// Default for maps
-	std::string ttrts_maps_dir = STRINGIFY(TTRTS_MAPS);
-	if( getenv("TTRTS_MAPS") )
+	if( arg1 == "client" )
 	{
-		ttrts_maps_dir = getenv("TTRTS_MAPS");
-
-		// Additional trailing slash
-		if( ttrts_maps_dir.back() != '/' )
-			ttrts_maps_dir += "/";
+		if( argc == 3 )
+			return runClient(argv[2]);
 	}
-
-	// Default for games
-	std::string ttrts_games_dir = STRINGIFY(TTRTS_GAMES);
-	if( getenv("TTRTS_GAMES") )
+	else if ( arg1 == "server" )
 	{
-		ttrts_games_dir = getenv("TTRTS_GAMES");
-
-		// Additional trailing slash
-		if( ttrts_games_dir.back() != '/' )
-			ttrts_games_dir += "/";
+		return runServer();
 	}
-	
-	// If file path is not local path and file doesn't exist
-	if( gameFile.find("/") == std::string::npos
-		&& access( gameFile.c_str(), F_OK ) == -1 )
-	{
-		gameFile = ttrts_maps_dir + gameFile;
-	}
-
-	// If still not good
-	if( access( gameFile.c_str(), F_OK ) == -1 )
-	{
-		std::cerr<<"Error: "<<gameFile<<" file not found"<<std::endl;
-		return -1;
-	}
-
-	return runFromFilesystem(ttrts_games_dir, gameFile);
+	else
+		return runFromFilesystem(arg1);
 
 };
