@@ -14,23 +14,25 @@
 
 int runServer(int argc, char* argv[])
 {
-    int sockfd; 	// socket File descriptor
-    int newsockfd; 	// new socket File descriptor
+    // Server side information
+    int sockfd; 	        // socket File descriptor
+    sockaddr_in serv_addr;  // Server address
+    int portno;		        // Port number
 
-    int portno;		// Port number
+    // information for each client
+    sockaddr_in cli_addr;   // Client address
     socklen_t clilen;		// length of client address
-    clilen = sizeof(sockaddr_in);
+    int clientsockfd; 	    // new socket File descriptor
+
 
     int n = 0;			// return value for read and write calls
 
     char buffer[1028]; // buffer for socked read
     memset(buffer,0,sizeof(buffer));
 
-    struct sockaddr_in serv_addr; // Server address
-    struct sockaddr_in cli_addr;  // Client address
 
     // Create a new socket
-    // AF_INET is general internetsocked domain
+    // AF_INET is general internet socket domain
     // SOCK_STREAM as messages will be read in on this socket, SOCK_DGRAM would be for packets
     // 0 is for default protocol
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
@@ -41,7 +43,7 @@ int runServer(int argc, char* argv[])
     memset(&serv_addr,0, sizeof(serv_addr));
 
     // Grab the port number
-    portno = 11715;
+    portno = TTRTS_PORT;
 
     // Set the server address family to AF_INET
     serv_addr.sin_family = AF_INET;
@@ -67,8 +69,8 @@ int runServer(int argc, char* argv[])
     // accept waits for a connection from a client
     // it returns a new socket file descriptor for this connection
     // client information will be stored in cli_addr
-    newsockfd = accept(sockfd, (struct sockaddr *) &cli_addr, &clilen);
-    if (newsockfd < 0)
+    clientsockfd = accept(sockfd, (struct sockaddr *) &cli_addr, &clilen);
+    if (clientsockfd < 0)
         error("ERROR on accept");
 
     // loop
@@ -80,7 +82,7 @@ int runServer(int argc, char* argv[])
         // Read in the new socket
         // read will block until the client has called write
         // up to the full size of the buffer
-        n = read(newsockfd,buffer,sizeof(buffer)-1);
+        n = read(clientsockfd,buffer,sizeof(buffer)-1);
         if (n < 0)
             error("ERROR reading from socket");
 

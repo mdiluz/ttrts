@@ -34,7 +34,7 @@ int runClient(int argc, char* argv[])
     }
 
     // Get port number
-    portno = 11715;
+    portno = TTRTS_PORT;
 
     // Create a new socket
     // AF_INET is general internetsocked domain
