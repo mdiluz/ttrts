@@ -3,6 +3,7 @@
 #include <thread>
 #include <vector>
 #include <iostream>
+#include <mutex>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -14,35 +15,35 @@
 
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <game.h>
+#include <formatters.h>
 
 #include "net.h"
+#include "filesystem.h"
 
-std::vector<std::thread> gClientThreads;
-
-int clientHandler( sockaddr_in cli_addr, socklen_t clilen, int clientsockfd)
+// Struct for net client info
+struct ClientInfo
 {
-    std::cout<<"Client connected from "<<inet_ntoa(cli_addr.sin_addr)<<std::endl;
+    sockaddr_in cli_addr;
+    int clientsockfd;
+};
 
-    char buffer[1028]; // buffer for socked read
+int waitForOrdersFromClient(const ClientInfo& info, std::mutex& mut, CTTRTSGame& game )
+{
+    char buffer[1028]; // buffer for orders
     memset(buffer,0,sizeof(buffer));
 
-    // loop
-    int n = 0;			// return value for read and write calls
-    while( n >= 0 )
-    {
-        // empty the buffer
-        memset(buffer,0,sizeof(buffer));
+    // Read in the new socket
+    // read will block until the client has called write
+    // up to the full size of the buffer
+    if (read(info.clientsockfd,buffer,sizeof(buffer)-1) < 0)
+        error("ERROR reading from client");
 
-        // Read in the new socket
-        // read will block until the client has called write
-        // up to the full size of the buffer
-        n = read(clientsockfd,buffer,sizeof(buffer)-1);
-        if (n < 0)
-            error("ERROR reading from socket");
+    std::cout<<"Recieved orders from "<<inet_ntoa(info.cli_addr.sin_addr)<<std::endl;
 
-        // print the message recieved
-        printf("%s",buffer);
-    }
+    mut.lock();
+    game.IssueOrders(player_t::Red , buffer);
+    mut.unlock();
 
     return 0;
 }
@@ -98,20 +99,26 @@ int runServer(int argc, char* argv[])
     // max is usually set to 5
     listen(sockfd,5);
 
+    // Set up game
+    CTTRTSGame game = GetGameFromFile("Tiny2Player.txt");
+    unsigned int numClients = game.GetPlayers().size();
+
+    //  game mutex
+    std::mutex gameMutex;
+
+    // Set of clients
+    std::vector<ClientInfo> myClients;
+
     std::cout<<"Waiting for clients"<<std::endl;
 
     // Loop while we're connecting the clients
-    bool connectingClients = true;
-    while ( connectingClients )
+    while ( myClients.size() < numClients )
     {
-
         // information for each client
         sockaddr_in cli_addr;   // Client address
-        socklen_t clilen;		// length of client address
         int clientsockfd; 	    // new socket File descriptor
 
-        clilen = sizeof(sockaddr_in);
-
+        socklen_t clilen = sizeof(sockaddr_in);
 
         // accept waits for a connection from a client
         // it returns a new socket file descriptor for this connection
@@ -120,11 +127,53 @@ int runServer(int argc, char* argv[])
         if (clientsockfd < 0)
             error("ERROR on accept");
 
-        std::cout<<"Client recieved"<<std::endl;
-        std::thread clientThread = std::thread(clientHandler,cli_addr,clilen,clientsockfd);
-
-        gClientThreads.push_back(std::move(clientThread));
+        std::cout<<"Client connected from "<<inet_ntoa(cli_addr.sin_addr)<<std::endl;
+        myClients.push_back({cli_addr,clientsockfd});
     }
+
+    std::cout<<"All clients connected"<<std::endl;
+
+    // Loop for each turn
+    while ( !game.GameOver() )
+    {
+        // Grab the current game state string
+        gameMutex.lock();
+        std::string gamestate_string = GetStringFromGame(game);
+        gameMutex.unlock();
+
+        // Send data to clients
+        std::cout<<"Sending clients gamedata"<<std::endl;
+        for (auto client : myClients)
+        {
+            // Write to the socket with the buffer
+            if ( write( client.clientsockfd, gamestate_string.c_str(), gamestate_string.length() ) < 0 )
+                error("ERROR sending to client");
+        }
+
+        // Wait for orders from clients
+        std::cout<<"Waiting for client orders"<<std::endl;
+
+        std::vector<std::thread> clientThreads;
+        for(auto client : myClients)
+        {
+            std::thread clientThread(waitForOrdersFromClient,std::ref(client), std::ref(gameMutex), std::ref(game));
+            clientThreads.push_back(std::move(clientThread));
+        }
+
+        // Join up all the threads
+        for ( std::thread& thread : clientThreads )
+        {
+            thread.join();
+        }
+
+        // Step to the next turn
+        gameMutex.lock();
+        game.SimulateToNextTurn();
+        gameMutex.unlock();
+    }
+
+
+    // end game and disconnect clients
 
     // Return
     return 0;

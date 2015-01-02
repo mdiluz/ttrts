@@ -79,16 +79,12 @@ std::string getGamesDir()
     return dir;
 }
 
-// =====================================================================================================================
-int runFromFilesystem(int argc, char* argv[])
+CTTRTSGame GetGameFromFile( const std::string& filename )
 {
-    std::string gamefile = argv[1];
+    std::string gamefile = filename;
 
     // Default for maps
     std::string ttrts_maps_dir = getMapsDir();
-
-    // Default for games
-    std::string ttrts_games_dir = getGamesDir();
 
     // If file path is not local path and file doesn't exist
     if( gamefile.find("/") == std::string::npos
@@ -101,12 +97,10 @@ int runFromFilesystem(int argc, char* argv[])
     if( access( gamefile.c_str(), F_OK ) == -1 )
     {
         std::cerr<<"Error: "<< gamefile <<" file not found"<<std::endl;
-        return -1;
+        return CTTRTSGame(0,0);
     }
 
     std::ifstream file(gamefile);
-
-    std::cout<<"Launching TTRTS with "<<gamefile<<std::endl;
 
     std::string gameDescriptor;
 
@@ -121,14 +115,26 @@ int runFromFilesystem(int argc, char* argv[])
     if( gameDescriptor.size() == 0 )
     {
         std::cerr<<"Error: failed to read in any information from "<<gamefile<<std::endl;
-        return -1;
+        return CTTRTSGame(0,0);
     }
 
     // Create the game
-    CTTRTSGame game = GetGameFromString(gameDescriptor);
+    return GetGameFromString(gameDescriptor);
+}
+
+// =====================================================================================================================
+int runFromFilesystem(int argc, char* argv[])
+{
+    std::string gamefile = argv[1];
+
+    std::cout<<"Launching TTRTS with "<<gamefile<<std::endl;
+    CTTRTSGame game = GetGameFromFile(gamefile);
 
     // Grab the players involved
     auto players = game.GetPlayers();
+
+    // Default for games
+    std::string ttrts_games_dir = getGamesDir();
 
     // Current game directory
     std::string gameDir = ttrts_games_dir + game.GetName();

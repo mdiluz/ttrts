@@ -71,10 +71,17 @@ int runClient(int argc, char* argv[])
 
     while ( n >= 0 )
     {
-        // Get the message to send
-        printf("Please enter the message: ");
         memset(buffer,0,sizeof(buffer));
-        fgets(buffer,sizeof(buffer)-1,stdin);
+
+        // Receive gamestate
+        if (read(sockfd,buffer,sizeof(buffer)-1) < 0)
+            error("ERROR reading from client");
+
+        std::cout<<buffer<<std::endl;
+
+        // Output orders
+        memset(buffer,0,sizeof(buffer));
+        strcpy(buffer, "ORDER:F id:1\nEND");
 
         // Place a test message into the buffer
         strncpy(buffer,buffer,sizeof(buffer));

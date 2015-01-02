@@ -33,7 +33,7 @@ int main()
     //------
     {
         CTTRTSGame game(6, 6);
-        game.SetName("Tiny2player");
+        game.SetName("Tiny2Player");
 
         AddUnitToGame( player_t::Red, '<', uvector2(4, 2), game);
         AddUnitToGame( player_t::Red, '<', uvector2(4, 4), game);
