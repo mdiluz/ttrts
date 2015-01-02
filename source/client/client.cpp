@@ -39,12 +39,14 @@ int runClient(int argc, char* argv[])
     portno = TTRTS_PORT;
 
     // Create a new socket
-    // AF_INET is general internetsocked domain
+    // AF_INET is general internetsocket domain
     // SOCK_STREAM as messages will be read in on this socket, SOCK_DGRAM would be for packets
     // 0 is for default protocol
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd < 0)
         error("ERROR opening socket");
+
+    std::cout<<"Opened socket on "<<sockfd<<std::endl;
 
     // Get the hostent information for the host by name
     server = gethostbyname(argv[1]);
@@ -73,6 +75,7 @@ int runClient(int argc, char* argv[])
     {
         memset(buffer,0,sizeof(buffer));
 
+        std::cout<<"Waiting for gamestate"<<std::endl;
         // Receive gamestate
         if (read(sockfd,buffer,sizeof(buffer)-1) < 0)
             error("ERROR reading from client");
@@ -80,16 +83,16 @@ int runClient(int argc, char* argv[])
         std::cout<<buffer<<std::endl;
 
         // Output orders
-        memset(buffer,0,sizeof(buffer));
-        strcpy(buffer, "ORDER:F id:1\nEND");
+        std::string orders = std::to_string(sockfd);
 
-        // Place a test message into the buffer
-        strncpy(buffer,buffer,sizeof(buffer));
-
+        std::cout<<"Sending orders"<<std::endl;
+        std::cout<<orders<<std::endl;
         // Write to the socket with the buffer
-        n = write(sockfd,buffer,strlen(buffer));
+        n = write(sockfd,orders.c_str(),orders.length());
         if (n < 0)
             error("ERROR writing to socket");
+
+        std::cout<<"Order Sent"<<std::endl;
     }
 
     return 0;

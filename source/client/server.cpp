@@ -28,10 +28,12 @@ struct ClientInfo
     int clientsockfd;
 };
 
-int waitForOrdersFromClient(const ClientInfo& info, std::mutex& mut, CTTRTSGame& game )
+int waitForOrdersFromClient(const ClientInfo info, std::mutex& mut, CTTRTSGame& game )
 {
     char buffer[1028]; // buffer for orders
     memset(buffer,0,sizeof(buffer));
+
+    std::cout<<"Waiting for "<<inet_ntoa(info.cli_addr.sin_addr)<<std::endl;
 
     // Read in the new socket
     // read will block until the client has called write
@@ -40,6 +42,7 @@ int waitForOrdersFromClient(const ClientInfo& info, std::mutex& mut, CTTRTSGame&
         error("ERROR reading from client");
 
     std::cout<<"Recieved orders from "<<inet_ntoa(info.cli_addr.sin_addr)<<std::endl;
+    std::cout<<buffer<<std::endl;
 
     mut.lock();
     game.IssueOrders(player_t::Red , buffer);
@@ -127,7 +130,7 @@ int runServer(int argc, char* argv[])
         if (clientsockfd < 0)
             error("ERROR on accept");
 
-        std::cout<<"Client connected from "<<inet_ntoa(cli_addr.sin_addr)<<std::endl;
+        std::cout<<"Client connected from "<<inet_ntoa(cli_addr.sin_addr)<<" socket "<<clientsockfd<<std::endl;
         myClients.push_back({cli_addr,clientsockfd});
     }
 
@@ -156,7 +159,7 @@ int runServer(int argc, char* argv[])
         std::vector<std::thread> clientThreads;
         for(auto client : myClients)
         {
-            std::thread clientThread(waitForOrdersFromClient,std::ref(client), std::ref(gameMutex), std::ref(game));
+            std::thread clientThread(waitForOrdersFromClient, client, std::ref(gameMutex), std::ref(game));
             clientThreads.push_back(std::move(clientThread));
         }
 
@@ -166,6 +169,7 @@ int runServer(int argc, char* argv[])
             thread.join();
         }
 
+        std::cout<<"Orders recieved, simulating turn"<<std::endl;
         // Step to the next turn
         gameMutex.lock();
         game.SimulateToNextTurn();
