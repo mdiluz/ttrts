@@ -28,6 +28,23 @@ struct ClientInfo
     int clientsockfd;
 };
 
+void SendGameInfoToClients(std::vector<ClientInfo> &myClients, const CTTRTSGame &game, std::mutex &gameMutex)
+{
+    // Spawn threads
+    std::vector<std::thread> clientThreads;
+    for(auto client : myClients)
+    {
+        std::thread clientThread(waitForOrdersFromClient, client, ref(gameMutex), std::ref(game));
+        clientThreads.push_back(move(clientThread));
+    }
+
+    // Join up all the threads
+    for ( std::thread& thread : clientThreads )
+    {
+        thread.join();
+    }
+}
+
 int waitForOrdersFromClient(const ClientInfo info, std::mutex& mut, CTTRTSGame& game )
 {
     char buffer[1028]; // buffer for orders
@@ -156,28 +173,31 @@ int runServer(int argc, char* argv[])
         // Wait for orders from clients
         std::cout<<"Waiting for client orders"<<std::endl;
 
-        std::vector<std::thread> clientThreads;
-        for(auto client : myClients)
-        {
-            std::thread clientThread(waitForOrdersFromClient, client, std::ref(gameMutex), std::ref(game));
-            clientThreads.push_back(std::move(clientThread));
-        }
-
-        // Join up all the threads
-        for ( std::thread& thread : clientThreads )
-        {
-            thread.join();
-        }
+        SendGameInfoToClients(myClients, game, gameMutex);
 
         std::cout<<"Orders recieved, simulating turn"<<std::endl;
+
         // Step to the next turn
         gameMutex.lock();
         game.SimulateToNextTurn();
         gameMutex.unlock();
     }
 
+    // Send final state to all the clients
+    SendGameInfoToClients(myClients, game, gameMutex);
 
-    // end game and disconnect clients
+    // Get the winning player
+    player_t winningPlayer = game.GetWinningPlayer();
+
+    // Print the winner!
+    if ( winningPlayer != player_t::NUM_INVALID )
+    {
+        std::cout<<"Game over! Winner:"<<(int) winningPlayer <<std::endl;
+    }
+    else
+    {
+        std::cout<<"Game over! It was a draw!"<<std::endl;
+    }
 
     // Return
     return 0;
