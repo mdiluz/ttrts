@@ -4,8 +4,7 @@
 project( ttrts-test )
 
 include_directories( 
-	../ttrts 
-	../maths
+        ../ttrts
 )
 
 set( SOURCES 

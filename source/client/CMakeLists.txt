@@ -3,8 +3,7 @@
 project( ttrts-client )
 
 include_directories(
-	${CMAKE_CURRENT_BINARY_DIR}
-	../maths
+        ${CMAKE_CURRENT_BINARY_DIR}
 	../ttrts
 )
 

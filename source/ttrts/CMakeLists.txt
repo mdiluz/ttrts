@@ -5,8 +5,7 @@ project( ttrts )
 
 # Include the maths
 include_directories(
-	${CMAKE_CURRENT_BINARY_DIR}
-	../maths
+        ${CMAKE_CURRENT_BINARY_DIR}
 )
 
 # Add our sources 

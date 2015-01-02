@@ -3,8 +3,7 @@
 project( ttrts-gen )
 
 include_directories(
-	../ttrts
-	../maths
+        ../ttrts
 )
 
 set( SOURCES
