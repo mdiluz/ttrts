@@ -26,6 +26,7 @@ struct ClientInfo
 {
     sockaddr_in cli_addr;
     int clientsockfd;
+    player_t player;
 };
 
 int WaitForOrdersFromClient(const ClientInfo info, std::mutex &mut, CTTRTSGame &game)
@@ -45,7 +46,7 @@ int WaitForOrdersFromClient(const ClientInfo info, std::mutex &mut, CTTRTSGame &
     std::cout<<buffer<<std::endl;
 
     mut.lock();
-    game.IssueOrders(player_t::Red , buffer);
+    game.IssueOrders(info.player , buffer);
     mut.unlock();
 
     return 0;
@@ -135,7 +136,10 @@ int runServer(int argc, char* argv[])
 
     // Set up game
     CTTRTSGame game = GetGameFromFile("Tiny2Player.txt");
+
+    std::vector<player_t> players = game.GetPlayers();
     unsigned int numClients = game.GetPlayers().size();
+    auto player_iterator = players.begin();
 
     //  game mutex
     std::mutex gameMutex;
@@ -162,7 +166,42 @@ int runServer(int argc, char* argv[])
             error("ERROR on accept");
 
         std::cout<<"Client connected from "<<inet_ntoa(cli_addr.sin_addr)<<" socket "<<clientsockfd<<std::endl;
+
+        ClientInfo clientInfo;
+        clientInfo.cli_addr = cli_addr;
+        clientInfo.clientsockfd = clientsockfd;
+        clientInfo.player = *player_iterator;
+
+        player_iterator++;
+
+        // Could verify if player is valid here
+
         myClients.push_back({cli_addr,clientsockfd});
+    }
+
+    // Perform the initial handshake with clients
+    for( auto client : myClients )
+    {
+        // Handshake currently just player
+        std::string handshake = std::string("player ")+std::to_string((int)client.player);
+
+        // Output the handshake
+        std::cout<<"Handshaking with "<<handshake<<std::endl;
+
+        // Send handshake
+        if ( write( client.clientsockfd,handshake.c_str(),handshake.length() ) < 0 )
+            error("ERROR sending to client");
+
+        // Recieve handshake
+        char buffer[64];
+        if (read(client.clientsockfd,buffer,sizeof(buffer)-1) < 0)
+            error("ERROR reading from client");
+
+        // Verify handshake
+        if ( std::string(buffer) != handshake )
+            error("Error in client handshake");
+
+        std::cout<<"Success on handshake with "<<handshake<<std::endl;
     }
 
     std::cout<<"All clients connected"<<std::endl;

@@ -14,9 +14,12 @@
 #include <netdb.h>
 
 #include "net.h"
+#include "game.h"
 
 int runClient(int argc, char* argv[])
 {
+    player_t myPlayer;
+
     int sockfd; 	// socket File descriptor
     int portno;		// Port number
     int n = 0;		// return value for read and write calls
@@ -70,6 +73,30 @@ int runClient(int argc, char* argv[])
     // Attempt to connect to the server using the socket and server address info
     if (connect(sockfd, (const sockaddr*)&serv_addr, sizeof(serv_addr)) < 0)
         error("ERROR connecting");
+
+    std::cout<<"Waiting for handshake"<<std::endl;
+
+    memset(buffer,0,sizeof(buffer));
+    if (read(sockfd,buffer,sizeof(buffer)-1) < 0)
+        error("ERROR recieving handshake from server");
+
+    std::string handshake(buffer);
+
+    if ( write(sockfd,handshake.c_str(),handshake.length()) < 0)
+        error("ERROR sending handshake to server");
+
+    size_t pos;
+    if( (pos = handshake.find("player")) != std::string::npos )
+    {
+        std::string player = handshake.substr(pos, handshake.length());
+        myPlayer = (player_t)atoi(player.c_str());
+    }
+    else
+    {
+        error("Handshake failed");
+    }
+
+    std::cout<<"I am player "<< std::to_string((int)myPlayer) << std::endl;
 
     while ( n >= 0 )
     {
