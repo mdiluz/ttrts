@@ -28,24 +28,7 @@ struct ClientInfo
     int clientsockfd;
 };
 
-void SendGameInfoToClients(std::vector<ClientInfo> &myClients, const CTTRTSGame &game, std::mutex &gameMutex)
-{
-    // Spawn threads
-    std::vector<std::thread> clientThreads;
-    for(auto client : myClients)
-    {
-        std::thread clientThread(waitForOrdersFromClient, client, ref(gameMutex), std::ref(game));
-        clientThreads.push_back(move(clientThread));
-    }
-
-    // Join up all the threads
-    for ( std::thread& thread : clientThreads )
-    {
-        thread.join();
-    }
-}
-
-int waitForOrdersFromClient(const ClientInfo info, std::mutex& mut, CTTRTSGame& game )
+int WaitForOrdersFromClient(const ClientInfo info, std::mutex &mut, CTTRTSGame &game)
 {
     char buffer[1028]; // buffer for orders
     memset(buffer,0,sizeof(buffer));
@@ -66,6 +49,37 @@ int waitForOrdersFromClient(const ClientInfo info, std::mutex& mut, CTTRTSGame& 
     mut.unlock();
 
     return 0;
+}
+
+void GetOrdersFromClients(std::vector<ClientInfo> &myClients, CTTRTSGame &game, std::mutex &gameMutex)
+{
+    // Spawn threads
+    std::vector<std::thread> clientThreads;
+    for(auto client : myClients)
+    {
+        std::thread clientThread(WaitForOrdersFromClient, client, ref(gameMutex), std::ref(game));
+        clientThreads.push_back(move(clientThread));
+    }
+
+    // Join up all the threads
+    for ( std::thread& thread : clientThreads )
+    {
+        thread.join();
+    }
+}
+
+void SendGameInfoToClients(std::vector<ClientInfo> &myClients, const CTTRTSGame &game, std::mutex &gameMutex)
+{
+    gameMutex.lock();
+    std::string gamestate_string = GetStringFromGame(game);
+    gameMutex.unlock();
+
+    for (auto client : myClients)
+    {
+        // Write to the socket with the buffer
+        if ( write( client.clientsockfd, gamestate_string.c_str(), gamestate_string.length() ) < 0 )
+            error("ERROR sending to client");
+    }
 }
 
 int runServer(int argc, char* argv[])
@@ -156,24 +170,13 @@ int runServer(int argc, char* argv[])
     // Loop for each turn
     while ( !game.GameOver() )
     {
-        // Grab the current game state string
-        gameMutex.lock();
-        std::string gamestate_string = GetStringFromGame(game);
-        gameMutex.unlock();
-
         // Send data to clients
         std::cout<<"Sending clients gamedata"<<std::endl;
-        for (auto client : myClients)
-        {
-            // Write to the socket with the buffer
-            if ( write( client.clientsockfd, gamestate_string.c_str(), gamestate_string.length() ) < 0 )
-                error("ERROR sending to client");
-        }
+        SendGameInfoToClients(myClients, game, gameMutex);
 
         // Wait for orders from clients
         std::cout<<"Waiting for client orders"<<std::endl;
-
-        SendGameInfoToClients(myClients, game, gameMutex);
+        GetOrdersFromClients(myClients, game, gameMutex);
 
         std::cout<<"Orders recieved, simulating turn"<<std::endl;
 
