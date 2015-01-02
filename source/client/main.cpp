@@ -1,5 +1,5 @@
 #include "game.h"
-#include "server.h"
+#include "filesystem.h"
 
 #include <iostream>
 #include <unistd.h>
@@ -60,6 +60,6 @@ int main(int argc, char* argv[])
 		return -1;
 	}
 
-	return runServer(ttrts_games_dir, gameFile);
+	return runFromFilesystem(ttrts_games_dir, gameFile);
 
 };

@@ -13,6 +13,7 @@ set( SOURCES
 	client.cpp
 	server.cpp
 	net.cpp
+	filesystem.cpp
 )
 
 # Set defaults for ttrts variables
