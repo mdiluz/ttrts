@@ -80,9 +80,9 @@ std::string getGamesDir()
 }
 
 // =====================================================================================================================
-int runFromFilesystem( const std::string& gamestring )
+int runFromFilesystem(int argc, char* argv[])
 {
-    std::string gamefile = gamestring;
+    std::string gamefile = argv[1];
 
     // Default for maps
     std::string ttrts_maps_dir = getMapsDir();

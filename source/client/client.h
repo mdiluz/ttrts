@@ -3,6 +3,6 @@
 
 #include <string>
 
-int runClient( const std::string& host_address );
+int runClient(int argc, char* argv[]);
 
 #endif

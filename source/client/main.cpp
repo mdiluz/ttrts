@@ -22,16 +22,12 @@ int main(int argc, char* argv[])
 	// Attempt to open the game file
 	std::string arg1 = argv[1];
 
+	// Either run the client, the server, or from local filesystem
 	if( arg1 == "client" )
-	{
-		if( argc == 3 )
-			return runClient(argv[2]);
-	}
+		return runClient(argc,argv+1);
 	else if ( arg1 == "server" )
-	{
-		return runServer();
-	}
+		return runServer(argc,argv+1);
 	else
-		return runFromFilesystem(arg1);
+		return runFromFilesystem(argc,argv);
 
 };
