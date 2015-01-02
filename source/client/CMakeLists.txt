@@ -33,7 +33,7 @@ add_executable( ${PROJECT_NAME} ${SOURCES} )
 set_target_properties( ${PROJECT_NAME} PROPERTIES OUTPUT_NAME ttrts )
 
 # dependent on main ttrts libary
-target_link_libraries( ${PROJECT_NAME} ttrts )
+target_link_libraries( ${PROJECT_NAME} ttrts pthread )
 
 # Installation target
 install( TARGETS ${PROJECT_NAME} DESTINATION bin )
