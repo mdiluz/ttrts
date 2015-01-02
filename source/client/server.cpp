@@ -206,6 +206,9 @@ int runServer(int argc, char* argv[])
 
     std::cout<<"All clients connected"<<std::endl;
 
+    std::cout<<"Hit enter to begin...";
+    std::cin.ignore();
+
     // Loop for each turn
     while ( !game.GameOver() )
     {

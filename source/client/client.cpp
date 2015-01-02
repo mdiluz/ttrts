@@ -15,6 +15,7 @@
 
 #include "net.h"
 #include "game.h"
+#include "filesystem.h"
 
 int runClient(int argc, char* argv[])
 {
