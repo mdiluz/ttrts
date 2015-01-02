@@ -24,9 +24,9 @@ int main(int argc, char* argv[])
 
 	// Either run the client, the server, or from local filesystem
 	if( arg1 == "client" )
-		return runClient(argc,argv+1);
+		return runClient(argc-1,argv+1);
 	else if ( arg1 == "server" )
-		return runServer(argc,argv+1);
+		return runServer(argc-1,argv+1);
 	else
 		return runFromFilesystem(argc,argv);
 
