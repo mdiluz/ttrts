@@ -9,16 +9,17 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <sys/socket.h>
 
 #include "net.h"
 #include "filesystem.h"
 
-int runServer(int argc, char* argv[])
+CTTRTSGame &RunServerForGame(CTTRTSGame &game)
 {
-    std::cout<<"Setting up server on port "<<TTRTS_PORT<<std::endl;
+    std::cout<<"Setting up server on port "<<TTRTS_PORT<< std::endl;
 
     // Server side information
-    int sockfd; 	        // socket File descriptor
+    int sockfd;            // socket File descriptor
     sockaddr_in serv_addr;  // Server address
     int portno = TTRTS_PORT;
 
@@ -31,7 +32,7 @@ int runServer(int argc, char* argv[])
     // The host for this address is this current machine's IP, INADDR_ANY fetches this
     serv_addr.sin_addr.s_addr = INADDR_ANY;
 
-    std::cout<<"Opening socket"<<std::endl;
+    std::cout<<"Opening socket"<< std::endl;
     // Create a new socket
     // AF_INET is general internet socket domain
     // SOCK_STREAM as messages will be read in on this socket, SOCK_DGRAM would be for packets
@@ -41,7 +42,7 @@ int runServer(int argc, char* argv[])
         fatal_perror("ERROR opening socket");
 
     // bind our socket to this server address
-    std::cout<<"Binding socket"<<std::endl;
+    std::cout<<"Binding socket"<< std::endl;
     int retry = 1;
     while (1)
     {
@@ -53,7 +54,7 @@ int runServer(int argc, char* argv[])
         if (bind(sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) >= 0)
             break;
 
-        std::cout<<"Binding failed on try "<<retry<<std::endl;
+        std::cout<<"Binding failed on try "<<retry<< std::endl;
         sleep(retry);
         retry++;
     }
@@ -63,9 +64,6 @@ int runServer(int argc, char* argv[])
     // that can be waiting while the process is handling a single connection
     // max is usually set to 5
     listen(sockfd,5);
-
-    // Set up game
-    CTTRTSGame game = GetGameFromFile("Tiny2Player.txt");
 
     std::vector<player_t> players = game.GetPlayers();
     unsigned int numClients = players.size();
@@ -77,7 +75,7 @@ int runServer(int argc, char* argv[])
     // Set of clients
     std::vector<ClientInfo> myClients;
 
-    std::cout<<"Waiting for clients"<<std::endl;
+    std::cout<<"Waiting for clients"<< std::endl;
 
     // Loop while we're connecting the clients
     while ( myClients.size() < numClients )
@@ -95,7 +93,7 @@ int runServer(int argc, char* argv[])
         if (clientsockfd < 0)
             fatal_perror("ERROR on accept");
 
-        std::cout<<"Client connected from "<<inet_ntoa(cli_addr.sin_addr)<<" socket "<<clientsockfd<<std::endl;
+        std::cout<<"Client connected from "<<inet_ntoa(cli_addr.sin_addr)<<" socket "<<clientsockfd<< std::endl;
 
         ClientInfo clientInfo;
         clientInfo.cli_addr = cli_addr;
@@ -114,7 +112,7 @@ int runServer(int argc, char* argv[])
         snprintf(handshake, sizeof(handshake), TTRTS_HANDSHAKE_FORMAT,(unsigned int)client.player,game.GetName().c_str());
 
         // Output the handshake
-        std::cout<<"Handshaking:"<<handshake<<std::endl;
+        std::cout<<"Handshaking:"<<handshake<< std::endl;
 
         // Send handshake
         if ( write( client.clientsockfd,handshake,sizeof(handshake) ) < 0 )
@@ -125,16 +123,16 @@ int runServer(int argc, char* argv[])
         if (read(client.clientsockfd,buffer,sizeof(buffer)-1) < 0)
             fatal_perror("ERROR reading from client");
 
-        std::cout<<"Received:"<<buffer<<std::endl;
+        std::cout<<"Received:"<<buffer<< std::endl;
 
         // Verify handshake
         if ( std::string(buffer) != std::string(handshake) )
             fatal_error("Error in client handshake");
 
-        std::cout<<"Success on handshake with "<<handshake<<std::endl;
+        std::cout<<"Success on handshake with "<<handshake<< std::endl;
     }
 
-    std::cout<<"All clients connected"<<std::endl;
+    std::cout<<"All clients connected"<< std::endl;
 
     std::cout<<"Hit enter to begin...";
     std::cin.ignore();
@@ -143,14 +141,14 @@ int runServer(int argc, char* argv[])
     while ( !game.GameOver() )
     {
         // Send data to clients
-        std::cout<<"Sending clients gamedata"<<std::endl;
+        std::cout<<"Sending clients gamedata"<< std::endl;
         SendGameInfoToClients(myClients, game, gameMutex);
 
         // Wait for orders from clients
-        std::cout<<"Waiting for client orders"<<std::endl;
+        std::cout<<"Waiting for client orders"<< std::endl;
         GetOrdersFromClients(myClients, game, gameMutex);
 
-        std::cout<<"Orders recieved, simulating turn"<<std::endl;
+        std::cout<<"Orders recieved, simulating turn"<< std::endl;
 
         // Step to the next turn
         gameMutex.lock();
@@ -160,20 +158,27 @@ int runServer(int argc, char* argv[])
 
     // Send final state to all the clients
     SendGameInfoToClients(myClients, game, gameMutex);
+    return game;
+}
+
+int runServer(int argc, char* argv[])
+{
+    // Set up game
+    CTTRTSGame game = GetGameFromFile(argv[1]);
+    if(game.GetNumUnits() == 0)
+        fatal_error("game not valid");
+
+    RunServerForGame(game);
 
     // Get the winning player
     player_t winningPlayer = game.GetWinningPlayer();
 
     // Print the winner!
     if ( winningPlayer != player_t::NUM_INVALID )
-    {
         std::cout<<"Game over! Winner:"<<(int) winningPlayer <<std::endl;
-    }
     else
-    {
         std::cout<<"Game over! It was a draw!"<<std::endl;
-    }
 
     // Return
-    return 0;
+    return (int)winningPlayer;
 }
