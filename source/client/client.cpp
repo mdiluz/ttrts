@@ -101,17 +101,23 @@ int runClient(int argc, char* argv[])
 
     while ( n >= 0 )
     {
-        memset(buffer,0,sizeof(buffer));
-
         std::cout<<"Waiting for gamestate"<<std::endl;
-        // Receive gamestate
-        if (read(sockfd,buffer,sizeof(buffer)-1) < 0)
-            error("ERROR reading from client");
 
-        std::cout<<buffer<<std::endl;
+        std::string gamestate;
+        while( gamestate.find("END") == std::string::npos )
+        {
+            // Receive gamestate
+            memset(buffer,0,sizeof(buffer));
+            if (read(sockfd,buffer,sizeof(buffer)-1) < 0)
+                error("ERROR reading from client");
+
+            gamestate+=buffer;
+        }
+
+        std::cout<<gamestate<<std::endl;
 
         // Output orders
-        std::string orders = std::to_string(sockfd);
+        std::string orders = "END";
 
         std::cout<<"Sending orders"<<std::endl;
         std::cout<<orders<<std::endl;

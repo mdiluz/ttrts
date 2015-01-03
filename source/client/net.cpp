@@ -11,21 +11,29 @@
 int WaitForOrdersFromClient(const ClientInfo info, std::mutex &mut, CTTRTSGame &game)
 {
     char buffer[1028]; // buffer for orders
-    memset(buffer,0,sizeof(buffer));
 
     std::cout<<"Waiting for "<<inet_ntoa(info.cli_addr.sin_addr)<<std::endl;
 
-    // Read in the new socket
-    // read will block until the client has called write
-    // up to the full size of the buffer
-    if (read(info.clientsockfd,buffer,sizeof(buffer)-1) < 0)
-        error("ERROR reading from client");
+    std::string orders;
+
+    while ( orders.find("END") == std::string::npos )
+    {
+        memset(buffer,0,sizeof(buffer));
+
+        // Read in the new socket
+        // read will block until the client has called write
+        // up to the full size of the buffer
+        if (read(info.clientsockfd,buffer,sizeof(buffer)-1) < 0)
+            error("ERROR reading from client");
+
+        // Append the received orders
+        orders+=buffer;
+    }
 
     std::cout<<"Recieved orders from "<<inet_ntoa(info.cli_addr.sin_addr)<<std::endl;
-    std::cout<<buffer<<std::endl;
 
     mut.lock();
-    game.IssueOrders(info.player , buffer);
+    game.IssueOrders(info.player , orders);
     mut.unlock();
 
     return 0;
