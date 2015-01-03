@@ -33,7 +33,7 @@ void WaitForFile( const std::string& name, const std::chrono::milliseconds& time
 bool OutputGameStateFile(CTTRTSGame &game, const std::string &gameDir)
 {
     char turnFileName[128];
-    snprintf(turnFileName,128,"%s/Turn_%i.txt",gameDir.c_str(),game.GetTurn());
+    snprintf(turnFileName,128,"%s/%s/Turn_%i.txt",gameDir.c_str(),game.GetName().c_str(),game.GetTurn());
     std::ofstream turnFile(turnFileName, std::ios_base::trunc); // truncate to overwrite if a file exists
 
     if ( turnFile.bad() )
@@ -122,24 +122,65 @@ CTTRTSGame GetGameFromFile( const std::string& filename )
     return GetGameFromString(gameDescriptor);
 }
 
-// =====================================================================================================================
-int runFromFilesystem(int argc, char* argv[])
+std::string GetOrdersFromPlayerFile(const CTTRTSGame &game, player_t &player)
 {
-    std::string gamefile = argv[1];
+    std::string gameDir = getGamesDir();
 
-    std::cout<<"Launching TTRTS with "<<gamefile<<std::endl;
-    CTTRTSGame game = GetGameFromFile(gamefile);
+    char playerOrderFileName[128];
+    snprintf(playerOrderFileName, 128, "%s/%s/Player_%i_Turn_%i.txt", gameDir.c_str(),game.GetName().c_str(),(int) player, game.GetTurn());
 
-    // Grab the players involved
-    auto players = game.GetPlayers();
+    // Wait for the player order file to be created
+    std::cout<<"Waiting for "<< playerOrderFileName << std::endl;
+    bool hasOrderFile = false;
+    while(!hasOrderFile)
+            {
+                WaitForFile(playerOrderFileName,sk_waitTime); // Wait for the file
 
-    // Default for games
-    std::string ttrts_games_dir = getGamesDir();
+                // File must have END
+                // Method taken from http://stackoverflow.com/questions/11876290/c-fastest-way-to-read-only-last-line-of-text-file
+                std::ifstream turnFile(playerOrderFileName);
+                turnFile.seekg(-1, std::ios_base::end);
 
-    // Current game directory
-    std::string gameDir = ttrts_games_dir + game.GetName();
+                // Loop back from the end of file
+                bool keepLooping = true;
+                while(keepLooping) {
+                    char ch;
+                    turnFile.get(ch);                            // Get current byte's data
 
-    // Empty the current game directory
+                    if((int)turnFile.tellg() <= 1) {             // If the data was at or before the 0th byte
+                        turnFile.seekg(0);                       // The first line is the last line
+                        keepLooping = false;                // So stop there
+                    }
+                    else if(ch == '\n') {                   // If the data was a newline
+                        keepLooping = false;                // Stop at the current position.
+                    }
+                    else {                                  // If the data was neither a newline nor at the 0 byte
+                        turnFile.seekg(-2, std::ios_base::cur);        // Move to the front of that data, then to the front of the data before it
+                    }
+                }
+
+                // Grab this line
+                std::string lastLine;
+                getline(turnFile,lastLine);
+                if(lastLine == "END")
+                    hasOrderFile = true;
+            }
+
+    std::ifstream turnFile(playerOrderFileName);
+
+    // Reserve the full order string
+    std::string orders;
+    turnFile.seekg(0, std::ios_base::end);
+    orders.reserve(turnFile.tellg());
+    turnFile.seekg(0, std::ios_base::beg);
+
+    // Grab the string from the file
+    orders.assign((std::istreambuf_iterator<char>(turnFile)), std::istreambuf_iterator<char>());
+    return orders;
+}
+
+int CreateAndCleanGameDir(const std::string& gameDir)
+{
     struct stat info;
     int ret = stat( gameDir.c_str(), &info );
     if( ret == 0 && info.st_mode & S_IFDIR )
@@ -178,6 +219,30 @@ int runFromFilesystem(int argc, char* argv[])
         return -1;
     }
 
+    return 0;
+}
+
+// =====================================================================================================================
+int runFromFilesystem(int argc, char* argv[])
+{
+    std::string gamefile = argv[1];
+
+    std::cout<<"Launching TTRTS with "<<gamefile<<std::endl;
+    CTTRTSGame game = GetGameFromFile(gamefile);
+
+    // Grab the players involved
+    auto players = game.GetPlayers();
+
+    // Default for games
+    std::string ttrts_games_dir = getGamesDir();
+
+    // Current game directory
+    std::string gameDir = ttrts_games_dir + game.GetName();
+
+    // Empty the current game directory
+    if ( CreateAndCleanGameDir(gameDir) < 0)
+        return -1;
+
     // While the game isn't finished
     while ( ! game.GameOver() )
     {
@@ -194,56 +259,7 @@ int runFromFilesystem(int argc, char* argv[])
         for( player_t player : players)
         {
             // Construct the player order filename
-            char playerOrderFileName[128];
-            snprintf(playerOrderFileName, 128, "%s/Player_%i_Turn_%i.txt", gameDir.c_str(), (int) player, game.GetTurn());
-
-            // Wait for the player order file to be created
-            std::cout<<"Waiting for "<< playerOrderFileName <<std::endl;
-            bool hasOrderFile = false;
-            while(!hasOrderFile)
-            {
-                WaitForFile(playerOrderFileName,sk_waitTime); // Wait for the file
-
-                // File must have END
-                // Method taken from http://stackoverflow.com/questions/11876290/c-fastest-way-to-read-only-last-line-of-text-file
-                std::ifstream turnFile(playerOrderFileName);
-                turnFile.seekg(-1,std::ios_base::end);
-
-                // Loop back from the end of file
-                bool keepLooping = true;
-                while(keepLooping) {
-                    char ch;
-                    turnFile.get(ch);                            // Get current byte's data
-
-                    if((int)turnFile.tellg() <= 1) {             // If the data was at or before the 0th byte
-                        turnFile.seekg(0);                       // The first line is the last line
-                        keepLooping = false;                // So stop there
-                    }
-                    else if(ch == '\n') {                   // If the data was a newline
-                        keepLooping = false;                // Stop at the current position.
-                    }
-                    else {                                  // If the data was neither a newline nor at the 0 byte
-                        turnFile.seekg(-2,std::ios_base::cur);        // Move to the front of that data, then to the front of the data before it
-                    }
-                }
-
-                // Grab this line
-                std::string lastLine;
-                std::getline(turnFile,lastLine);
-                if(lastLine == "END")
-                    hasOrderFile = true;
-            }
-
-            std::ifstream turnFile(playerOrderFileName);
-
-            // Reserve the full order string
-            std::string orders;
-            turnFile.seekg(0, std::ios::end);
-            orders.reserve(turnFile.tellg());
-            turnFile.seekg(0, std::ios::beg);
-
-            // Grab the string from the file
-            orders.assign((std::istreambuf_iterator<char>(turnFile)),std::istreambuf_iterator<char>());
+            std::string orders = GetOrdersFromPlayerFile(game, player);
 
             // Issue the orders to the game
             if( game.IssueOrders(player, orders) )

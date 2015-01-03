@@ -114,10 +114,12 @@ int runClient(int argc, char* argv[])
             gamestate+=buffer;
         }
 
-        std::cout<<gamestate<<std::endl;
+        // Output the gamestate file for this game
+        CTTRTSGame thisGame = GetGameFromString(gamestate);
+        OutputGameStateFile(thisGame, getGamesDir());
 
-        // Output orders
-        std::string orders = "END";
+        // Get the order file for this turn
+        std::string orders = GetOrdersFromPlayerFile(thisGame,myPlayer);
 
         std::cout<<"Sending orders"<<std::endl;
         std::cout<<orders<<std::endl;

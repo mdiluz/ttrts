@@ -15,6 +15,8 @@ void WaitForFile( const std::string& name, const std::chrono::milliseconds& time
 
 bool OutputGameStateFile(CTTRTSGame &game, const std::string &gameDir);
 
+std::string GetOrdersFromPlayerFile(const CTTRTSGame &game, player_t &player);
+
 CTTRTSGame GetGameFromFile( const std::string& file );
 
 std::string getMapsDir();

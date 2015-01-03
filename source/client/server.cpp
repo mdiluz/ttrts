@@ -68,7 +68,7 @@ int runServer(int argc, char* argv[])
     CTTRTSGame game = GetGameFromFile("Tiny2Player.txt");
 
     std::vector<player_t> players = game.GetPlayers();
-    unsigned int numClients = game.GetPlayers().size();
+    unsigned int numClients = players.size();
     auto player_iterator = players.begin();
 
     //  game mutex
@@ -103,10 +103,7 @@ int runServer(int argc, char* argv[])
         clientInfo.player = *player_iterator;
 
         player_iterator++;
-
-        // Could verify if player is valid here
-
-        myClients.push_back({cli_addr,clientsockfd});
+        myClients.push_back(clientInfo);
     }
 
     // Perform the initial handshake with clients
