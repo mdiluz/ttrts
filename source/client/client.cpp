@@ -116,7 +116,7 @@ int runClient(int argc, char* argv[])
 
         // Output the gamestate file for this game
         CTTRTSGame thisGame = GetGameFromString(gamestate);
-        OutputGameStateFile(thisGame, getGamesDir());
+        OutputGameStateFile(thisGame);
 
         // Get the order file for this turn
         std::string orders = GetOrdersFromPlayerFile(thisGame,myPlayer);

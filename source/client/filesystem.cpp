@@ -30,10 +30,10 @@ void WaitForFile( const std::string& name, const std::chrono::milliseconds& time
     while( !FileExists(name) ) std::this_thread::sleep_for(time);
 }
 
-bool OutputGameStateFile(CTTRTSGame &game, const std::string &gameDir)
+bool OutputGameStateFile(CTTRTSGame &game)
 {
     char turnFileName[128];
-    snprintf(turnFileName,128,"%s/%s/Turn_%i.txt",gameDir.c_str(),game.GetName().c_str(),game.GetTurn());
+    snprintf(turnFileName,128,"%s%s/Turn_%i.txt", getGamesDir().c_str(),game.GetName().c_str(),game.GetTurn());
     std::ofstream turnFile(turnFileName, std::ios_base::trunc); // truncate to overwrite if a file exists
 
     if ( turnFile.bad() )
@@ -127,7 +127,7 @@ std::string GetOrdersFromPlayerFile(const CTTRTSGame &game, player_t &player)
     std::string gameDir = getGamesDir();
 
     char playerOrderFileName[128];
-    snprintf(playerOrderFileName, 128, "%s/%s/Player_%i_Turn_%i.txt", gameDir.c_str(),game.GetName().c_str(),(int) player, game.GetTurn());
+    snprintf(playerOrderFileName, 128, "%s%s/Player_%i_Turn_%i.txt", gameDir.c_str(),game.GetName().c_str(),(int) player, game.GetTurn());
 
     // Wait for the player order file to be created
     std::cout<<"Waiting for "<< playerOrderFileName << std::endl;
@@ -249,7 +249,7 @@ int runFromFilesystem(int argc, char* argv[])
         std::cout<<"Starting turn "<<game.GetTurn()<<std::endl;
 
         // Create a turn file
-        if( !OutputGameStateFile(game, gameDir))
+        if( !OutputGameStateFile(game))
         {
             std::cerr<<"Error: Failed to output new turn file" << std::endl;
             return 1;
@@ -277,7 +277,7 @@ int runFromFilesystem(int argc, char* argv[])
     }
 
     // Output final gamestate
-    OutputGameStateFile(game, gameDir);
+    OutputGameStateFile(game);
 
     // Get the winning player
     player_t winningPlayer = game.GetWinningPlayer();
