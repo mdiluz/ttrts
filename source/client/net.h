@@ -14,6 +14,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <iostream>
 
 #define TTRTS_HANDSHAKE_FORMAT "player %u name %s"
 
@@ -31,7 +32,13 @@ void GetOrdersFromClients(std::vector<ClientInfo> &myClients, CTTRTSGame &game, 
 
 void SendGameInfoToClients(std::vector<ClientInfo> &myClients, const CTTRTSGame &game, std::mutex &gameMutex);
 
-inline void error(const char *msg)
+inline void fatal_error(const char *msg)
+{
+    std::cerr<<msg<<std::endl;
+    exit(1);
+}
+
+inline void fatal_perror(const char *msg)
 {
     perror(msg);
     exit(1);

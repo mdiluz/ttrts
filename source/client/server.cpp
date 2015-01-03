@@ -38,7 +38,7 @@ int runServer(int argc, char* argv[])
     // 0 is for default protocol
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd < 0)
-        error("ERROR opening socket");
+        fatal_perror("ERROR opening socket");
 
     // bind our socket to this server address
     std::cout<<"Binding socket"<<std::endl;
@@ -47,7 +47,7 @@ int runServer(int argc, char* argv[])
     {
         if(retry > 10)
         {
-            error("Binding failed after retries");
+            fatal_error("Binding failed after retries");
         }
 
         if (bind(sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) >= 0)
@@ -93,7 +93,7 @@ int runServer(int argc, char* argv[])
         // client information will be stored in cli_addr
         clientsockfd = accept(sockfd, (sockaddr *) &cli_addr, &clilen);
         if (clientsockfd < 0)
-            error("ERROR on accept");
+            fatal_perror("ERROR on accept");
 
         std::cout<<"Client connected from "<<inet_ntoa(cli_addr.sin_addr)<<" socket "<<clientsockfd<<std::endl;
 
@@ -118,18 +118,18 @@ int runServer(int argc, char* argv[])
 
         // Send handshake
         if ( write( client.clientsockfd,handshake,sizeof(handshake) ) < 0 )
-            error("ERROR sending to client");
+            fatal_perror("ERROR sending to client");
 
         // Recieve handshake
         char buffer[64];
         if (read(client.clientsockfd,buffer,sizeof(buffer)-1) < 0)
-            error("ERROR reading from client");
+            fatal_perror("ERROR reading from client");
 
         std::cout<<"Received:"<<buffer<<std::endl;
 
         // Verify handshake
         if ( std::string(buffer) != std::string(handshake) )
-            error("Error in client handshake");
+            fatal_error("Error in client handshake");
 
         std::cout<<"Success on handshake with "<<handshake<<std::endl;
     }

@@ -48,14 +48,14 @@ int runClient(int argc, char* argv[])
     // 0 is for default protocol
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd < 0)
-        error("ERROR opening socket");
+        fatal_perror("ERROR opening socket");
 
     std::cout<<"Opened socket on "<<sockfd<<std::endl;
 
     // Get the hostent information for the host by name
     server = gethostbyname(argv[1]);
     if (server == NULL)
-        error("ERROR, no such host");
+        fatal_error("ERROR, no such host");
 
     std::cout<<"Connecting to "<<argv[1]<<std::endl;
 
@@ -73,24 +73,24 @@ int runClient(int argc, char* argv[])
 
     // Attempt to connect to the server using the socket and server address info
     if (connect(sockfd, (const sockaddr*)&serv_addr, sizeof(serv_addr)) < 0)
-        error("ERROR connecting");
+        fatal_perror("ERROR connecting");
 
     std::cout<<"Waiting for handshake"<<std::endl;
 
     memset(buffer,0,sizeof(buffer));
     if (read(sockfd,buffer,sizeof(buffer)-1) < 0)
-        error("ERROR recieving handshake from server");
+        fatal_perror("ERROR recieving handshake from server");
 
     std::string handshake(buffer);
     std::cout<<"Handshake:"<<handshake<<std::endl;
 
     if ( write( sockfd, handshake.c_str(), handshake.length()+1 ) < 0 )
-        error("ERROR sending handshake to server");
+        fatal_perror("ERROR sending handshake to server");
 
     unsigned int player;
     char gameName[64];
     if ( sscanf(handshake.c_str(),TTRTS_HANDSHAKE_FORMAT,&player,gameName) < 2 )
-        error("Handshake failed");
+        fatal_error("Handshake failed");
 
     myPlayer = (player_t)player;
     std::cout<<"I am player "<<std::to_string((int)myPlayer)<<std::endl;
@@ -109,7 +109,7 @@ int runClient(int argc, char* argv[])
             // Receive gamestate
             memset(buffer,0,sizeof(buffer));
             if (read(sockfd,buffer,sizeof(buffer)-1) < 0)
-                error("ERROR reading from client");
+                fatal_perror("ERROR reading from client");
 
             gamestate+=buffer;
         }
@@ -125,8 +125,8 @@ int runClient(int argc, char* argv[])
         std::cout<<orders<<std::endl;
         // Write to the socket with the buffer
         n = write(sockfd,orders.c_str(),orders.length());
-        if (n < 0)
-            error("ERROR writing to socket");
+        if (0 < n)
+            fatal_perror("ERROR writing to socket");
 
         std::cout<<"Order Sent"<<std::endl;
     }

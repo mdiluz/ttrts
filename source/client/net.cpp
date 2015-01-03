@@ -24,7 +24,7 @@ int WaitForOrdersFromClient(const ClientInfo info, std::mutex &mut, CTTRTSGame &
         // read will block until the client has called write
         // up to the full size of the buffer
         if (read(info.clientsockfd,buffer,sizeof(buffer)-1) < 0)
-            error("ERROR reading from client");
+            fatal_perror("ERROR reading from client");
 
         // Append the received orders
         orders+=buffer;
@@ -66,6 +66,6 @@ void SendGameInfoToClients(std::vector<ClientInfo> &myClients, const CTTRTSGame 
     {
         // Write to the socket with the buffer
         if ( write( client.clientsockfd, gamestate_string.c_str(), gamestate_string.length() ) < 0 )
-            error("ERROR sending to client");
+            fatal_perror("ERROR sending to client");
     }
 }
