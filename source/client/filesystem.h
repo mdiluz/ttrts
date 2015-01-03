@@ -24,4 +24,6 @@ std::string getGamesDir();
 
 int runFromFilesystem(int argc, char* argv[]);
 
+int CreateAndCleanGameDir(const std::string& gameName);
+
 #endif

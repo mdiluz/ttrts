@@ -110,13 +110,14 @@ int runServer(int argc, char* argv[])
     for( auto client : myClients )
     {
         // Handshake currently just player
-        std::string handshake = std::string("player ")+std::to_string((int)client.player);
+        char handshake[64];
+        snprintf(handshake, sizeof(handshake), TTRTS_HANDSHAKE_FORMAT,(unsigned int)client.player,game.GetName().c_str());
 
         // Output the handshake
-        std::cout<<"Handshaking with "<<handshake<<std::endl;
+        std::cout<<"Handshaking:"<<handshake<<std::endl;
 
         // Send handshake
-        if ( write( client.clientsockfd,handshake.c_str(),handshake.length() ) < 0 )
+        if ( write( client.clientsockfd,handshake,sizeof(handshake) ) < 0 )
             error("ERROR sending to client");
 
         // Recieve handshake
@@ -124,8 +125,10 @@ int runServer(int argc, char* argv[])
         if (read(client.clientsockfd,buffer,sizeof(buffer)-1) < 0)
             error("ERROR reading from client");
 
+        std::cout<<"Received:"<<buffer<<std::endl;
+
         // Verify handshake
-        if ( std::string(buffer) != handshake )
+        if ( std::string(buffer) != std::string(handshake) )
             error("Error in client handshake");
 
         std::cout<<"Success on handshake with "<<handshake<<std::endl;

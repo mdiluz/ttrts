@@ -179,8 +179,9 @@ std::string GetOrdersFromPlayerFile(const CTTRTSGame &game, player_t &player)
     return orders;
 }
 
-int CreateAndCleanGameDir(const std::string& gameDir)
+int CreateAndCleanGameDir(const std::string& gameName)
 {
+    std::string gameDir = getGamesDir()+gameName;
     struct stat info;
     int ret = stat( gameDir.c_str(), &info );
     if( ret == 0 && info.st_mode & S_IFDIR )
@@ -236,11 +237,8 @@ int runFromFilesystem(int argc, char* argv[])
     // Default for games
     std::string ttrts_games_dir = getGamesDir();
 
-    // Current game directory
-    std::string gameDir = ttrts_games_dir + game.GetName();
-
     // Empty the current game directory
-    if ( CreateAndCleanGameDir(gameDir) < 0)
+    if ( CreateAndCleanGameDir(game.GetName()) < 0)
         return -1;
 
     // While the game isn't finished

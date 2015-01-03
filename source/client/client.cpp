@@ -82,22 +82,22 @@ int runClient(int argc, char* argv[])
         error("ERROR recieving handshake from server");
 
     std::string handshake(buffer);
+    std::cout<<"Handshake:"<<handshake<<std::endl;
 
-    if ( write(sockfd,handshake.c_str(),handshake.length()) < 0)
+    if ( write( sockfd, handshake.c_str(), handshake.length()+1 ) < 0 )
         error("ERROR sending handshake to server");
 
-    size_t pos;
-    if( (pos = handshake.find("player")) != std::string::npos )
-    {
-        std::string player = handshake.substr(pos, handshake.length());
-        myPlayer = (player_t)atoi(player.c_str());
-    }
-    else
-    {
+    unsigned int player;
+    char gameName[64];
+    if ( sscanf(handshake.c_str(),TTRTS_HANDSHAKE_FORMAT,&player,gameName) < 2 )
         error("Handshake failed");
-    }
 
-    std::cout<<"I am player "<< std::to_string((int)myPlayer) << std::endl;
+    myPlayer = (player_t)player;
+    std::cout<<"I am player "<<std::to_string((int)myPlayer)<<std::endl;
+    std::cout<<"Game is "<<gameName<<std::endl;
+
+    // Clean out the games dir
+    CreateAndCleanGameDir(gameName);
 
     while ( n >= 0 )
     {

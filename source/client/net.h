@@ -15,6 +15,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define TTRTS_HANDSHAKE_FORMAT "player %u name %s"
+
 // Struct for net client info
 struct ClientInfo
 {
