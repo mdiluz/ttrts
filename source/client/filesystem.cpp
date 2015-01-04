@@ -208,6 +208,44 @@ int CreateAndCleanGameDir(const std::string& gameName)
     return 0;
 }
 
+int OutputGameEnd(const CTTRTSGame &game) {
+    std::cout<<"TTRTS: Game Over!"<< std::endl;
+
+    // Get the winning player
+    player_t winningPlayer = game.GetWinningPlayer();
+
+    // Print the winner!
+    if ( winningPlayer != player_t::NUM_INVALID )
+    {
+        std::cout<<"TTRTS: Winner:"<<(int) winningPlayer <<std::endl;
+    }
+    else
+    {
+        std::cout<<"TTRTS: It was a draw!"<<std::endl;
+    }
+
+    return (int)winningPlayer;
+}
+
+int OutputgameEnd(const CTTRTSGame &game) {
+    std::cout<<"TTRTS: Game Over!"<< std::endl;
+
+    // Get the winning player
+    player_t winningPlayer = game.GetWinningPlayer();
+
+    // Print the winner!
+    if ( winningPlayer != player_t::NUM_INVALID )
+    {
+        std::cout<<"TTRTS: Winner:"<<(int) winningPlayer <<std::endl;
+    }
+    else
+    {
+        std::cout<<"TTRTS: It was a draw!"<<std::endl;
+    }
+
+    return (int)winningPlayer;
+}
+
 // =====================================================================================================================
 int runFromFilesystem(int argc, char* argv[])
 {
@@ -256,20 +294,5 @@ int runFromFilesystem(int argc, char* argv[])
     // Output final gamestate
     OutputGameStateFile(game);
 
-    std::cout<<"TTRTS: Game Over!"<<std::endl;
-
-    // Get the winning player
-    player_t winningPlayer = game.GetWinningPlayer();
-
-    // Print the winner!
-    if ( winningPlayer != player_t::NUM_INVALID )
-    {
-        std::cout<<"TTRTS: Winner:"<<(int) winningPlayer <<std::endl;
-    }
-    else
-    {
-        std::cout<<"TTRTS: It was a draw!"<<std::endl;
-    }
-
-    return (int)winningPlayer;
+    return OutputGameEnd( game );
 }

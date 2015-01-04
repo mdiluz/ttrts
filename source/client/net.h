@@ -18,6 +18,9 @@
 
 #define TTRTS_HANDSHAKE_FORMAT "player %u name %s"
 
+//======================================================================================================================
+// Structs for net management
+
 // Struct for net client info
 struct ClientInfo
 {
@@ -25,6 +28,10 @@ struct ClientInfo
     int clientsockfd;
     player_t player;
 };
+
+
+//======================================================================================================================
+// Server side function
 
 // Get the address of a local server
 sockaddr_in GetLocalServerAddress();
@@ -52,8 +59,23 @@ void TryBindSocket(int sockfd, const sockaddr_in &serv_addr);
 // Perform the server side handshake with a client
 void PerformServerHandshake(const ClientInfo &client, const std::string &game);
 
+//======================================================================================================================
+// Client side functions
+
+// Connect to the host, returns new socket for communication
+int ConnectToHostServer(const std::string &hostname, sockaddr_in &serv_addr);
+
 // Perform the client side handshake with the server
 void PerformClientHandshake(int sockfd, unsigned int &player, std::string &gameNameString);
+
+// Wait for gamestate message from host
+std::string WaitForGamestateMessage(int sockfd);
+
+// Send orders to the server
+int SendOrdersToServer(int sockfd, const std::string &orders);
+
+//======================================================================================================================
+// Error functions
 
 // For local fatal errors
 inline void fatal_error(const char *msg)
@@ -68,5 +90,9 @@ inline void fatal_perror(const char *msg)
     perror(msg);
     exit(1);
 }
+
+//======================================================================================================================
+// Other functions
+int OutputGameEnd( CTTRTSGame& game );
 
 #endif

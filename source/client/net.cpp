@@ -1,5 +1,7 @@
 #include "net.h"
 
+#include <netdb.h>
+
 #include <iostream>
 #include <thread>
 
@@ -186,4 +188,73 @@ sockaddr_in GetLocalServerAddress()
     // The host for this address is this current machine's IP, INADDR_ANY fetches this
     serv_addr.sin_addr.s_addr = INADDR_ANY;
     return serv_addr;
+}
+
+
+int ConnectToHostServer(const std::string &hostname, sockaddr_in &serv_addr)
+{
+    // Create a new socket
+    int sockfd = socket(AF_INET, SOCK_STREAM, 0);
+    if (sockfd < 0)
+        fatal_perror("ERROR opening socket");
+
+    // Get the hostent information for the host by name
+    hostent *server = gethostbyname(hostname.c_str());
+    if (server == NULL)
+        fatal_error("ERROR, no such host");
+
+    // copy the server address into our server_addr struct
+    memcpy(&serv_addr.sin_addr.s_addr, server->h_addr, server->h_length);
+
+    // Attempt to connect to the server using the socket and server address info
+    if (connect(sockfd, (const sockaddr*)&serv_addr, sizeof(serv_addr)) < 0)
+        fatal_perror("ERROR connecting");
+
+    return sockfd;
+}
+
+std::string WaitForGamestateMessage(int sockfd)
+{
+    std::string gamestate;
+    char gamestateBuffer[1028];
+    while( gamestate.find("END") == std::string::npos )
+    {
+        memset(gamestateBuffer,0,sizeof(gamestateBuffer));
+
+        // Receive gamestate
+        if (read(sockfd,gamestateBuffer,sizeof(gamestateBuffer)-1) < 0)
+            fatal_perror("ERROR reading from client");
+
+        gamestate+=gamestateBuffer;
+    }
+    return gamestate;
+}
+
+int SendOrdersToServer(int sockfd, const std::string &orders)
+{
+    int n = write(sockfd,orders.c_str(),orders.length());
+    if (0 < n)
+        fatal_perror("ERROR writing to socket");
+    return n;
+}
+
+
+int OutputGameEnd( CTTRTSGame& game )
+{
+    std::cout<<"TTRTS: Game Over!"<<std::endl;
+
+    // Get the winning player
+    player_t winningPlayer = game.GetWinningPlayer();
+
+    // Print the winner!
+    if ( winningPlayer != player_t::NUM_INVALID )
+    {
+        std::cout<<"TTRTS: Winner:"<<(int) winningPlayer <<std::endl;
+    }
+    else
+    {
+        std::cout<<"TTRTS: It was a draw!"<<std::endl;
+    }
+
+    return (int)winningPlayer;
 }

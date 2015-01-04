@@ -89,17 +89,6 @@ int runServer(int argc, char* argv[])
 
     RunServerForGame(game);
 
-    std::cout<<"TTRTS: Game over!"<<std::endl;
-
-    // Get the winning player
-    player_t winningPlayer = game.GetWinningPlayer();
-
-    // Print the winner!
-    if ( winningPlayer != player_t::NUM_INVALID )
-        std::cout<<"TTRTS: Winner is player "<<(int) winningPlayer <<std::endl;
-    else
-        std::cout<<"TTRTS: It was a draw!"<<std::endl;
-
-    // Return
-    return (int)winningPlayer;
+    // Return winning player and output game end
+    return OutputGameEnd(game);
 }
