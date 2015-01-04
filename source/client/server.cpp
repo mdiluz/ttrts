@@ -67,8 +67,8 @@ void RunServerForGame(CTTRTSGame &game)
     while ( myClients.size() < numClients )
     {
         // information for each client
-        sockaddr_in cli_addr;   // Client address
-        int clientsockfd; 	    // new socket File descriptor
+        sockaddr_in cli_addr;           // Client address
+        int         clientsockfd; 	    // new socket File descriptor
 
         socklen_t clilen = sizeof(sockaddr_in);
 
@@ -81,20 +81,20 @@ void RunServerForGame(CTTRTSGame &game)
 
         std::cout<<"Client connected from "<<inet_ntoa(cli_addr.sin_addr)<<" socket "<<clientsockfd<< std::endl;
 
+        // Fill out client info struct
         ClientInfo clientInfo;
-        clientInfo.cli_addr = cli_addr;
+        clientInfo.cli_addr     = cli_addr;
         clientInfo.clientsockfd = clientsockfd;
-        clientInfo.player = *player_iterator;
+        clientInfo.player       = *player_iterator;
 
-        player_iterator++;
+        // Handshake with client
+        PerformServerHandshake(clientInfo, game);
+
+        // Add out client info to our list
         myClients.push_back(clientInfo);
-    }
 
-    // Perform the initial handshake with clients
-    for( auto client : myClients )
-    {
-        // Handshake currently just player
-        PerformServerHandshakeWithClient(client, game);
+        // Iterate to next player
+        player_iterator++;
     }
 
     std::cout<<"All clients connected"<< std::endl;
@@ -107,11 +107,11 @@ void RunServerForGame(CTTRTSGame &game)
     {
         // Send data to clients
         std::cout<<"Sending clients gamedata"<< std::endl;
-        SendGameInfoToClients(myClients, game, gameMutex);
+        SendGamestateToClients(myClients, game, gameMutex);
 
         // Wait for orders from clients
         std::cout<<"Waiting for client orders"<< std::endl;
-        GetOrdersFromClients(myClients, game, gameMutex);
+        WaitForOrdersFromClients(myClients, game, gameMutex);
 
         std::cout<<"Orders recieved, simulating turn"<< std::endl;
 
@@ -122,7 +122,7 @@ void RunServerForGame(CTTRTSGame &game)
     }
 
     // Send final state to all the clients
-    SendGameInfoToClients(myClients, game, gameMutex);
+    SendGamestateToClients(myClients, game, gameMutex);
 }
 
 int runServer(int argc, char* argv[])

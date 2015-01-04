@@ -8,7 +8,7 @@
 #include <string.h>
 #include <unistd.h>
 
-void WaitForOrdersFromClient(const ClientInfo info, std::mutex &mut, CTTRTSGame &game)
+void WaitForOrdersFromClient(const ClientInfo info,  CTTRTSGame &game, std::mutex &mut)
 {
     char buffer[1028]; // buffer for orders
 
@@ -37,13 +37,13 @@ void WaitForOrdersFromClient(const ClientInfo info, std::mutex &mut, CTTRTSGame 
     mut.unlock();
 }
 
-void GetOrdersFromClients(std::vector<ClientInfo> &myClients, CTTRTSGame &game, std::mutex &gameMutex)
+void WaitForOrdersFromClients(std::vector<ClientInfo> &myClients, CTTRTSGame &game, std::mutex &gameMutex)
 {
     // Spawn threads
     std::vector<std::thread> clientThreads;
     for(auto client : myClients)
     {
-        std::thread clientThread(WaitForOrdersFromClient, client, ref(gameMutex), std::ref(game));
+        std::thread clientThread(WaitForOrdersFromClient, client, std::ref(game), ref(gameMutex));
         clientThreads.push_back(move(clientThread));
     }
 
@@ -54,7 +54,7 @@ void GetOrdersFromClients(std::vector<ClientInfo> &myClients, CTTRTSGame &game, 
     }
 }
 
-void SendGameInfoToClients(std::vector<ClientInfo> &myClients, const CTTRTSGame &game, std::mutex &gameMutex)
+void SendGamestateToClients(std::vector<ClientInfo> &myClients, const CTTRTSGame &game, std::mutex &gameMutex)
 {
     gameMutex.lock();
     std::string gamestate_string = GetStringFromGame(game);
@@ -90,7 +90,7 @@ void PerformClientHandshake(int sockfd, unsigned int &player, std::string &gameN
     gameNameString = gameName;
 }
 
-void PerformServerHandshakeWithClient(const ClientInfo &client, const CTTRTSGame &game)
+void PerformServerHandshake(const ClientInfo &client, const CTTRTSGame &game)
 {
     char handshake[64];
     snprintf(handshake, sizeof(handshake), TTRTS_HANDSHAKE_FORMAT,(unsigned int)client.player,game.GetName().c_str());

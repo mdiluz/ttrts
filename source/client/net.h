@@ -26,24 +26,33 @@ struct ClientInfo
     player_t player;
 };
 
-void WaitForOrdersFromClient(const ClientInfo info, std::mutex &mut, CTTRTSGame &game);
+// Wait for orders from a client, will not return until client has send valid orders
+// Will automatically add orders to the game
+void WaitForOrdersFromClient(const ClientInfo info, CTTRTSGame &game, std::mutex &mut);
 
-void GetOrdersFromClients(std::vector<ClientInfo> &myClients, CTTRTSGame &game, std::mutex &gameMutex);
+// Iterates through a list of clients calling WaitForOrdersFromClient
+void WaitForOrdersFromClients(std::vector<ClientInfo> &myClients, CTTRTSGame &game, std::mutex &gameMutex);
 
-void SendGameInfoToClients(std::vector<ClientInfo> &myClients, const CTTRTSGame &game, std::mutex &gameMutex);
+// Sends current gamestate to each client
+void SendGamestateToClients(std::vector<ClientInfo> &myClients, const CTTRTSGame &game, std::mutex &gameMutex);
 
+// Tries to bind to a socket, will attempt 10 times with longer waits between
 void TryBindSocket(int sockfd, sockaddr_in &serv_addr);
 
-void PerformServerHandshakeWithClient(const ClientInfo &client, const CTTRTSGame &game);
+// Perform the server side handshake with a client
+void PerformServerHandshake(const ClientInfo &client, const CTTRTSGame &game);
 
+// Perform the client side handshake with the server
 void PerformClientHandshake(int sockfd, unsigned int &player, std::string &gameNameString);
 
+// For local fatal errors
 inline void fatal_error(const char *msg)
 {
     std::cerr<<msg<<std::endl;
     exit(1);
 }
 
+// For system fatal errors (ie. functions that set errno)
 inline void fatal_perror(const char *msg)
 {
     perror(msg);
