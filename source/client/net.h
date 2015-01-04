@@ -26,11 +26,17 @@ struct ClientInfo
     player_t player;
 };
 
-int WaitForOrdersFromClient(const ClientInfo info, std::mutex &mut, CTTRTSGame &game);
+void WaitForOrdersFromClient(const ClientInfo info, std::mutex &mut, CTTRTSGame &game);
 
 void GetOrdersFromClients(std::vector<ClientInfo> &myClients, CTTRTSGame &game, std::mutex &gameMutex);
 
 void SendGameInfoToClients(std::vector<ClientInfo> &myClients, const CTTRTSGame &game, std::mutex &gameMutex);
+
+void TryBindSocket(int sockfd, sockaddr_in &serv_addr);
+
+void PerformServerHandshakeWithClient(const ClientInfo &client, const CTTRTSGame &game);
+
+void PerformClientHandshake(int sockfd, unsigned int &player, std::string &gameNameString);
 
 inline void fatal_error(const char *msg)
 {

@@ -14,7 +14,7 @@
 #include "net.h"
 #include "filesystem.h"
 
-CTTRTSGame &RunServerForGame(CTTRTSGame &game)
+void RunServerForGame(CTTRTSGame &game)
 {
     std::cout<<"Setting up server on port "<<TTRTS_PORT<< std::endl;
 
@@ -42,22 +42,7 @@ CTTRTSGame &RunServerForGame(CTTRTSGame &game)
         fatal_perror("ERROR opening socket");
 
     // bind our socket to this server address
-    std::cout<<"Binding socket"<< std::endl;
-    int retry = 1;
-    while (1)
-    {
-        if(retry > 10)
-        {
-            fatal_error("Binding failed after retries");
-        }
-
-        if (bind(sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) >= 0)
-            break;
-
-        std::cout<<"Binding failed on try "<<retry<< std::endl;
-        sleep(retry);
-        retry++;
-    }
+    TryBindSocket(sockfd, serv_addr);
 
     // Listen on the socket for messages
     // Second param is length of backlog queue, the maximum number of connections
@@ -65,6 +50,7 @@ CTTRTSGame &RunServerForGame(CTTRTSGame &game)
     // max is usually set to 5
     listen(sockfd,5);
 
+    // Get information about the game
     std::vector<player_t> players = game.GetPlayers();
     unsigned int numClients = players.size();
     auto player_iterator = players.begin();
@@ -108,28 +94,7 @@ CTTRTSGame &RunServerForGame(CTTRTSGame &game)
     for( auto client : myClients )
     {
         // Handshake currently just player
-        char handshake[64];
-        snprintf(handshake, sizeof(handshake), TTRTS_HANDSHAKE_FORMAT,(unsigned int)client.player,game.GetName().c_str());
-
-        // Output the handshake
-        std::cout<<"Handshaking:"<<handshake<< std::endl;
-
-        // Send handshake
-        if ( write( client.clientsockfd,handshake,sizeof(handshake) ) < 0 )
-            fatal_perror("ERROR sending to client");
-
-        // Recieve handshake
-        char buffer[64];
-        if (read(client.clientsockfd,buffer,sizeof(buffer)-1) < 0)
-            fatal_perror("ERROR reading from client");
-
-        std::cout<<"Received:"<<buffer<< std::endl;
-
-        // Verify handshake
-        if ( std::string(buffer) != std::string(handshake) )
-            fatal_error("Error in client handshake");
-
-        std::cout<<"Success on handshake with "<<handshake<< std::endl;
+        PerformServerHandshakeWithClient(client, game);
     }
 
     std::cout<<"All clients connected"<< std::endl;
@@ -158,7 +123,6 @@ CTTRTSGame &RunServerForGame(CTTRTSGame &game)
 
     // Send final state to all the clients
     SendGameInfoToClients(myClients, game, gameMutex);
-    return game;
 }
 
 int runServer(int argc, char* argv[])

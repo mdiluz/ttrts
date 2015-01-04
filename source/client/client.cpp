@@ -19,7 +19,7 @@
 
 int runClient(int argc, char* argv[])
 {
-    player_t myPlayer;
+    player_t myPlayer = player_t::NUM_INVALID; // My player
 
     int sockfd; 	// socket File descriptor
     int portno;		// Port number
@@ -29,7 +29,7 @@ int runClient(int argc, char* argv[])
 
     struct hostent *server; // pointer to host information
 
-    char buffer[1028]; // buffer for socked read
+    char buffer[1028]; // buffer for socket read
     memset(buffer,0,sizeof(buffer));
 
     // must provide information
@@ -77,27 +77,17 @@ int runClient(int argc, char* argv[])
 
     std::cout<<"Waiting for handshake"<<std::endl;
 
-    memset(buffer,0,sizeof(buffer));
-    if (read(sockfd,buffer,sizeof(buffer)-1) < 0)
-        fatal_perror("ERROR recieving handshake from server");
-
-    std::string handshake(buffer);
-    std::cout<<"Handshake:"<<handshake<<std::endl;
-
-    if ( write( sockfd, handshake.c_str(), handshake.length()+1 ) < 0 )
-        fatal_perror("ERROR sending handshake to server");
-
     unsigned int player;
-    char gameName[64];
-    if ( sscanf(handshake.c_str(),TTRTS_HANDSHAKE_FORMAT,&player,gameName) < 2 )
-        fatal_error("Handshake failed");
+    std::string gameNameString;
+
+    PerformClientHandshake(sockfd, player, gameNameString);
 
     myPlayer = (player_t)player;
     std::cout<<"I am player "<<std::to_string((int)myPlayer)<<std::endl;
-    std::cout<<"Game is "<<gameName<<std::endl;
+    std::cout<<"Game is "<<gameNameString<<std::endl;
 
     // Clean out the games dir
-    CreateAndCleanGameDir(gameName);
+    CreateAndCleanGameDir(gameNameString);
 
     while ( n >= 0 )
     {
