@@ -12,7 +12,7 @@ void WaitForOrdersFromClient(const ClientInfo info,  CTTRTSGame &game, std::mute
 {
     char buffer[1028]; // buffer for orders
 
-    std::cout<<"Waiting for "<<inet_ntoa(info.cli_addr.sin_addr)<<std::endl;
+    std::clog<<"TTRTS: Waiting for player "<<(int)info.player<<" at "<<inet_ntoa(info.cli_addr.sin_addr)<<std::endl;
 
     std::string orders;
 
@@ -30,7 +30,7 @@ void WaitForOrdersFromClient(const ClientInfo info,  CTTRTSGame &game, std::mute
         orders+=buffer;
     }
 
-    std::cout<<"Recieved orders from "<<inet_ntoa(info.cli_addr.sin_addr)<<std::endl;
+    std::clog<<"Recieved orders from "<<inet_ntoa(info.cli_addr.sin_addr)<<std::endl;
 
     mut.lock();
     game.IssueOrders(info.player , orders);
@@ -78,7 +78,6 @@ void PerformClientHandshake(int sockfd, unsigned int &player, std::string &gameN
         fatal_perror("ERROR recieving handshake from server");
 
     std::string handshake(handshakeBuffer);
-    std::cout<<"Handshake:"<<handshake<< std::endl;
 
     if ( write( sockfd, handshake.c_str(), handshake.length()+1 ) < 0 )
         fatal_perror("ERROR sending handshake to server");
@@ -90,13 +89,10 @@ void PerformClientHandshake(int sockfd, unsigned int &player, std::string &gameN
     gameNameString = gameName;
 }
 
-void PerformServerHandshake(const ClientInfo &client, const CTTRTSGame &game)
+void PerformServerHandshake(const ClientInfo &client, const std::string &game)
 {
     char handshake[64];
-    snprintf(handshake, sizeof(handshake), TTRTS_HANDSHAKE_FORMAT,(unsigned int)client.player,game.GetName().c_str());
-
-    // Output the handshake
-    std::cout<<"Handshaking:"<<handshake<< std::endl;
+    snprintf(handshake, sizeof(handshake), TTRTS_HANDSHAKE_FORMAT,(unsigned int)client.player,game.c_str());
 
     // Send handshake
     if ( write( client.clientsockfd,handshake,sizeof(handshake) ) < 0 )
@@ -107,18 +103,16 @@ void PerformServerHandshake(const ClientInfo &client, const CTTRTSGame &game)
     if ( read(client.clientsockfd,buffer,sizeof(buffer)-1) < 0 )
         fatal_perror("ERROR reading from client");
 
-    std::cout<<"Received:"<<buffer<< std::endl;
-
     // Verify handshake
     if ( std::string(buffer) != std::string(handshake) )
         fatal_error("Error in client handshake");
 
-    std::cout<<"Success on handshake with "<<handshake<< std::endl;
+    std::clog<<"TTRTS: Success on handshake with player "<<(int)client.player<< std::endl;
 }
 
-void TryBindSocket(int sockfd, sockaddr_in &serv_addr)
+void TryBindSocket(int sockfd, const sockaddr_in &serv_addr)
 {
-    std::cout<<"Binding socket"<< std::endl;
+    std::clog<<"TTRTS: Binding to socket"<< std::endl;
     int retry = 1;
     while (1)
     {
@@ -129,8 +123,67 @@ void TryBindSocket(int sockfd, sockaddr_in &serv_addr)
         if (bind(sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) >= 0)
             break;
 
-        std::cout<<"Binding failed on try "<<retry<< std::endl;
+        std::cerr<<"Warning: Binding failed on try "<<retry<< std::endl;
         sleep(retry);
         retry++;
     }
+}
+
+ClientInfo &WaitForClientConnection(int sockfd, const std::string &game, ClientInfo &clientInfo)
+{
+    socklen_t clilen = sizeof(sockaddr_in);
+
+    // accept waits for a connection from a client
+    // it returns a new socket file descriptor for this connection
+    // client information will be stored in cli_addr
+    clientInfo.clientsockfd = accept(sockfd, (sockaddr *) &clientInfo.cli_addr, &clilen);
+    if (clientInfo.clientsockfd < 0)
+        fatal_perror("ERROR on accept");
+
+    std::clog<<"TTRTS: Client connected from "<<inet_ntoa(clientInfo.cli_addr.sin_addr)<<" socket "<<clientInfo.clientsockfd<< std::endl;
+
+    // Handshake with client
+    PerformServerHandshake(clientInfo, game);
+    return clientInfo;
+}
+
+
+int SetUpServerListeningSocket(const sockaddr_in &serv_addr)
+{
+    int sockfd;
+
+    std::clog<<"TTRTS: Opening socket"<< std::endl;
+    // Create a new socket
+    // AF_INET is general internet socket domain
+    // SOCK_STREAM as messages will be read in on this socket, SOCK_DGRAM would be for packets
+    // 0 is for default protocol
+    sockfd = socket(AF_INET, SOCK_STREAM, 0);
+    if (sockfd < 0)
+        fatal_perror("ERROR opening socket");
+
+    // bind our socket to this server address
+    TryBindSocket(sockfd, serv_addr);
+
+    // Listen on the socket for messages
+    // Second param is length of backlog queue, the maximum number of connections
+    // that can be waiting while the process is handling a single connection
+    // max is usually set to 5
+    listen(sockfd,5);
+    return sockfd;
+}
+
+
+sockaddr_in GetLocalServerAddress()
+{
+    sockaddr_in serv_addr;  // Server address
+
+    // empty the server address
+    memset(&serv_addr,0, sizeof(serv_addr));
+    // Set the server address family to AF_INET
+    serv_addr.sin_family = AF_INET;
+    // htons swaps from host byte order to network byte order
+    serv_addr.sin_port = htons(TTRTS_PORT);
+    // The host for this address is this current machine's IP, INADDR_ANY fetches this
+    serv_addr.sin_addr.s_addr = INADDR_ANY;
+    return serv_addr;
 }

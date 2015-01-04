@@ -16,7 +16,7 @@ if [[ $? != 0 ]]; then
     exit
 fi
 
-echo "Performing install"
+echo "TTRTS: Performing install"
 sudo make install
 if [[ $? != 0 ]]; then
     echo "TTRTS: Install failed, check output"

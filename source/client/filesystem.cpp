@@ -1,4 +1,5 @@
 #include "filesystem.h"
+#include "net.h"
 
 
 #include <iostream>
@@ -95,10 +96,7 @@ CTTRTSGame GetGameFromFile( const std::string& filename )
 
     // If still not good
     if( access( gamefile.c_str(), F_OK ) == -1 )
-    {
-        std::cerr<<"Error: "<< gamefile <<" file not found"<<std::endl;
-        return CTTRTSGame(0,0);
-    }
+        fatal_perror("Could not open game file");
 
     std::ifstream file(gamefile);
 
@@ -113,10 +111,7 @@ CTTRTSGame GetGameFromFile( const std::string& filename )
     gameDescriptor.assign((std::istreambuf_iterator<char>(file)),std::istreambuf_iterator<char>());
 
     if( gameDescriptor.size() == 0 )
-    {
-        std::cerr<<"Error: failed to read in any information from "<<gamefile<<std::endl;
-        return CTTRTSGame(0,0);
-    }
+        fatal_error("failed to read in any information from gamefile");
 
     // Create the game
     return GetGameFromString(gameDescriptor);
@@ -130,7 +125,7 @@ std::string GetOrdersFromPlayerFile(const CTTRTSGame &game, player_t &player)
     snprintf(playerOrderFileName, 128, "%s%s/Player_%i_Turn_%i.txt", gameDir.c_str(),game.GetName().c_str(),(int) player, game.GetTurn());
 
     // Wait for the player order file to be created
-    std::cout<<"Waiting for "<< playerOrderFileName << std::endl;
+    std::clog<<"TTRTS: Waiting for "<< playerOrderFileName << std::endl;
     bool hasOrderFile = false;
     while(!hasOrderFile)
             {
@@ -186,39 +181,29 @@ int CreateAndCleanGameDir(const std::string& gameName)
     int ret = stat( gameDir.c_str(), &info );
     if( ret == 0 && info.st_mode & S_IFDIR )
     {
-        std::cout<< gameDir << " game directory already exists"<<std::endl;
-        std::cout<<"Confirm to delete contents [y/N] ";
+        std::cout<<"TTRTS: " << gameDir << " game directory already exists"<<std::endl;
+        std::cout<<"TTRTS: Confirm to delete contents [y/N] ";
         std::string input;
         std::cin>>input;
         if( !input.size() || std::tolower(input[0]) != 'y' )
-        {
-            std::cerr<<"Aborting..."<<std::endl;
             return -1;
-        }
     }
     else if ( ret  == 0 )
     {
-        std::cerr<< gameDir << " exists but is not directory \nAborting..."<<std::endl;
-        return -1;
+        fatal_error("TTRTS_GAMES exists but is not directory \nAborting...");
     }
 
     // Create the game directory
     char cmd2[128];
     snprintf(cmd2,128, "test -d %s || mkdir %s",gameDir.c_str(),gameDir.c_str());
     if( system(cmd2) == -1)
-    {
-        std::cerr<<"Error: Failed to create the game directory"<<std::endl;
-        return -1;
-    }
+        fatal_error("Error: Failed to create the game directory");
 
     // Clean out the game directory
     char cmd1[128];
     snprintf(cmd1,128, "rm -rf %s/*",gameDir.c_str());
     if ( system(cmd1) == -1 )
-    {
-        std::cerr<<"Error: Failed to clean the game directory"<<std::endl;
-        return -1;
-    }
+        fatal_error("Error: Failed to clean the game directory");
 
     return 0;
 }
@@ -228,7 +213,7 @@ int runFromFilesystem(int argc, char* argv[])
 {
     std::string gamefile = argv[1];
 
-    std::cout<<"Launching TTRTS with "<<gamefile<<std::endl;
+    std::cout<<"TTRTS: Launching with "<<gamefile<<std::endl;
     CTTRTSGame game = GetGameFromFile(gamefile);
 
     // Grab the players involved
@@ -244,14 +229,11 @@ int runFromFilesystem(int argc, char* argv[])
     // While the game isn't finished
     while ( ! game.GameOver() )
     {
-        std::cout<<"Starting turn "<<game.GetTurn()<<std::endl;
+        std::cout<<"TTRTS: Starting turn "<<game.GetTurn()<<std::endl;
 
         // Create a turn file
         if( !OutputGameStateFile(game))
-        {
-            std::cerr<<"Error: Failed to output new turn file" << std::endl;
-            return 1;
-        }
+            fatal_error("Error: Failed to output new turn file");
 
         // Wait for order files
         for( player_t player : players)
@@ -265,17 +247,16 @@ int runFromFilesystem(int argc, char* argv[])
         }
 
         // Simulate turn
-        std::cout<<"Simulating this turn!"<<std::endl;
+        std::cout<<"TTRTS: Simulating this turn!"<<std::endl;
         if ( game.SimulateToNextTurn() )
-        {
-            std::cerr << "Error: Failed to simulate for turn "<<game.GetTurn()<<std::endl;
-            return -1;
-        }
+            fatal_error("Failed to simulate game turn");
 
     }
 
     // Output final gamestate
     OutputGameStateFile(game);
+
+    std::cout<<"TTRTS: Game Over!"<<std::endl;
 
     // Get the winning player
     player_t winningPlayer = game.GetWinningPlayer();
@@ -283,11 +264,11 @@ int runFromFilesystem(int argc, char* argv[])
     // Print the winner!
     if ( winningPlayer != player_t::NUM_INVALID )
     {
-        std::cout<<"Game over! Winner:"<<(int) winningPlayer <<std::endl;
+        std::cout<<"TTRTS: Winner:"<<(int) winningPlayer <<std::endl;
     }
     else
     {
-        std::cout<<"Game over! It was a draw!"<<std::endl;
+        std::cout<<"TTRTS: It was a draw!"<<std::endl;
     }
 
     return (int)winningPlayer;

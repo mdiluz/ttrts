@@ -50,14 +50,12 @@ int runClient(int argc, char* argv[])
     if (sockfd < 0)
         fatal_perror("ERROR opening socket");
 
-    std::cout<<"Opened socket on "<<sockfd<<std::endl;
-
     // Get the hostent information for the host by name
     server = gethostbyname(argv[1]);
     if (server == NULL)
         fatal_error("ERROR, no such host");
 
-    std::cout<<"Connecting to "<<argv[1]<<std::endl;
+    std::cout<<"TTRTS: Connecting to "<<argv[1]<<std::endl;
 
     // Empty the server address struct
     memset(&serv_addr,0, sizeof(serv_addr));
@@ -75,23 +73,21 @@ int runClient(int argc, char* argv[])
     if (connect(sockfd, (const sockaddr*)&serv_addr, sizeof(serv_addr)) < 0)
         fatal_perror("ERROR connecting");
 
-    std::cout<<"Waiting for handshake"<<std::endl;
-
     unsigned int player;
     std::string gameNameString;
 
     PerformClientHandshake(sockfd, player, gameNameString);
 
     myPlayer = (player_t)player;
-    std::cout<<"I am player "<<std::to_string((int)myPlayer)<<std::endl;
-    std::cout<<"Game is "<<gameNameString<<std::endl;
+    std::cout<<"TTRTS: I am player "<<std::to_string((int)myPlayer)<<std::endl;
+    std::cout<<"TTRTS: Game is "<<gameNameString<<std::endl;
 
     // Clean out the games dir
     CreateAndCleanGameDir(gameNameString);
 
     while ( n >= 0 )
     {
-        std::cout<<"Waiting for gamestate"<<std::endl;
+        std::cout<<"TTRTS: Waiting for gamestate"<<std::endl;
 
         std::string gamestate;
         while( gamestate.find("END") == std::string::npos )
@@ -111,14 +107,12 @@ int runClient(int argc, char* argv[])
         // Get the order file for this turn
         std::string orders = GetOrdersFromPlayerFile(thisGame,myPlayer);
 
-        std::cout<<"Sending orders"<<std::endl;
+        std::cout<<"TTRTS: Sending orders"<<std::endl;
         std::cout<<orders<<std::endl;
         // Write to the socket with the buffer
         n = write(sockfd,orders.c_str(),orders.length());
         if (0 < n)
             fatal_perror("ERROR writing to socket");
-
-        std::cout<<"Order Sent"<<std::endl;
     }
 
     return 0;

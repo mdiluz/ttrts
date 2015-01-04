@@ -26,6 +26,16 @@ struct ClientInfo
     player_t player;
 };
 
+// Get the address of a local server
+sockaddr_in GetLocalServerAddress();
+
+// Set up a new listening socket for the server
+int SetUpServerListeningSocket(const sockaddr_in &serv_addr);
+
+// Wait for client connection on listening socket sockfd
+// Will fill clientInfo with client information
+ClientInfo &WaitForClientConnection(int sockfd, const std::string &game, ClientInfo &clientInfo);
+
 // Wait for orders from a client, will not return until client has send valid orders
 // Will automatically add orders to the game
 void WaitForOrdersFromClient(const ClientInfo info, CTTRTSGame &game, std::mutex &mut);
@@ -37,10 +47,10 @@ void WaitForOrdersFromClients(std::vector<ClientInfo> &myClients, CTTRTSGame &ga
 void SendGamestateToClients(std::vector<ClientInfo> &myClients, const CTTRTSGame &game, std::mutex &gameMutex);
 
 // Tries to bind to a socket, will attempt 10 times with longer waits between
-void TryBindSocket(int sockfd, sockaddr_in &serv_addr);
+void TryBindSocket(int sockfd, const sockaddr_in &serv_addr);
 
 // Perform the server side handshake with a client
-void PerformServerHandshake(const ClientInfo &client, const CTTRTSGame &game);
+void PerformServerHandshake(const ClientInfo &client, const std::string &game);
 
 // Perform the client side handshake with the server
 void PerformClientHandshake(int sockfd, unsigned int &player, std::string &gameNameString);
