@@ -82,6 +82,10 @@ void RunServerForGame(CTTRTSGame &game)
 
 int runServer(int argc, char* argv[])
 {
+    // argv[1] needs to be a valid game file 
+    if( argc < 2 )
+        fatal_error("must provide game file argument");
+
     // Set up game
     CTTRTSGame game = GetGameFromFile(argv[1]);
     if(game.GetNumUnits() == 0)
