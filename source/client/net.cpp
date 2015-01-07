@@ -233,7 +233,7 @@ std::string WaitForGamestateMessage(int sockfd)
 int SendOrdersToServer(int sockfd, const std::string &orders)
 {
     int n = write(sockfd,orders.c_str(),orders.length());
-    if (0 < n)
+    if (n < 0)
         fatal_perror("ERROR writing to socket");
     return n;
 }
