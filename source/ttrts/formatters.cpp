@@ -92,7 +92,7 @@ CTTRTSGame       GetGameFromString( const std::string& input )
         size_t pos;
         while ( ( pos = walls_str.find(']') ) != std::string::npos )
         {
-            std::string pos_string = walls_str.substr(0,pos);
+            std::string pos_string = walls_str.substr(0,pos+1);
 
             // Use scanf to extract positions
 

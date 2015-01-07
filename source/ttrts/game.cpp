@@ -17,6 +17,7 @@ CTTRTSGame::CTTRTSGame(CTTRTSGame&& game)
 , dimensions(std::move(game.dimensions))
 , turn(std::move(game.turn))
 , name(std::move(game.name))
+, m_walls(std::move(game.m_walls))
 {
 
 }
