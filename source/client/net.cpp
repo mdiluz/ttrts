@@ -32,7 +32,7 @@ void WaitForOrdersFromClient(const ClientInfo info,  CTTRTSGame &game, std::mute
         orders+=buffer;
     }
 
-    std::clog<<"Recieved orders from "<<inet_ntoa(info.cli_addr.sin_addr)<<std::endl;
+    std::clog<<"TTRTS: Recieved orders from "<<inet_ntoa(info.cli_addr.sin_addr)<<std::endl;
 
     mut.lock();
     game.IssueOrders(info.player , orders);
