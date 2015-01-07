@@ -238,6 +238,13 @@ sub PrintGameFromGamestateString
 		$map[$invalidPos[0]][$invalidPos[1]] = "~";
 	}
 
+	# Fill with walls
+	foreach my $wall ( $info[8] =~ /\[(\d+,\d+)\]/g )
+	{
+		$wall =~ /(\d+),(\d+)/;
+		$map[$1][$2] = "|"; 
+	}
+
 	# Fill with units
 	for my $unit (@units)
 	{
