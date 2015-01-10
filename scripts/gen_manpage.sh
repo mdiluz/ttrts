@@ -35,6 +35,7 @@ cat "$5" \
  | sed -E 's/-----+//g'  	            		        \
  | sed -E 's/`(.*)`/\\fB\1\\fR/g'  	                    \
  | sed -E 's/MAPFILE/\\fImapfile\\fR/g'  	            \
+ | sed -E 's/HOSTNAME/\\fIhostname\\fR/g'  	            \
  | sed -E 's/	ttrts -/	ttrts \\-/g'   		>> $TEMP
 
 
