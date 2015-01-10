@@ -13,6 +13,7 @@ TTRTS is from the ground up designed to be a fun way to practice programming. An
 #### Requirements
 * CMake - our build system uses cmake
 * Linux/OSX - currently no support for Windows, tracked with [Issue #9](https://github.com/mdiluz/ttrts/issues/9)
+* perl 5.0 or newer - for the launch script
 
 #### To Build
     $ git clone https://github.com/mdiluz/ttrts.git
