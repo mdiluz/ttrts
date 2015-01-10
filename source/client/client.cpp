@@ -1,17 +1,15 @@
-#include "client.h"
-
 #include <iostream>
 
 #include "net.h"
-
 #include "game.h"
+#include "error.h"
 #include "filesystem.h"
 
-int runClient(int argc, char* argv[])
+int main(int argc, char* argv[])
 {
     // must provide information
     if (argc < 2)
-        fatal_error("Usage: ttrts client HOST");
+        fatal_error("Usage: ttrts-client HOST");
 
     std::string hostname = argv[1];
 

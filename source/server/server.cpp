@@ -1,4 +1,4 @@
-#include "server.h"
+#include "error.h"
 
 #include <thread>
 #include <vector>
@@ -80,11 +80,11 @@ void RunServerForGame(CTTRTSGame &game)
     SendGamestateToClients(myClients, game, gameMutex);
 }
 
-int runServer(int argc, char* argv[])
+int main(int argc, char* argv[])
 {
     // argv[1] needs to be a valid game file 
     if( argc < 2 )
-        fatal_error("must provide game file argument");
+        fatal_error("Usage: ttrts-server MAPFILE");
 
     // Set up game
     CTTRTSGame game = GetGameFromFile(argv[1]);

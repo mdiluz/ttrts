@@ -75,23 +75,6 @@ std::string WaitForGamestateMessage(int sockfd);
 int SendOrdersToServer(int sockfd, const std::string &orders);
 
 //======================================================================================================================
-// Error functions
-
-// For local fatal errors
-inline void fatal_error(const char *msg)
-{
-    std::cerr<<msg<<std::endl;
-    exit(1);
-}
-
-// For system fatal errors (ie. functions that set errno)
-inline void fatal_perror(const char *msg)
-{
-    perror(msg);
-    exit(1);
-}
-
-//======================================================================================================================
 // Other functions
 int OutputGameEnd( CTTRTSGame& game );
 

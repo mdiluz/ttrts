@@ -1,4 +1,5 @@
 #include "net.h"
+#include "error.h"
 
 #include <netdb.h>
 
