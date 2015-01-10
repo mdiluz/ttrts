@@ -47,7 +47,7 @@
 
       <section id="main_content">
         <h1>
-<a id="ttrts-v030" class="anchor" href="#ttrts-v030" aria-hidden="true"><span class="octicon octicon-link"></span></a>TTRTS v0.3.0</h1>
+<a id="ttrts" class="anchor" href="#ttrts" aria-hidden="true"><span class="octicon octicon-link"></span></a>TTRTS</h1>
 
 <p><em>The Tiny Terminal RTS where the players write their AIs</em></p>
 
@@ -69,9 +69,10 @@
 <a id="requirements" class="anchor" href="#requirements" aria-hidden="true"><span class="octicon octicon-link"></span></a>Requirements</h4>
 
 <ul>
-<li>cmake - our build system uses cmake</li>
+<li>CMake - our build system uses cmake</li>
 <li>Linux/OSX - currently no support for Windows, tracked with <a href="https://github.com/mdiluz/ttrts/issues/9">Issue #9</a>
 </li>
+<li>perl 5.0 or newer - for the launch script</li>
 </ul>
 
 <h4>
@@ -80,7 +81,7 @@
 <pre><code>$ git clone https://github.com/mdiluz/ttrts.git
 $ cd ttrts
 $ ./bootstrap.sh
-$ ./ttrts # To launch binary and display usage
+$ man ttrts # for full usage and guide
 </code></pre>
 
 <hr>
@@ -99,6 +100,66 @@ $ ./ttrts # To launch binary and display usage
 
 <h2>
 <a id="changelog" class="anchor" href="#changelog" aria-hidden="true"><span class="octicon octicon-link"></span></a>Changelog</h2>
+
+<h4>
+<a id="v040" class="anchor" href="#v040" aria-hidden="true"><span class="octicon octicon-link"></span></a>v0.4.0</h4>
+
+<ul>
+<li>Updated with network functionality
+
+<ul>
+<li>Game can now be hosted with ttrts --server option</li>
+<li>Server can be connected to with ttrts --client</li>
+</ul>
+</li>
+<li>Updated command line interface with new launcher script
+
+<ul>
+<li>map file must now be specified with --map=FILE </li>
+</ul>
+</li>
+<li>Slight refactor of libraries to account for new run targets</li>
+</ul>
+
+<h4>
+<a id="v032" class="anchor" href="#v032" aria-hidden="true"><span class="octicon octicon-link"></span></a>v0.3.2</h4>
+
+<ul>
+<li>Fix bug when loading map files with walls</li>
+<li>Fix ttrts on OSX
+
+<ul>
+<li>Install man files to correct location</li>
+<li>Update usage of sed to be compatible with BSD as well as GNU versions</li>
+</ul>
+</li>
+<li>New maps and renames of old ones</li>
+</ul>
+
+<h4>
+<a id="v031" class="anchor" href="#v031" aria-hidden="true"><span class="octicon octicon-link"></span></a>v0.3.1</h4>
+
+<ul>
+<li>Upgraded install target to repository
+
+<ul>
+<li>libttrts static library binary in /usr/local/lib</li>
+<li>ttrts headers in /usr/local/include/ttrts</li>
+<li>bash completion into /etc/bash_completion.d/</li>
+<li>man page into /usr/local/man/man6</li>
+<li>maps into /usr/share/ttrts/maps</li>
+</ul>
+</li>
+<li>client now supports env variable configuration
+
+<ul>
+<li>TTRTS_MAPS for location of map files, defaults to /usr/share/ttrts/maps</li>
+<li>TTRTS_GAMES for gameplay directories, defaults to /tmp/</li>
+</ul>
+</li>
+<li>Map files now have proper header</li>
+<li>NOTE: This version is compatible with v0.3.0, but old generated mapfiles will need the additional header line added</li>
+</ul>
 
 <h4>
 <a id="v030" class="anchor" href="#v030" aria-hidden="true"><span class="octicon octicon-link"></span></a>v0.3.0</h4>
@@ -144,7 +205,7 @@ $ ./ttrts # To launch binary and display usage
 <h2>
 <a id="further-information" class="anchor" href="#further-information" aria-hidden="true"><span class="octicon octicon-link"></span></a>Further Information</h2>
 
-<p>See the ttrts binary <a href="source/ttrts/README.md">readme</a> for full usage and game rules</p>
+<p>See the ttrts <a href="source/README.md">README</a> for full usage and game rules</p>
 
 <p>See <a href="https://github.com/mdiluz/ttrts-players">ttrts-players</a> for examples of AIs</p>
       </section>
