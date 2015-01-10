@@ -3,7 +3,7 @@ use strict;
 use warnings;
 
 our $ttrts_perlai_versioncompat_major = 0;
-our $ttrts_perlai_versioncompat_minor = 3;
+our $ttrts_perlai_versioncompat_minor = 4;
 
 our $headerDelimiter="~~~~";
 
