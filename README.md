@@ -18,7 +18,7 @@ TTRTS is from the ground up designed to be a fun way to practice programming. An
     $ git clone https://github.com/mdiluz/ttrts.git
     $ cd ttrts
     $ ./bootstrap.sh
-    $ ./ttrts # To launch binary and display usage
+    $ man ttrts # for full usage and guide
 
 -----------------------------------------------------------
 ## Development
