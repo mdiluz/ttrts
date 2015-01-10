@@ -10,4 +10,9 @@ HEADER="// Auto generated ttrts version header
 
 #endif //_TTRTS_VERSION_H_"
 
-echo "$HEADER" > "version.h"
+echo "$HEADER" > "version.h.tmp"
+
+# If no difference
+if [ ! -e version.h ] || [ ! -z $( diff version.h version.h.tmp ) ]; then
+	mv -f version.h.tmp version.h
+fi

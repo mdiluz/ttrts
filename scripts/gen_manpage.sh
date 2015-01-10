@@ -1,10 +1,13 @@
 #! /bin/bash
 # Used to a man page from markdown
 
-echo ".\" Man page for the ttrts project" > $4
-echo ".\" this man page is auto-generated, do not edit directly" >> $4
+FILE="$4"
+TEMP="$FILE.tmp"
 
-echo ".TH TTRTS\ v$1.$2.$3 6 $(date +%Y-%m-%d) http://mdiluz.github.io/ttrts/" >> $4
+echo ".\" Man page for the ttrts project" > $TEMP
+echo ".\" this man page is auto-generated, do not edit directly" >> $TEMP
+
+echo ".TH TTRTS\ v$1.$2.$3 6 $(date +%Y-%m-%d) http://mdiluz.github.io/ttrts/" >> $TEMP
 
 # NOTE: For the OSX version of sed we use -E, which on linux appears be an undocumented switch for -r
 # we also have to use [A-Za-z] instead of \w for some reason
@@ -32,4 +35,9 @@ cat "$5" \
  | sed -E 's/-----+//g'  	            		        \
  | sed -E 's/`(.*)`/\\fB\1\\fR/g'  	                    \
  | sed -E 's/MAPFILE/\\fImapfile\\fR/g'  	            \
- | sed -E 's/	ttrts -/	ttrts \\-/g'   		>> $4
+ | sed -E 's/	ttrts -/	ttrts \\-/g'   		>> $TEMP
+
+
+if [ ! -e $FILE ] || [ ! -z $( diff $FILE $TEMP ) ]; then
+	mv -f $TEMP $FILE
+fi
