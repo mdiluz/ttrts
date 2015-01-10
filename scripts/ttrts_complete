@@ -5,12 +5,11 @@ test ! -z TTRTS_MAPS && TTRTS_MAPS=/usr/share/ttrts/maps/
 have ttrts &&
 function _ttrts
 {
-	commandnames="--server --client --map --host localhost "
+	commandnames="--server --client --host= --host=localhost "
 	for filename in ${TTRTS_MAPS}/* 
 	do
 		map="${filename##*/}"
 		commandnames+="--map=$map "
-		commandnames+="$map "
 	done
 
     local cur prev
