@@ -38,6 +38,6 @@ cat "$5" \
  | sed -E 's/	ttrts -/	ttrts \\-/g'   		>> $TEMP
 
 
-if [ ! -e $FILE ] || [ ! -z $( diff $FILE $TEMP ) ]; then
+if [ ! -e $FILE ] || [ ! -z "$( diff $FILE $TEMP )" ]; then
 	mv -f $TEMP $FILE
 fi
