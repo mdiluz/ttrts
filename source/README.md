@@ -2,7 +2,7 @@
 	ttrts - Tiny Terminal RTS
 
 # SYNOPSIS
-	ttrts [--server] [--client] [--host=HOSTNAME] [MAPFILE]
+	ttrts [--server] [--client] [--host=HOSTNAME] [--map=MAPFILE]
  
 # DESCRIPTION
 	ttrts is a tiny terminal based RTS that uses text files as order lists to control the units
@@ -13,7 +13,13 @@
     ttrts will return -1 on error, or the winning player on completion
 
 # OPTIONS
-	MAPFILE - File to read in the initial game state. Local or in ${TTRTS_MAPS}
+    --server - Run in server mode, must provide a map file
+
+    --client - Run in client mode, must provide a hostname for a running server
+
+	--map=MAPFILE - File to read in the initial game state. Local or in ${TTRTS_MAPS}
+
+    --host=HOSTNAME - Name of host to connect to in client mode
 
 # USAGE
 	When invoked, ttrts will set up the game in a directory within ${TTRTS_GAMES} by the name of the map
@@ -23,6 +29,8 @@
 	ttrts will then await order files from each participant
 
 	Once all order files have been received ttrts will calculate the turn and output a new gamestate file
+
+    In server and client mode, the client will output and read in these files while the server simulates the game
 
 	This process repeats until the game is over
 
@@ -56,6 +64,21 @@
     ORDER:{ORDER_CHAR} id:{UNIT_ID}
     ... {continue for all orders}
     END
+
+-----------------------------------------------------------
+# SERVER/CLIENT
+    When in server or client mode, the game can be played across a network. If desired, a player could design an AI to act as a client instead of using the client mode and intermediary filesystem.
+
+## Protocol
+    The server is accesible on port 11715
+
+    To perform the handshake the server will write to the socket with the format "player PLAYER_ID name GAME_NAME", it will expect this exact information to be written back to in reply.
+
+    Once handshake is performed, the server will write to the socket in the form of the Gamestate file as above.
+
+    The server will then wait for a new-line delimited and END terminated list of orders
+
+    This will be repeated until the game is over
 
 -----------------------------------------------------------
 # GAMEPLAY
