@@ -31,6 +31,14 @@ TTRTS is from the ground up designed to be a fun way to practice programming. An
 -----------------------------------------------------------
 ## Changelog
 
+#### v0.4.0
+* Updated with network functionality
+  * Game can now be hosted with ttrts --server option
+  * Server can be connected to with ttrts --client
+* Updated command line interface with new launcher script
+  * map file must now be specified with --map=FILE 
+* Slight refactor of libraries to account for new run targets
+
 #### v0.3.2
 * Fix bug when loading map files with walls
 * Fix ttrts on OSX
