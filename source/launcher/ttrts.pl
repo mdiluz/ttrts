@@ -41,4 +41,4 @@ $res = system("ttrts-client $host") 	if $client and $host;
 $res = system("ttrts-server $map") 		if $server and $map;
 $res = system("ttrts-local $map") 		if not $server and not $client and $map;
 
-return $res
+exit $res
