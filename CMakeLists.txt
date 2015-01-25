@@ -49,6 +49,7 @@ else()
 endif()
 
 install( FILES "${CMAKE_BINARY_DIR}/ttrts.6" DESTINATION ${MANPAGE_LOC} )
+install( FILES "${CMAKE_SOURCE_DIR}/api/lua/ttrts.lua" DESTINATION share/lua/5.1/ )
 
 # Subprojects
 add_subdirectory( source )
