@@ -52,7 +52,7 @@ std::string      GetStringFromGame( const CTTRTSGame& game )
     state += '\n';
     state += GAME_HEADER_DELIMITER;
     state += units;
-    state += "END";
+    state += "END\n";
 
     return state;
 }

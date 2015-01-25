@@ -16,7 +16,7 @@
 #include <stdlib.h>
 #include <iostream>
 
-#define TTRTS_HANDSHAKE_FORMAT "player %u name %s"
+#define TTRTS_HANDSHAKE_FORMAT "player %u name %s\n"
 
 //======================================================================================================================
 // Structs for net management
