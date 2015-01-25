@@ -108,7 +108,10 @@ void PerformServerHandshake(const ClientInfo &client, const std::string &game)
 
     // Verify handshake
     if ( std::string(buffer) != std::string(handshake) )
+    {
+        std::cerr<<"Handshake was \""<<handshake<<"\" but recieved \""<<buffer<<"\""<<std::endl;
         fatal_error("Error in client handshake");
+    }
 
     std::clog<<"TTRTS: Success on handshake with player "<<(int)client.player<< std::endl;
 }
